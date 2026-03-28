@@ -56,7 +56,7 @@ const PropertyCard = ({ property }: { property: Property }) => {
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="bg-gray-50 p-2 rounded-xl">
             <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider mb-0.5">EST. ROI</p>
-            <p className="text-[13px] font-black text-green-600">{property.roi}</p>
+            <p className="text-[13px] font-black text-[#88A613]">{property.roi}</p>
           </div>
           <div className="bg-gray-50 p-2 rounded-xl">
             <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider mb-0.5">FUNDING</p>

@@ -1,111 +1,87 @@
 "use client";
 
 import React from "react";
-import { 
-  RotateCw, 
-  FileText, 
-  MoreVertical, 
-  Users,
-  Building,
-  PieChart,
-  TrendingUp,
-  Wallet
-} from "lucide-react";
+import { RotateCw, FileText, Building, Flag, Wallet, ClipboardList } from "lucide-react";
 
 const QuickAccess = () => {
-  const portfolioItems = [
-    { 
-      name: "Residential Projects", 
-      label: "MARKETPLACE", 
-      count: "12 New", 
-      color: "bg-[#1E3A5F]", 
-      textColor: "text-white",
-      icon: <Building size={18} />
+  const stats = [
+    {
+      label: "Submissions",
+      value: "4 total",
+      sub: "Projects in pipeline",
+      icon: <Building size={22} className="text-[#1E3A5F]" />,
     },
-    { 
-      name: "NFT Ownership", 
-      label: "MY ASSETS", 
-      count: "8 Shares", 
-      color: "bg-white", 
-      textColor: "text-gray-900",
-      icon: <PieChart size={18} />
+    {
+      label: "This month",
+      value: "2 reports",
+      sub: "Milestones due",
+      icon: <Flag size={22} className="text-[#1E3A5F]" />,
     },
-    { 
-      name: "Dividend Payouts", 
-      label: "EARNINGS", 
-      count: "+$1,240", 
-      color: "bg-white", 
-      textColor: "text-gray-900",
-      icon: <TrendingUp size={18} />
+    {
+      label: "Escrow → you",
+      value: "$220k YTD",
+      sub: "Funds released",
+      icon: <Wallet size={22} className="text-[#1E3A5F]" />,
     },
   ];
 
   return (
     <section className="px-8 py-4">
-      <div className="flex items-center gap-3 mb-8">
-        <h2 className="text-3xl font-black text-gray-900 tracking-tight">Investor Portal</h2>
-        <button className="bg-[#1E3A5F]/10 p-2.5 rounded-xl shadow-sm border border-[#1E3A5F]/20 hover:bg-[#1E3A5F]/20 transition-all group text-[#1E3A5F]">
-          <RotateCw size={20} className="group-active:rotate-180 transition-transform duration-500" />
-        </button>
+      <div className="border-l-4 border-[#1E3A5F] pl-5 py-1 mb-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-600 bg-stone-200/90 px-2 py-1 rounded border border-stone-300">
+            Field
+          </span>
+          <h2 className="text-3xl font-black text-stone-800 tracking-tight">Project Owner Portal</h2>
+          <button
+            type="button"
+            className="bg-stone-100 p-2 rounded-lg border border-stone-300 hover:bg-stone-200 transition-all group text-[#1E3A5F] ml-auto"
+          >
+            <RotateCw size={20} className="group-active:rotate-180 transition-transform duration-500" />
+          </button>
+        </div>
+        <p className="text-[12px] text-stone-600 mt-3 max-w-xl">
+          Submit builds, report milestones, and request releases — dashboard is task-first, not card-heavy.
+        </p>
       </div>
 
-      <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">PORTFOLIO OVERVIEW</h3>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {portfolioItems.map((item, i) => (
-          <div
-            key={i}
-            className={`${item.color} p-4.5 rounded-[28px] shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group hover:-translate-y-2 border border-gray-100 flex flex-col h-[156px] relative overflow-hidden`}
-          >
-            <div className="flex items-center justify-between mb-auto z-10">
-              <div className="flex -space-x-3">
-                {[1, 2, 3].map((_, j) => (
-                  <div key={j} className="w-7 h-7 rounded-full border-2 border-white shadow-sm overflow-hidden bg-gray-200">
-                    <img src={`/jessica.png`} alt="Owner" className="w-full h-full object-cover" />
-                  </div>
-                ))}
-              </div>
-              <button className={`${item.textColor} opacity-40 hover:opacity-100 transition-opacity`}>
-                <MoreVertical size={16} />
-              </button>
-            </div>
-            
-            <div className="mt-3.5 z-10">
-              <div className="flex items-center gap-2 mb-2">
-                <Users size={10} className={`${item.textColor} opacity-60`} />
-                <p className={`text-[9px] font-bold ${item.textColor} opacity-60 tracking-widest uppercase`}>{item.count}</p>
-              </div>
-              <div className="flex flex-col">
-                <p className={`text-[9px] font-black ${item.textColor} opacity-40 tracking-wider mb-0.5 uppercase`}>{item.label}</p>
-                <p className={`text-lg font-bold ${item.textColor} truncate leading-tight`}>{item.name}</p>
-              </div>
-            </div>
+      <p className="text-[10px] font-black text-stone-500 uppercase tracking-[0.2em] mb-3">Site snapshot</p>
 
-            <div className={`absolute -right-2 -bottom-2 opacity-10 ${item.textColor}`}>
-               {React.cloneElement(item.icon as React.ReactElement, { size: 100 })}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        {stats.map((s) => (
+          <div
+            key={s.label}
+            className="flex items-center gap-4 p-4 bg-white border border-stone-300 rounded-r-xl border-l-4 border-l-[#1E3A5F] shadow-[0_2px_0_rgba(28,25,23,0.04)]"
+          >
+            <div className="p-2.5 rounded-lg bg-stone-100 border border-stone-200 shrink-0">{s.icon}</div>
+            <div className="min-w-0">
+              <p className="text-[9px] font-black text-stone-400 uppercase tracking-wider">{s.sub}</p>
+              <p className="text-lg font-black text-stone-900 leading-tight mt-0.5">{s.value}</p>
+              <p className="text-[11px] font-semibold text-stone-500 mt-0.5">{s.label}</p>
             </div>
           </div>
         ))}
+      </div>
 
-        <div className="bg-white p-4.5 rounded-[28px] shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group hover:-translate-y-2 border border-gray-100 flex flex-col h-[156px] relative overflow-hidden">
-          <div className="flex items-start justify-between z-10">
-            <div className="p-2.5 bg-[#1E3A5F]/5 rounded-xl text-[#1E3A5F]">
-              <FileText size={18} />
-            </div>
-            <div className="relative w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden ring-4 ring-gray-50 bg-gray-200 shrink-0">
-               <img src="/jessica.png" alt="Owner" className="w-full h-full object-cover" />
-            </div>
+      <div className="flex items-stretch gap-4 p-4 bg-stone-100/80 border border-stone-300 rounded-lg">
+        <div className="p-3 rounded-md bg-white border border-stone-200 text-[#1E3A5F] shrink-0">
+          <FileText size={22} />
+        </div>
+        <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black text-stone-500 uppercase tracking-widest flex items-center gap-2">
+              <ClipboardList size={12} />
+              Compliance
+            </p>
+            <h4 className="text-[16px] font-black text-stone-900 mt-1">Owner checklist</h4>
+            <p className="text-[12px] text-stone-600 mt-0.5">Permits and registry docs before next tranche.</p>
           </div>
-          <div className="mt-auto z-10">
-            <h4 className="text-[15px] font-bold text-gray-800 mb-1">EstateX Whitepaper</h4>
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Project Docs</span>
-              <span className="text-[10px] font-bold text-[#1E3A5F]">VIEW</span>
-            </div>
-          </div>
-          <div className="absolute -right-4 -bottom-4 opacity-[0.03] text-black">
-            <FileText size={120} />
-          </div>
+          <button
+            type="button"
+            className="self-start sm:self-center px-5 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-bold rounded-md hover:bg-[#2a4d75] transition-colors shrink-0"
+          >
+            Open checklist
+          </button>
         </div>
       </div>
     </section>

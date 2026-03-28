@@ -4,49 +4,47 @@ import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import QuickAccess from "./components/QuickAccess";
-import FilesTable from "./components/FilesTable";
-import Marketplace from "./components/Marketplace";
-import Portfolio from "./components/Portfolio";
-import Governance from "./components/Governance";
-import Transactions from "./components/Transactions";
-import LegalDocuments from "./components/LegalDocuments";
+import OwnerProjectsTable from "./components/OwnerProjectsTable";
+import ProjectSubmission from "./components/ProjectSubmission";
+import MilestoneReporting from "./components/MilestoneReporting";
+import OwnerDocuments from "./components/OwnerDocuments";
+import FundRequests from "./components/FundRequests";
+import OwnerSitesMap from "./components/OwnerSitesMap";
 
 export default function Home() {
   const [currentView, setCurrentView] = useState("dashboard");
 
   const renderContent = () => {
     switch (currentView) {
-      case "marketplace":
-        return <Marketplace />;
-      case "portfolio":
-        return <Portfolio />;
-      case "governance":
-        return <Governance />;
-      case "transactions":
-        return <Transactions />;
+      case "submit":
+        return <ProjectSubmission />;
+      case "milestones":
+        return <MilestoneReporting />;
       case "documents":
-        return <LegalDocuments />;
+        return <OwnerDocuments />;
+      case "funds":
+        return <FundRequests />;
+      case "map":
+        return <OwnerSitesMap />;
       case "dashboard":
       default:
         return (
           <div className="flex-1 overflow-y-auto custom-scrollbar p-0">
             <QuickAccess />
-            <FilesTable />
+            <OwnerProjectsTable />
           </div>
         );
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 font-jost overflow-hidden">
+    <div className="flex h-screen bg-[#F0EFEC] overflow-hidden text-stone-900">
       <Sidebar activeView={currentView} onNavigate={setCurrentView} />
-      
+
       <div className="flex-1 flex flex-col min-w-0">
         <Header />
-        
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {renderContent()}
-        </main>
+
+        <main className="flex-1 flex flex-col overflow-hidden">{renderContent()}</main>
       </div>
 
       <style jsx global>{`
@@ -70,8 +68,14 @@ export default function Home() {
         }
 
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .animate-fade-in {

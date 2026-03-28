@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 
 const transactions = [
-  { id: 1, name: "Kigali Heights Plaza", type: "Buy Shares", amount: "$2,500", status: "Completed", date: "Jul 25, 2026", color: "purple" },
-  { id: 2, name: "Vision City II", type: "NFT Purchase", amount: "$3,000", status: "Processing", date: "Jul 24, 2026", color: "gray" },
-  { id: 3, name: "Downtown Office Hub", type: "Monthly Yield", amount: "$1,500", status: "Pending", date: "Jul 22, 2026", color: "green" },
-  { id: 4, name: "Nyagatare Trade", type: "Buy Shares", amount: "$850", status: "Completed", date: "Jul 20, 2026", color: "purple" },
+  { id: 1, name: "Kigali Heights Plaza", type: "Buy Shares", amount: "$2,500", status: "Completed", date: "Jul 25, 2026", color: "blue" },
+  { id: 2, name: "Vision City II", type: "NFT Purchase", amount: "$3,000", status: "Processing", date: "Jul 24, 2026", color: "blue" },
+  { id: 3, name: "Downtown Office Hub", type: "Monthly Yield", amount: "$1,500", status: "Pending", date: "Jul 22, 2026", color: "yellow" },
+  { id: 4, name: "Nyagatare Trade", type: "Buy Shares", amount: "$850", status: "Completed", date: "Jul 20, 2026", color: "blue" },
 ];
 
 const Transactions = () => {
@@ -26,12 +26,12 @@ const Transactions = () => {
       {/* Top Row: Summary Stats */}
       <div className="flex items-center justify-between mb-4 gap-2">
         <div className="flex gap-1.5 shrink-0">
-           <div className="bg-black text-white px-3.5 py-2 rounded-[16px] min-w-[120px] shadow-lg relative overflow-hidden group">
+           <div className="bg-black text-white px-3.5 py-2 rounded-[16px] min-w-[120px] shadow-lg relative overflow-hidden group border border-[#D9F443]/10">
               <p className="text-[7.5px] font-black opacity-40 uppercase tracking-widest mb-0.5">Total Volume</p>
               <p className="text-base font-black italic">70%</p>
-              <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 skew-x-12 group-hover:bg-white/10 transition-all" />
+              <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[#D9F443]/5 skew-x-12 group-hover:bg-[#D9F443]/10 transition-all" />
            </div>
-           <div className="bg-yellow-400 text-black px-3.5 py-2 rounded-[16px] min-w-[80px] shadow-md border border-yellow-500/20">
+           <div className="bg-[#1E3A5F] text-white px-3.5 py-2 rounded-[16px] min-w-[80px] shadow-sm border border-[#1E3A5F]/20">
               <p className="text-[7.5px] font-black opacity-40 uppercase tracking-widest mb-0.5">Hired</p>
               <p className="text-base font-black italic">10%</p>
            </div>
@@ -40,7 +40,7 @@ const Transactions = () => {
               <p className="text-base font-black italic">15%</p>
               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 10px)' }} />
            </div>
-           <div className="bg-white border border-gray-100 text-black px-3.5 py-2 rounded-[16px] min-w-[80px] shadow-sm">
+           <div className="bg-white border border-gray-100 text-[#1E3A5F] px-3.5 py-2 rounded-[16px] min-w-[80px] shadow-sm">
               <p className="text-[7.5px] font-black opacity-40 uppercase tracking-widest mb-0.5">Output</p>
               <p className="text-base font-black italic">5%</p>
            </div>
@@ -174,11 +174,12 @@ const Transactions = () => {
                            <td className="px-4 py-3 text-[10px] font-bold text-gray-500">{tx.type}</td>
                            <td className="px-4 py-3 text-[11px] font-black text-gray-900">{tx.amount}</td>
                            <td className="px-4 py-3">
-                              <div className={`mx-auto w-fit px-2 py-0.5 rounded-full text-[9px] font-black capitalize ${
-                                tx.color === 'purple' ? 'bg-purple-100 text-purple-600' : 
-                                tx.color === 'green' ? 'bg-green-100 text-green-600' : 
-                                'bg-gray-100 text-gray-400'
-                              }`}>
+                               <div className={`mx-auto w-fit px-2 py-0.5 rounded-full text-[9px] font-black capitalize ${
+                                 tx.color === 'lime' ? 'bg-[#D9F443]/20 text-[#88A613]' : 
+                                 tx.color === 'blue' ? 'bg-[#1E3A5F]/10 text-[#1E3A5F]' : 
+                                 tx.color === 'yellow' ? 'bg-yellow-50 text-yellow-600' :
+                                 'bg-gray-100 text-gray-400'
+                               }`}>
                                 {tx.status}
                               </div>
                            </td>
@@ -216,7 +217,7 @@ const Transactions = () => {
                   <path 
                     d="M0 80 Q 50 50, 100 110 T 200 70 T 300 120 T 400 60 T 500 100" 
                     fill="none" 
-                    stroke="#FACC15" 
+                    stroke="#D9F443" 
                     strokeWidth="2" 
                     strokeDasharray="4 6"
                   />

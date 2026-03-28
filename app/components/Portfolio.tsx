@@ -26,11 +26,11 @@ import {
   FileText
 } from "lucide-react";
 
-const worklistItems = [
-  { id: 1, name: "Jessica Caballero", role: "Investor - Premium", active: true, color: "bg-[#D9F443]", text: "text-black" },
-  { id: 2, name: "Jane Doe", role: "Investor - Gold", active: false, color: "bg-white/5", text: "text-white" },
-  { id: 3, name: "Jack Donovan", role: "Investor - Silver", active: false, color: "bg-white/5", text: "text-white" },
-  { id: 4, name: "Barry White", role: "Investor - Basic", active: false, color: "bg-white/5", text: "text-white" },
+const initialWorklist = [
+  { id: 1, name: "Jessica Caballero", role: "Investor - Premium", level: "Premium", active: true, image: "/jessica.png" },
+  { id: 2, name: "Jane Doe", role: "Investor - Gold", level: "Gold", active: false, image: "/jessica.png" },
+  { id: 3, name: "Jack Donovan", role: "Investor - Silver", level: "Silver", active: false, image: "/jessica.png" },
+  { id: 4, name: "Barry White", role: "Investor - Basic", level: "Basic", active: false, image: "/jessica.png" },
 ];
 
 const timeline = [
@@ -41,8 +41,8 @@ const timeline = [
     desc: "Investment agreement for Kigali Heights Plaza has been signed and verified.", 
     user: "Marty C.", 
     status: "Verified",
-    icon: <Phone size={14} />,
-    statusColor: "bg-teal-500/10 text-teal-500"
+    icon: <Check size={14} />,
+    statusColor: "bg-[#1E3A5F]/10 text-[#1E3A5F]"
   },
   { 
     id: 2, 
@@ -52,12 +52,13 @@ const timeline = [
     user: "Marty C.", 
     status: "Reviewing",
     icon: <MessageSquare size={14} />,
-    statusColor: "bg-purple-500/10 text-purple-500"
+    statusColor: "bg-[#1E3A5F]/5 text-[#1E3A5F]/60"
   }
 ];
 
 const Portfolio = () => {
   const [message, setMessage] = useState("");
+  const [worklistItems, setWorklistItems] = useState(initialWorklist);
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#FDFDFD] overflow-hidden">
@@ -65,65 +66,71 @@ const Portfolio = () => {
       {/* 3-Column Layout Container */}
       <div className="flex flex-1 overflow-hidden">
         
-        {/* Left Side: Worklist Sidebar (Dark) */}
-        <aside className="w-52 bg-[#141416] flex flex-col p-3 overflow-y-auto no-scrollbar pt-6 transition-all duration-300">
+        {/* Left Side: Worklist Sidebar (White) */}
+        <aside className="w-52 bg-[#F9F9F9] border-r border-gray-100 flex flex-col p-3 overflow-y-auto no-scrollbar pt-6 transition-all duration-300">
           <div className="grid grid-cols-2 gap-1.5 mb-6">
-            <div className="bg-[#1C1C1E] p-2.5 rounded-xl border border-white/5 relative overflow-hidden group hover:border-white/10 transition-all">
-               <div className="w-1.5 h-1.5 rounded-full border border-yellow-400 mb-1" />
-               <p className="text-white text-base font-black leading-none">6</p>
-               <p className="text-white/40 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">Portfolio</p>
+            <div className="bg-white p-2.5 rounded-xl border border-gray-100 relative overflow-hidden group hover:border-[#1E3A5F]/30 transition-all cursor-pointer shadow-sm">
+               <div className="w-1.5 h-1.5 rounded-full border border-[#1E3A5F] mb-1 shadow-[0_0_8px_rgba(30,58,95,0.2)]" />
+               <p className="text-gray-900 text-base font-black leading-none">6</p>
+               <p className="text-gray-400 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">Portfolio</p>
             </div>
-            <div className="bg-[#1C1C1E] p-2.5 rounded-xl border border-white/5">
-               <div className="w-1.5 h-1.5 rounded-full border border-red-400 mb-1" />
-               <p className="text-white text-base font-black leading-none">27</p>
-               <p className="text-white/40 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">New Leads</p>
+            <div className="bg-white p-2.5 rounded-xl border border-gray-100 hover:border-red-500/30 transition-all cursor-pointer shadow-sm">
+               <div className="w-1.5 h-1.5 rounded-full border border-red-500 mb-1" />
+               <p className="text-gray-900 text-base font-black leading-none">27</p>
+               <p className="text-gray-400 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">New Leads</p>
             </div>
-            <div className="bg-[#1C1C1E] p-2.5 rounded-xl border border-white/5">
-               <div className="w-1.5 h-1.5 rounded-full border border-blue-400 mb-1" />
-               <p className="text-white text-base font-black leading-none">22</p>
-               <p className="text-white/40 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">Updates</p>
+            <div className="bg-white p-2.5 rounded-xl border border-gray-100 hover:border-blue-500/30 transition-all cursor-pointer shadow-sm">
+               <div className="w-1.5 h-1.5 rounded-full border border-blue-500 mb-1" />
+               <p className="text-gray-900 text-base font-black leading-none">22</p>
+               <p className="text-gray-400 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">Updates</p>
             </div>
-            <div className="bg-[#1C1C1E] p-2.5 rounded-xl border border-white/5">
-               <div className="w-1.5 h-1.5 rounded-full border border-purple-400 mb-1" />
-               <p className="text-white text-base font-black leading-none">3</p>
-               <p className="text-white/40 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">Assigned</p>
+            <div className="bg-white p-2.5 rounded-xl border border-gray-100 hover:border-purple-500/30 transition-all cursor-pointer shadow-sm">
+               <div className="w-1.5 h-1.5 rounded-full border border-purple-500 mb-1" />
+               <p className="text-gray-900 text-base font-black leading-none">3</p>
+               <p className="text-gray-400 text-[7.5px] font-bold uppercase tracking-wider mt-0.5">Assigned</p>
             </div>
           </div>
 
           <div className="flex items-center justify-between mb-3 px-1">
              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full border border-white/20" />
-                <h3 className="text-white text-[10px] font-black uppercase tracking-widest">Active Assets</h3>
+                <div className="w-3 h-3 rounded-full border border-gray-200" />
+                <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Active Assets</h3>
              </div>
-             <ChevronDown size={12} className="text-white/40" />
+             <ChevronDown size={12} className="text-gray-300" />
           </div>
 
           <div className="space-y-1.5">
             {worklistItems.map((item) => (
               <div 
-                key={item.id} 
-                className={`${item.active ? item.color : 'bg-[#1C1C1E] hover:bg-white/5'} p-2.5 rounded-[20px] cursor-pointer transition-all relative group overflow-hidden`}
+                key={item.id}
+                onClick={() =>
+                  setWorklistItems((prev) => prev.map((i) => ({ ...i, active: i.id === item.id })))
+                }
+                className={`p-2.5 rounded-xl cursor-pointer transition-all duration-300 relative group ${
+                  item.active ? 'bg-[#1E3A5F] text-white shadow-[0_4px_15px_rgba(30,58,95,0.3)] scale-[1.02]' : 'hover:bg-gray-100'
+                }`}
               >
-                <div className="absolute top-2 right-3 text-black/40 group-hover:text-black">
-                  <ArrowUpRight size={12} />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full border border-black/10 overflow-hidden shrink-0">
-                    <img src="/jessica.png" alt="" className="w-full h-full object-cover" />
+                <div className="flex items-center gap-2.5">
+                  <div className="relative">
+                    <img src={item.image} alt={item.name} className="w-8 h-8 rounded-full border border-gray-100" />
+                    <div className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border-2 ${item.active ? 'border-[#1E3A5F]' : 'border-white'} ${
+                      item.level === 'Premium' ? 'bg-[#D9F443]' : 'bg-gray-400'
+                    }`} />
                   </div>
-                  <div>
-                    <h4 className={`text-[10px] font-black leading-tight ${item.active ? 'text-black' : 'text-white'}`}>{item.name}</h4>
-                    <p className={`text-[8px] font-bold opacity-60 ${item.active ? 'text-black' : 'text-white'}`}>{item.role}</p>
+                  <div className="min-w-0 flex-1">
+                    <h4 className={`text-[11px] font-black truncate ${item.active ? 'text-white' : 'text-gray-900'}`}>{item.name}</h4>
+                    <p className={`text-[8px] font-bold ${item.active ? 'text-white/60' : 'text-gray-400'}`}>{item.role}</p>
                   </div>
+                  <ArrowUpRight size={10} className={`ml-auto ${item.active ? 'text-white/40' : 'text-gray-200'}`} />
                 </div>
                 {item.active && (
-                   <div className="mt-2.5 flex items-center justify-between">
-                     <div className="flex items-center gap-1 bg-white/40 px-1.5 py-0.5 rounded-lg">
-                        <FileText size={9} className="text-black" />
-                        <span className="text-[7.5px] font-black text-black leading-none">Awaiting yield</span>
-                     </div>
-                     <span className="bg-red-500 text-white text-[7.5px] font-black px-1.5 py-0.5 rounded-full">High</span>
+                  <div className="mt-2.5 flex items-center justify-between">
+                   <div className="flex items-center gap-1 bg-white/20 px-1.5 py-0.5 rounded-lg border border-white/10">
+                      <FileText size={9} className="text-white" />
+                      <span className="text-[7.5px] font-black text-white leading-none">Awaiting yield</span>
                    </div>
+                   <span className="bg-red-500 text-white text-[7.5px] font-black px-1.5 py-0.5 rounded-full shadow-sm">High</span>
+                  </div>
                 )}
               </div>
             ))}
@@ -176,10 +183,15 @@ const Portfolio = () => {
           {/* Action Icons Bar */}
           <div className="px-6 flex items-center justify-between mb-4">
             <div className="flex gap-1">
-              {[Phone, MessageSquare, Mail, Calendar].map((Icon, i) => (
-                <button key={i} className="w-7 h-7 bg-[#D9F443] text-black rounded-full flex items-center justify-center shadow-md hover:scale-105 transition-transform">
-                  <Icon size={13} />
-                </button>
+              {[
+                { icon: <Phone size={14} />, color: "bg-[#1E3A5F] text-white" },
+                { icon: <MessageSquare size={14} />, color: "bg-[#1E3A5F]/10 text-[#1E3A5F]" },
+                { icon: <Mail size={14} />, color: "bg-[#1E3A5F]/10 text-[#1E3A5F]" },
+                { icon: <Calendar size={14} />, color: "bg-[#1E3A5F]/10 text-[#1E3A5F]" },
+              ].map((btn, i) => (
+                <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-all ${btn.color}`}>
+                  {btn.icon}
+                </div>
               ))}
               <button className="w-7 h-7 bg-white text-gray-400 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
                  <Plus size={13} />
@@ -291,9 +303,9 @@ const Portfolio = () => {
                        <div className="flex items-center gap-1.5 pr-1">
                          <button className="text-gray-300 hover:text-gray-900 transition-colors"><ImageIcon size={14} /></button>
                          <button className="text-gray-300 hover:text-gray-900 transition-colors"><Paperclip size={14} /></button>
-                         <button className="w-7 h-7 bg-[#D9F443] text-black rounded-lg flex items-center justify-center shadow-md hover:scale-105 transition-all">
-                            <Send size={12} />
-                         </button>
+                          <button className="w-7 h-7 bg-[#1E3A5F] text-white rounded-lg flex items-center justify-center shadow-md hover:scale-105 transition-all border border-white/10">
+                             <Send size={12} />
+                          </button>
                        </div>
                     </div>
                   </div>
@@ -304,7 +316,7 @@ const Portfolio = () => {
         </main>
 
         {/* Right Side: Analysis Sidebar */}
-        <aside className="w-68 bg-[#F3F2EA] flex flex-col p-4 gap-4 overflow-y-auto custom-scrollbar transition-all duration-300">
+        <aside className="w-68 bg-[#FDFDFD] border-l border-gray-100 flex flex-col p-4 gap-4 overflow-y-auto custom-scrollbar transition-all duration-300">
           {/* Profit Prediction Card */}
           <div className="bg-white rounded-[24px] p-5 shadow-sm border border-gray-100 relative overflow-hidden group">
              <div className="absolute top-3 right-3 text-gray-300 group-hover:text-black cursor-pointer">
@@ -312,69 +324,71 @@ const Portfolio = () => {
              </div>
              <h3 className="text-base font-black text-gray-900 mb-4 leading-tight">Interested in <br/>Kigali Heights</h3>
              
-             <div className="bg-gray-50 rounded-xl p-0.5 flex mb-6">
-                <button className="flex-1 bg-white shadow-sm border border-gray-100 rounded-[10px] py-1 text-[9px] font-black flex items-center justify-center gap-1.5">
-                   <div className="w-1.5 h-1.5 rounded-full border border-gray-900" /> Negotiation
+             <div className="flex gap-2 mb-6">
+                <button className="px-4 py-1.5 bg-[#1E3A5F] text-white border border-[#1E3A5F] rounded-full text-[11px] font-black shadow-md">
+                   Negotiation
                 </button>
-                <button className="flex-1 text-gray-400 text-[9px] font-black hover:text-gray-600">Close</button>
+                <button className="px-4 py-1.5 bg-gray-50 text-gray-400 border border-gray-100 rounded-full text-[11px] font-black hover:bg-gray-100">
+                   Close
+                </button>
              </div>
 
              <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Potential profit:</p>
              <p className="text-3xl font-black text-gray-900 mb-6">$ 25,000</p>
 
-             <div className="space-y-2">
-                {[
-                  { text: "Client's portrait", checked: true },
-                  { text: "Successful cases", checked: true },
-                  { text: "Low budget", checked: false },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${item.checked ? 'bg-teal-500 text-white' : 'border border-gray-200'}`}>
-                       {item.checked ? <Check size={8} /> : <div className="w-0.5 h-0.5 bg-gray-300 rounded-full" />}
-                    </div>
-                    <span className={`text-[10px] font-bold ${item.checked ? 'text-gray-900' : 'text-gray-400 line-through opacity-40'}`}>{item.text}</span>
+             <div className="space-y-3 mb-8">
+              {[
+                { label: "Client's portrait", checked: true },
+                { label: "Successful cases", checked: true },
+                { label: "Low budget", checked: false },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${item.checked ? 'bg-[#1E3A5F] text-white' : 'border-2 border-gray-100 text-transparent'}`}>
+                    <Check size={8} strokeWidth={4} />
                   </div>
-                ))}
-             </div>
+                  <span className={`text-[11px] font-black ${item.checked ? 'text-gray-900' : 'text-gray-300'}`}>{item.label}</span>
+                </div>
+              ))}
+           </div>
 
              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl" />
           </div>
 
           {/* Task Card */}
-          <div className="bg-[#D9F443] rounded-[24px] p-5 shadow-sm flex flex-col items-center text-center relative overflow-hidden group border border-black/5">
-             <h3 className="text-[15px] font-black text-black mb-0.5">Task</h3>
-             <p className="text-[9px] font-black text-black/40 uppercase tracking-widest mb-4 leading-none">Send our proposal</p>
+          <div className="bg-[#1E3A5F] rounded-[24px] p-5 shadow-xl flex flex-col items-center text-center relative overflow-hidden group border border-white/10">
+             <h3 className="text-[15px] font-black text-white mb-0.5">Task</h3>
+             <p className="text-[9px] font-black text-white/40 uppercase tracking-widest mb-4 leading-none text-center">SEND OUR PROPOSAL</p>
              
-             <div className="bg-white border border-black/5 rounded-xl p-2 w-full flex items-center justify-between mb-6">
+             <div className="bg-white/10 border border-white/10 rounded-xl p-2 w-full flex items-center justify-between mb-6 backdrop-blur-md">
                 <div className="flex items-center gap-2">
-                   <div className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-black">
+                   <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-white">
                       <FileText size={13} />
                    </div>
-                   <p className="text-[11px] font-black text-black">Proposal</p>
+                   <p className="text-[11px] font-black text-white">Proposal</p>
                 </div>
-                <button className="text-black/40 hover:text-black">
+                <button className="text-white/40 hover:text-white">
                    <Plus size={14} />
                 </button>
              </div>
 
-             <p className="text-[10px] font-black text-black/40 uppercase tracking-widest mb-4">The customer chooses between</p>
+             <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4">THE CUSTOMER CHOOSES BETWEEN</p>
              <div className="flex gap-2 w-full mb-6">
-                <button className="flex-1 bg-white/40 border border-black/5 rounded-lg py-1.5 text-[10px] font-black text-black">Us</button>
-                <button className="flex-1 bg-white/40 border border-black/5 rounded-lg py-1.5 text-[10px] font-black text-black">Alberto's</button>
+                <button className="flex-1 bg-white/10 border border-white/10 rounded-lg py-1.5 text-[10px] font-black text-white hover:bg-white/20">Us</button>
+                <button className="flex-1 bg-white/10 border border-white/10 rounded-lg py-1.5 text-[10px] font-black text-white hover:bg-white/20">Alberto's</button>
              </div>
 
              <div className="flex items-center gap-2 mb-6">
-                <div className="w-4 h-4 bg-black text-[#D9F443] rounded-full flex items-center justify-center shadow-md">
-                   <Check size={10} />
+                <div className="w-4 h-4 bg-[#D9F443] text-black rounded-full flex items-center justify-center shadow-lg">
+                   <Check size={10} strokeWidth={4} />
                 </div>
-                <span className="text-[11px] font-black text-black">Trusted name, Good support</span>
+                <span className="text-[11px] font-black text-white">Trusted name, Good support</span>
              </div>
 
              <div className="flex gap-2 w-full">
-                <button className="flex-1 bg-black text-white h-9 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-all text-sm font-black">
+                <button className="flex-1 bg-black text-white h-9 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-all text-sm font-black border border-white/10">
                    <Send size={14} />
                 </button>
-                <button className="w-9 h-9 border border-black/10 rounded-xl flex items-center justify-center hover:bg-black/5 transition-all">
+                <button className="w-9 h-9 bg-white/10 border border-white/10 rounded-xl flex items-center justify-center hover:bg-white/20 transition-all text-white">
                    <Check size={14} />
                 </button>
              </div>

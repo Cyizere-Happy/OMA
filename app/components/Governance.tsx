@@ -21,9 +21,9 @@ const Governance = () => {
       {/* Top Section: Results & Calendar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         
-        {/* Voting Power Blob Chart (Reference inspired) */}
-        <div className="lg:col-span-2 bg-[#E2DED0] rounded-[48px] p-8 relative overflow-hidden h-[340px] group shadow-inner">
-          <div className="relative z-10 h-full flex flex-col justify-between">
+        {/* Voting Power Blob Chart (Light) */}
+        <div className="lg:col-span-2 bg-white rounded-[48px] p-8 relative overflow-hidden h-[340px] group border border-gray-100 shadow-sm">
+           <div className="relative z-10 h-full flex flex-col justify-between">
             <div>
               <h3 className="text-[16px] font-black text-gray-900 mb-1">Your Voting</h3>
               <p className="text-[16px] font-black text-gray-900">Results for Today</p>
@@ -31,9 +31,9 @@ const Governance = () => {
 
             <div className="flex gap-6 mt-auto">
               {[
-                { label: "Voting activity", color: "bg-yellow-400" },
-                { label: "Proposals engagement", color: "bg-red-500" },
-                { label: "Delegation time", color: "bg-gray-800" },
+                { label: "Voting activity", color: "bg-[#1E3A5F]" },
+                { label: "Proposals engagement", color: "bg-[#D9F443]" },
+                { label: "Delegation time", color: "bg-red-500" },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-2">
                   <div className={`w-3.5 h-1 ${item.color} rounded-full`} />
@@ -47,42 +47,42 @@ const Governance = () => {
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
              <div className="relative w-full h-full">
                 {/* Yellow Big Blob */}
-                <div className="absolute top-[10%] right-[15%] w-56 h-56 bg-yellow-400 rounded-full blur-[60px] opacity-60 animate-pulse" />
-                <div className="absolute top-[25%] right-[25%] bg-white/10 backdrop-blur-md rounded-full p-6 text-center shadow-2xl border border-white/20 transform hover:scale-110 transition-transform pointer-events-auto cursor-help">
+                <div className="absolute top-[10%] right-[15%] w-56 h-56 bg-[#D9F443] rounded-full blur-[60px] opacity-40 animate-pulse" />
+                <div className="absolute top-[25%] right-[25%] bg-white border border-gray-100 rounded-full p-6 text-center shadow-xl transform hover:scale-110 transition-transform pointer-events-auto cursor-help">
                    <p className="text-[18px] font-black text-gray-900">1.875</p>
-                   <p className="text-[9px] font-bold text-gray-500 uppercase">Weight</p>
+                   <p className="text-[9px] font-bold text-gray-400 uppercase">Weight</p>
                 </div>
 
                 {/* Red Small Blob */}
-                <div className="absolute bottom-[20%] left-[35%] w-32 h-32 bg-red-500 rounded-full blur-[40px] opacity-70" />
-                <div className="absolute bottom-[30%] left-[40%] bg-white/10 backdrop-blur-md rounded-full w-16 h-16 flex flex-col items-center justify-center shadow-xl border border-white/20 pointer-events-auto cursor-help">
+                <div className="absolute bottom-[20%] left-[35%] w-32 h-32 bg-red-400 rounded-full blur-[40px] opacity-30" />
+                <div className="absolute bottom-[30%] left-[40%] bg-white border border-gray-100 rounded-full w-16 h-16 flex flex-col items-center justify-center shadow-lg pointer-events-auto cursor-help">
                    <p className="text-[12px] font-black text-gray-900">850</p>
-                   <p className="text-[7px] font-bold text-gray-500 uppercase">Power</p>
+                   <p className="text-[7px] font-bold text-gray-400 uppercase">Power</p>
                 </div>
 
-                {/* Dark Circle */}
-                <div className="absolute top-[20%] left-[30%] bg-gray-900 rounded-full w-20 h-20 flex flex-col items-center justify-center text-white shadow-2xl pointer-events-auto cursor-help transform -translate-x-10 translate-y-5">
+                {/* Hours Circle (Light) */}
+                <div className="absolute top-[20%] left-[30%] bg-[#1E3A5F] rounded-full w-20 h-20 flex flex-col items-center justify-center text-white shadow-2xl pointer-events-auto cursor-help transform -translate-x-10 translate-y-5 border border-white/20">
                    <p className="text-[13px] font-black">2.30</p>
-                   <p className="text-[7px] font-bold opacity-60 uppercase">Hours</p>
+                   <p className="text-[7px] font-bold opacity-70 uppercase">Hours</p>
                 </div>
              </div>
           </div>
 
-          <button className="absolute top-8 right-8 w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center shadow-xl hover:scale-110 transition-all z-20">
+          <button className="absolute top-8 right-8 w-10 h-10 bg-[#F9F9F9] border border-gray-100 text-gray-900 rounded-xl flex items-center justify-center shadow-sm hover:scale-110 transition-all z-20">
              <Info size={18} />
           </button>
         </div>
 
-        {/* Training Days Calendar (Reference inspired) */}
-        <div className="bg-[#1C1C1E] rounded-[48px] p-8 text-white relative overflow-hidden flex flex-col h-[340px] shadow-2xl">
+        {/* Training Days Calendar (Light) */}
+        <div className="bg-white rounded-[48px] p-8 text-gray-900 relative overflow-hidden flex flex-col h-[340px] shadow-sm border border-gray-100">
            <div className="flex items-center justify-between mb-8 z-10">
               <h3 className="text-[15px] font-black tracking-tight">Governance Calendar</h3>
-              <div className="flex items-center gap-1 text-[11px] font-bold opacity-40 cursor-pointer hover:opacity-100 transition-all">
+              <div className="flex items-center gap-1 text-[11px] font-bold text-gray-400 cursor-pointer hover:text-gray-900 transition-all">
                 June <ChevronDown size={14} />
               </div>
            </div>
 
-           <div className="grid grid-cols-7 gap-y-6 text-center text-[10px] font-black opacity-30 mb-4 z-10 uppercase tracking-[0.2em]">
+           <div className="grid grid-cols-7 gap-y-6 text-center text-[10px] font-black text-gray-300 mb-4 z-10 uppercase tracking-[0.2em]">
               {['m', 't', 'w', 't', 'f', 's', 's'].map((d, i) => <div key={i}>{d}</div>)}
            </div>
 
@@ -96,10 +96,10 @@ const Governance = () => {
                 return (
                   <div key={i} className="flex justify-center items-center h-8">
                      <div className={`w-7 h-7 flex items-center justify-center rounded-full transition-all cursor-pointer ${
-                       isSelected ? 'bg-yellow-400 text-black shadow-[0_0_15px_rgba(250,204,21,0.4)]' : 
-                       isPast ? 'text-white opacity-40' : 
-                       isToday ? 'border border-white/20' : 
-                       'opacity-80 hover:bg-white/5'
+                       isSelected ? 'bg-[#1E3A5F] text-white shadow-[0_0_15px_rgba(30,58,95,0.4)]' : 
+                       isPast ? 'text-gray-300' : 
+                       isToday ? 'border border-gray-100 bg-gray-50' : 
+                       'text-gray-500 hover:bg-gray-50'
                      }`}>
                        {day}
                      </div>
@@ -108,9 +108,9 @@ const Governance = () => {
               })}
            </div>
 
-           <div className="mt-auto flex items-center gap-4 text-[9px] font-bold opacity-40 z-10 uppercase tracking-widest">
+           <div className="mt-auto flex items-center gap-4 text-[9px] font-bold text-gray-400 z-10 uppercase tracking-widest">
               <div className="flex items-center gap-1.5"><Circle size={8} /> Current</div>
-              <div className="flex items-center gap-1.5"><Circle size={8} className="fill-yellow-400 text-yellow-400" /> Voted</div>
+               <div className="flex items-center gap-1.5"><Circle size={8} className="fill-[#1E3A5F] text-[#1E3A5F]" /> Voted</div>
               <div className="flex items-center gap-1.5"><Circle size={8} strokeWidth={3} /> Scheduled</div>
            </div>
         </div>

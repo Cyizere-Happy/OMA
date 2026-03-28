@@ -18,29 +18,12 @@ import {
   Files,
   Send
 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 const suggestedActions = [
-  {
-    icon: <CheckCircle className="text-teal-500" size={18} />,
-    title: "Complete Registration",
-    desc: "Complete your profile and make the most of EstateX",
-    date: "23 Jan, 2026",
-    status: null
-  },
-  {
-    icon: <Lock className="text-teal-500" size={18} />,
-    title: "Enable 2-FA Authentication",
-    desc: "Add more security to your account by enabling two-step auth",
-    date: "23 Jan, 2026",
-    status: "Enabled"
-  },
-  {
-    icon: <Phone className="text-teal-500" size={18} />,
-    title: "Update Contact Information",
-    desc: "Keep your details up to date to avoid subscription issues",
-    date: "23 Jan, 2026",
-    status: "Updated"
-  }
+  { icon: <CheckCircle2 size={18} className="text-[#1E3A5F]" />, title: "Complete Registration", desc: "Complete your profile and make the most of EstateX", status: "ENABLED", color: "bg-[#1E3A5F]/10 text-[#1E3A5F]" },
+  { icon: <Lock size={18} className="text-[#1E3A5F]" />, title: "Enable 2-FA Authentication", desc: "Add more security to your account by enabling two-step auth", status: "ENABLED", color: "bg-[#1E3A5F]/10 text-[#1E3A5F]" },
+  { icon: <Phone size={18} className="text-[#1E3A5F]" />, title: "Update Contact Information", desc: "Keep your details up to date to avoid subscription issues", status: "UPDATED", color: "bg-[#1E3A5F]/10 text-[#1E3A5F]" }
 ];
 
 const documents = [
@@ -55,14 +38,23 @@ const documents = [
   { id: 9, name: "legal-tenure.doc", type: "doc", recipient: "Yohan Samel", date: "21 Jan 2026", status: "Wait", color: "gray" },
 ];
 
+const tabs = [
+  { id: "Todos", label: "Todos", icon: <Files size={14} /> },
+  { id: "Drafts", label: "Drafts" },
+  { id: "Sent", label: "Sent", icon: <Send size={14} /> },
+  { id: "Signed", label: "Signed" },
+  { id: "Expired", label: "Expired" },
+  { id: "Canceled", label: "Canceled" },
+];
+
 const LegalDocuments = () => {
   const [activeTab, setActiveTab] = useState("Todos");
 
   const getIcon = (type: string) => {
     switch(type) {
-      case 'folder': return <Folder size={16} className="text-orange-400 fill-orange-400" />;
-      case 'zip': return <Archive size={16} className="text-orange-500 fill-orange-500" style={{ opacity: 0.8 }} />;
-      case 'pdf': return <FileText size={16} className="text-red-500" />;
+      case 'folder': return <Folder size={16} className="text-[#1E3A5F] fill-[#1E3A5F]" />;
+      case 'zip': return <Archive size={16} className="text-[#1E3A5F] fill-[#1E3A5F]" style={{ opacity: 0.8 }} />;
+      case 'pdf': return <FileText size={16} className="text-[#1E3A5F]" />;
       case 'doc': return <File size={16} className="text-gray-400" />;
       default: return <File size={16} />;
     }
@@ -70,11 +62,11 @@ const LegalDocuments = () => {
 
   const getStatusStyle = (status: string) => {
     switch(status) {
-      case 'Completed': return 'bg-green-100 text-green-600';
+      case 'Completed': return 'bg-[#1E3A5F]/10 text-[#1E3A5F]';
       case 'Draft': return 'bg-gray-100 text-gray-500';
       case 'Trash': return 'bg-red-50 text-red-400';
-      case 'Expired': return 'bg-orange-50 text-orange-400';
-      case 'Wait': return 'bg-blue-50 text-blue-400';
+      case 'Expired': return 'bg-yellow-50 text-yellow-600';
+      case 'Wait': return 'bg-[#1E3A5F]/5 text-[#1E3A5F]/60';
       default: return 'bg-gray-100 text-gray-400';
     }
   };
@@ -89,11 +81,11 @@ const LegalDocuments = () => {
           {suggestedActions.map((action, i) => (
             <div key={i} className="bg-white border border-gray-100 rounded-[20px] p-4 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
               <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center">
+                <div className="w-9 h-9 bg-[#1E3A5F]/10 rounded-xl flex items-center justify-center">
                   {action.icon}
                 </div>
                 {action.status && (
-                  <span className="text-[9px] font-black text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-100">
+                  <span className={`text-[9px] font-black ${action.color} px-2 py-0.5 rounded-full border border-[#1E3A5F]/20`}>
                     {action.status}
                   </span>
                 )}
@@ -101,14 +93,14 @@ const LegalDocuments = () => {
               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">Juridico &gt; Freelancers</p>
               <h4 className="text-[13px] font-black text-gray-900 mb-1 leading-tight">{action.title}</h4>
               <p className="text-[10px] font-bold text-gray-400 leading-snug mb-4">{action.desc}</p>
-              <p className="text-[9px] font-bold text-gray-300">Modified on {action.date}</p>
+              <p className="text-[9px] font-bold text-gray-300">Modified on 23 Jan, 2026</p>
             </div>
           ))}
-          <div className="bg-gray-50 border border-dashed border-gray-200 rounded-[20px] flex flex-col items-center justify-center p-4 group cursor-pointer hover:bg-white hover:border-teal-300 transition-all">
-             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm mb-2 text-gray-400 group-hover:text-teal-500 transition-colors">
+          <div className="bg-gray-50 border border-dashed border-gray-200 rounded-[20px] flex flex-col items-center justify-center p-4 group cursor-pointer hover:bg-white hover:border-[#1E3A5F] transition-all">
+             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm mb-2 text-gray-400 group-hover:text-[#1E3A5F] transition-colors">
                 <Plus size={20} />
              </div>
-             <p className="text-[11px] font-black text-gray-400 group-hover:text-teal-600 transition-colors">Add Suggestion</p>
+             <p className="text-[11px] font-black text-gray-400 group-hover:text-[#1E3A5F] transition-colors">Add Suggestion</p>
           </div>
         </div>
       </div>
@@ -124,20 +116,17 @@ const LegalDocuments = () => {
 
         {/* Custom Tabs */}
         <div className="flex gap-6 border-b border-gray-50 mb-5 overflow-x-auto no-scrollbar">
-          {["Todos", "Drafts", "Sent", "Signed", "Expired", "Canceled"].map((tab) => (
+          {tabs.map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`pb-3 text-[12px] font-black transition-all relative flex items-center gap-2 ${
-                activeTab === tab ? "text-teal-500" : "text-gray-400 hover:text-gray-600"
-              }`}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`pb-3 text-[12px] font-black transition-all relative flex items-center gap-2`}
             >
-              {activeTab === tab && (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-500 rounded-t-full" />
+              <span className={`text-[12.5px] font-bold ${activeTab === tab.id ? 'text-[#1E3A5F]' : 'text-gray-400'}`}>{tab.label}</span>
+              {activeTab === tab.id && (
+                <div className="absolute -bottom-2.5 left-0 right-0 h-0.5 bg-[#1E3A5F] rounded-full shadow-[0_0_8px_rgba(30,58,95,0.4)]" />
               )}
-              {tab === "Todos" && <Files size={14} />}
-              {tab === "Sent" && <Send size={14} />}
-              {tab}
+              {tab.icon}
             </button>
           ))}
         </div>
