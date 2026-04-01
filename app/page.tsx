@@ -10,6 +10,8 @@ import MilestoneReporting from "./components/MilestoneReporting";
 import OwnerDocuments from "./components/OwnerDocuments";
 import FundRequests from "./components/FundRequests";
 import OwnerSitesMap from "./components/OwnerSitesMap";
+import InvestorRelations from "./components/InvestorRelations";
+import RevenuePayouts from "./components/RevenuePayouts";
 
 export default function Home() {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -26,6 +28,10 @@ export default function Home() {
         return <FundRequests />;
       case "map":
         return <OwnerSitesMap />;
+      case "investors":
+        return <InvestorRelations />;
+      case "revenue":
+        return <RevenuePayouts />;
       case "dashboard":
       default:
         return (
