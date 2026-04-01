@@ -11,6 +11,8 @@ import {
   Plus,
   Hammer,
   MapPin,
+  Users,
+  Banknote,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -49,6 +51,8 @@ const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
             { icon: <MapPin size={16} />, label: "Project map", id: "map" },
             { icon: <FileUp size={16} />, label: "Submit project", id: "submit" },
             { icon: <Flag size={16} />, label: "Milestones", id: "milestones" },
+            { icon: <Users size={16} />, label: "Investors", id: "investors" },
+            { icon: <Banknote size={16} />, label: "Revenue", id: "revenue" },
             { icon: <FolderOpen size={16} />, label: "Documents", id: "documents" },
             { icon: <Wallet size={16} />, label: "Fund requests", id: "funds" },
           ].map((item, i) => (
