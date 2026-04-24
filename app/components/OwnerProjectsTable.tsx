@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Building, MoreHorizontal, Loader2, Inbox } from "lucide-react";
-import { api } from "../../lib/api";
+import React from "react";
+import { Building, MoreHorizontal, Inbox } from "lucide-react";
 
 interface Project {
   id: string;
@@ -12,7 +11,7 @@ interface Project {
   funding_goal: number;
   current_funding: number;
   created_at: string;
-  property?: { address?: { district?: string; sector?: string } };
+  property: { address: { district: string; sector: string } };
 }
 
 const statusLabel: Record<string, string> = {
@@ -26,36 +25,15 @@ const statusLabel: Record<string, string> = {
   cancelled: "Cancelled",
 };
 
+const DEMO_PROJECTS: Project[] = [
+  { id: "1", title: "Kigali Heights Residences", slug: "kigali-heights", project_status: "funding_open", funding_goal: 2400000, current_funding: 1728000, created_at: "2026-02-10T10:00:00Z", property: { address: { district: "Gasabo", sector: "Kimironko" } } },
+  { id: "2", title: "Nyarutarama Green Villas", slug: "nyarutarama-villas", project_status: "active", funding_goal: 3100000, current_funding: 3100000, created_at: "2026-01-15T14:30:00Z", property: { address: { district: "Gasabo", sector: "Remera" } } },
+  { id: "3", title: "Musanze Lakeside Resort", slug: "musanze-resort", project_status: "under_review", funding_goal: 1850000, current_funding: 0, created_at: "2026-03-25T09:15:00Z", property: { address: { district: "Musanze", sector: "Muhoza" } } },
+  { id: "4", title: "Rubavu Waterfront Apartments", slug: "rubavu-waterfront", project_status: "draft", funding_goal: 1600000, current_funding: 0, created_at: "2026-04-01T16:45:00Z", property: { address: { district: "Rubavu", sector: "Gisenyi" } } },
+];
+
 const OwnerProjectsTable = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api("/projects?limit=50")
-      .then((res) => setProjects(res.data || []))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <section className="px-8 py-4">
-        <div className="flex items-center justify-center py-16"><Loader2 className="animate-spin text-[#1E3A5F]" size={28} /></div>
-      </section>
-    );
-  }
-
-  if (projects.length === 0) {
-    return (
-      <section className="px-8 py-4">
-        <div className="flex flex-col items-center justify-center py-16 text-stone-400">
-          <Inbox size={48} strokeWidth={1} />
-          <p className="mt-4 font-semibold text-[15px]">No projects yet</p>
-          <p className="text-[12px] mt-1">Submit your first property project to get started.</p>
-        </div>
-      </section>
-    );
-  }
+  const projects = DEMO_PROJECTS;
 
   return (
     <section className="px-8 py-4">
@@ -75,9 +53,7 @@ const OwnerProjectsTable = () => {
 
             <div>
               {projects.map((project, i) => {
-                const location = project.property?.address
-                  ? `${project.property.address.sector || ""}, ${project.property.address.district || ""}`.replace(/^, |, $/g, "")
-                  : "—";
+                const location = `${project.property.address.sector}, ${project.property.address.district}`;
                 const fundingPct = project.funding_goal > 0
                   ? `${Math.min(100, Math.round((project.current_funding / project.funding_goal) * 100))}%`
                   : "—";
