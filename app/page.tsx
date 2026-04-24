@@ -12,6 +12,7 @@ import FundRequests from "./components/FundRequests";
 import OwnerSitesMap from "./components/OwnerSitesMap";
 import InvestorRelations from "./components/InvestorRelations";
 import RevenuePayouts from "./components/RevenuePayouts";
+import GovVerificationStatus from "./components/GovVerificationStatus";
 
 export default function Home() {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -32,6 +33,8 @@ export default function Home() {
         return <InvestorRelations />;
       case "revenue":
         return <RevenuePayouts />;
+      case "gov-checks":
+        return <GovVerificationStatus />;
       case "dashboard":
       default:
         return (
