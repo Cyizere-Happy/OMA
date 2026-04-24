@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Users, Globe, Wallet, TrendingUp, Inbox, Loader2 } from "lucide-react";
-import { api } from "../../lib/api";
+import React, { useState } from "react";
+import { Users, Globe, Wallet, TrendingUp, Inbox } from "lucide-react";
 
 interface Investor {
   id: string;
@@ -14,17 +13,17 @@ interface Investor {
   projects: string;
 }
 
+const DEMO_INVESTORS: Investor[] = [
+  { id: "i1", name: "Jean-Pierre Mugisha", email: "jp.m**@gmail.com", diaspora: false, kyc_status: "verified", total_invested: 15000, projects: "Kigali Heights Residences" },
+  { id: "i2", name: "Grace Uwimana", email: "g.uwi**@yahoo.com", diaspora: true, kyc_status: "verified", total_invested: 25000, projects: "Kigali Heights Residences, Nyarutarama Green Villas" },
+  { id: "i3", name: "David Nshimiyimana", email: "david**@outlook.com", diaspora: false, kyc_status: "verified", total_invested: 5000, projects: "Nyarutarama Green Villas" },
+  { id: "i4", name: "Patrick Habimana", email: "pat**@icloud.com", diaspora: true, kyc_status: "verified", total_invested: 45000, projects: "Musanze Lakeside Resort, Kigali Heights Residences" },
+  { id: "i5", name: "Alice K.", email: "alice**@proton.me", diaspora: false, kyc_status: "verified", total_invested: 12500, projects: "Nyarutarama Green Villas" },
+  { id: "i6", name: "Emmanuel B.", email: "emm**@gmail.com", diaspora: true, kyc_status: "verified", total_invested: 8000, projects: "Musanze Lakeside Resort" },
+];
+
 const InvestorRelations = () => {
-  const [investors, setInvestors] = useState<Investor[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api("/owner/investors")
-      .then(res => setInvestors(res.data || []))
-      .catch(err => console.error("Failed to load investors", err))
-      .finally(() => setLoading(false));
-  }, []);
-
+  const investors = DEMO_INVESTORS;
   const totalRaised = investors.reduce((sum, inv) => sum + inv.total_invested, 0);
   const diasporaCount = investors.filter(inv => inv.diaspora).length;
   const avgInvestment = investors.length > 0 ? totalRaised / investors.length : 0;
@@ -60,49 +59,39 @@ const InvestorRelations = () => {
               <h3 className="text-[14px] font-black text-stone-900">Your investors</h3>
             </div>
             
-            {loading ? (
-              <div className="flex justify-center items-center py-20"><Loader2 className="animate-spin text-[#1E3A5F]" size={32} /></div>
-            ) : investors.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-stone-400">
-                <Inbox size={56} strokeWidth={1} />
-                <p className="mt-4 font-black text-[15px] text-stone-600">No investors yet</p>
-                <p className="text-[12px] mt-1 text-stone-500">Investors who purchase shares in your projects will appear here.</p>
-              </div>
-            ) : (
-              <div className="w-full overflow-x-auto custom-scrollbar">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-white border-b border-stone-100 text-[10px] font-black text-stone-400 uppercase tracking-widest">
-                      <th className="px-6 py-4 font-bold">Investor Name</th>
-                      <th className="px-6 py-4 font-bold">Projects Funded</th>
-                      <th className="px-6 py-4 font-bold">Type</th>
-                      <th className="px-6 py-4 font-bold text-right">Total Invested</th>
+            <div className="w-full overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-white border-b border-stone-100 text-[10px] font-black text-stone-400 uppercase tracking-widest">
+                    <th className="px-6 py-4 font-bold">Investor Name</th>
+                    <th className="px-6 py-4 font-bold">Projects Funded</th>
+                    <th className="px-6 py-4 font-bold">Type</th>
+                    <th className="px-6 py-4 font-bold text-right">Total Invested</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {investors.map((inv, i) => (
+                    <tr key={inv.id} className={`border-b border-stone-50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-stone-50/50'} hover:bg-stone-50`}>
+                      <td className="px-6 py-4">
+                        <p className="text-[13px] font-black text-stone-900">{inv.name}</p>
+                        <p className="text-[11px] text-stone-500 mt-0.5">{inv.email}</p>
+                      </td>
+                      <td className="px-6 py-4 max-w-[200px]">
+                        <p className="text-[12px] font-semibold text-stone-600 truncate">{inv.projects}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`text-[10px] font-black tracking-widest px-2 py-1 rounded-md uppercase ${inv.diaspora ? 'bg-indigo-100 text-indigo-700' : 'bg-stone-100 text-stone-600'}`}>
+                          {inv.diaspora ? 'Diaspora' : 'Local'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <p className="text-[14px] font-black text-[#1E3A5F]">${inv.total_invested.toLocaleString()}</p>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {investors.map((inv, i) => (
-                      <tr key={inv.id} className={`border-b border-stone-50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-stone-50/50'} hover:bg-stone-50`}>
-                        <td className="px-6 py-4">
-                          <p className="text-[13px] font-black text-stone-900">{inv.name}</p>
-                          <p className="text-[11px] text-stone-500 mt-0.5">{inv.email}</p>
-                        </td>
-                        <td className="px-6 py-4 max-w-[200px]">
-                          <p className="text-[12px] font-semibold text-stone-600 truncate">{inv.projects}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`text-[10px] font-black tracking-widest px-2 py-1 rounded-md uppercase ${inv.diaspora ? 'bg-indigo-100 text-indigo-700' : 'bg-stone-100 text-stone-600'}`}>
-                            {inv.diaspora ? 'Diaspora' : 'Local'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <p className="text-[14px] font-black text-[#1E3A5F]">${inv.total_invested.toLocaleString()}</p>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
