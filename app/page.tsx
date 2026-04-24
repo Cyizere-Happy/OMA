@@ -13,6 +13,8 @@ import OwnerSitesMap from "./components/OwnerSitesMap";
 import InvestorRelations from "./components/InvestorRelations";
 import RevenuePayouts from "./components/RevenuePayouts";
 import GovVerificationStatus from "./components/GovVerificationStatus";
+import EvaluatorVerdicts from "./components/EvaluatorVerdicts";
+import Appeals from "./components/Appeals";
 
 export default function Home() {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -35,6 +37,10 @@ export default function Home() {
         return <RevenuePayouts />;
       case "gov-checks":
         return <GovVerificationStatus />;
+      case "verdicts":
+        return <EvaluatorVerdicts />;
+      case "appeals":
+        return <Appeals />;
       case "dashboard":
       default:
         return (
