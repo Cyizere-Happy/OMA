@@ -13,6 +13,7 @@ import {
   MapPin,
   Users,
   Banknote,
+  ShieldCheck,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -50,6 +51,7 @@ const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
             { icon: <Layout size={16} />, label: "Dashboard", id: "dashboard" },
             { icon: <MapPin size={16} />, label: "Project map", id: "map" },
             { icon: <FileUp size={16} />, label: "Submit project", id: "submit" },
+            { icon: <ShieldCheck size={16} />, label: "Gov Checks", id: "gov-checks" },
             { icon: <Flag size={16} />, label: "Milestones", id: "milestones" },
             { icon: <Users size={16} />, label: "Investors", id: "investors" },
             { icon: <Banknote size={16} />, label: "Revenue", id: "revenue" },
