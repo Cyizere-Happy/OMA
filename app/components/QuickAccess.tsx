@@ -1,38 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { RotateCw, FileText, Building, Flag, Wallet, ClipboardList, Loader2 } from "lucide-react";
-import { api } from "../../lib/api";
+import React from "react";
+import { RotateCw, FileText, Building, Flag, Wallet, ClipboardList } from "lucide-react";
 
 const QuickAccess = () => {
-  const [stats, setStats] = useState({ projects: 0, milestones: 0, funds: 0 });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api("/projects?limit=1")
-      .then((res) => {
-        setStats((prev) => ({ ...prev, projects: res.meta?.total ?? res.data?.length ?? 0 }));
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+  // DEMO MODE — hardcoded stats
+  const stats = { projects: 4, milestones: 2, funds: 850000 };
 
   const statCards = [
     {
       label: "Submissions",
-      value: loading ? "..." : `${stats.projects} total`,
+      value: `${stats.projects} total`,
       sub: "Projects in pipeline",
       icon: <Building size={22} className="text-[#1E3A5F]" />,
     },
     {
       label: "Milestones",
-      value: loading ? "..." : `${stats.milestones} due`,
+      value: `${stats.milestones} due`,
       sub: "Reports this month",
       icon: <Flag size={22} className="text-[#1E3A5F]" />,
     },
     {
       label: "Escrow → you",
-      value: loading ? "..." : stats.funds > 0 ? `$${stats.funds.toLocaleString()}` : "No releases yet",
+      value: `+$${stats.funds.toLocaleString()}`,
       sub: "Funds released",
       icon: <Wallet size={22} className="text-[#1E3A5F]" />,
     },
