@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Search, SlidersHorizontal, Map as MapIcon, Building2, Inbox, Loader2 } from "lucide-react";
-import type { OwnerSiteMarker } from "./OwnerLeafletMap";
-import { api } from "../../lib/api";
+import { Search, Building2, Inbox } from "lucide-react";
 
 const OwnerLeafletMap = dynamic(() => import("./OwnerLeafletMap"), {
   ssr: false,
@@ -15,40 +13,22 @@ const OwnerLeafletMap = dynamic(() => import("./OwnerLeafletMap"), {
   ),
 });
 
+const DEMO_SITES = [
+  { id: "1", name: "Kigali Heights Residences", location: "Kimironko, Gasabo", status: "funding_open", funding: "72%", lat: -1.9441, lng: 30.0619, image: "/villa.png" },
+  { id: "2", name: "Nyarutarama Green Villas", location: "Remera, Gasabo", status: "active", funding: "100%", lat: -1.9335, lng: 30.1127, image: "/villa.png" },
+  { id: "3", name: "Musanze Lakeside Resort", location: "Muhoza, Musanze", status: "under_review", funding: "0%", lat: -1.4998, lng: 29.6345, image: "/villa.png" },
+  { id: "4", name: "Rubavu Waterfront Apartments", location: "Gisenyi, Rubavu", status: "draft", funding: "0%", lat: -1.6821, lng: 29.2563, image: "/villa.png" },
+];
+
 const OwnerSitesMap = () => {
   const [showMap, setShowMap] = useState(true);
   const [query, setQuery] = useState("");
-  const [sites, setSites] = useState<OwnerSiteMarker[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api("/projects?limit=50")
-      .then((res) => {
-        const mapped = (res.data || []).map((p: any) => ({
-          id: p.id,
-          name: p.title,
-          location: p.property?.address ? `${p.property.address.sector || ""}, ${p.property.address.district || ""}`.replace(/^, |, $/g, "") : "Rwanda",
-          status: p.project_status,
-          funding: p.funding_goal > 0 ? `${Math.min(100, Math.round((p.current_funding / p.funding_goal) * 100))}%` : "—",
-          lat: p.property?.latitude ?? -1.9441,
-          lng: p.property?.longitude ?? 30.0891,
-          image: "/villa.png",
-        }));
-        setSites(mapped);
-      })
-      .catch(() => setSites([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const filtered = sites.filter(
+  const filtered = DEMO_SITES.filter(
     (s) =>
       s.name.toLowerCase().includes(query.toLowerCase()) ||
       s.location.toLowerCase().includes(query.toLowerCase())
   );
-
-  if (loading) {
-    return <div className="flex-1 flex items-center justify-center"><Loader2 className="animate-spin text-[#1E3A5F]" size={28} /></div>;
-  }
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#F0EFEC] min-h-0">
@@ -75,45 +55,37 @@ const OwnerSitesMap = () => {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center text-stone-400">
-          <Inbox size={48} strokeWidth={1} />
-          <p className="mt-4 font-semibold text-[15px]">No project sites yet</p>
-          <p className="text-[12px] mt-1">Submit a property project to see it on the map.</p>
-        </div>
-      ) : (
-        <div className="flex-1 flex overflow-hidden min-h-0">
-          <div className={`flex-1 overflow-y-auto custom-scrollbar p-6 sm:p-8 transition-all duration-500 ${showMap ? "lg:max-w-[42%] xl:max-w-[38%]" : "max-w-5xl mx-auto w-full"}`}>
-            <div className={`grid gap-4 ${showMap ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
-              {filtered.map((site) => (
-                <article key={site.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-[0_2px_0_rgba(28,25,23,0.04)] hover:shadow-md transition-all group">
-                  <div className="p-4">
-                    <div className="flex items-start gap-2">
-                      <Building2 size={16} className="text-[#1E3A5F] shrink-0 mt-0.5" />
-                      <div className="min-w-0">
-                        <h3 className="text-[14px] font-black text-stone-900 leading-tight truncate">{site.name}</h3>
-                        <p className="text-[11px] font-semibold text-stone-500 mt-1">{site.location}</p>
-                        <p className="text-[11px] text-stone-600 mt-2">{site.status}</p>
-                        <div className="flex justify-between items-center mt-3 pt-3 border-t border-stone-100">
-                          <span className="text-[9px] font-black text-stone-400 uppercase">Funding</span>
-                          <span className="text-[13px] font-black text-[#1E3A5F]">{site.funding}</span>
-                        </div>
+      <div className="flex-1 flex overflow-hidden min-h-0">
+        <div className={`flex-1 overflow-y-auto custom-scrollbar p-6 sm:p-8 transition-all duration-500 ${showMap ? "lg:max-w-[42%] xl:max-w-[38%]" : "max-w-5xl mx-auto w-full"}`}>
+          <div className={`grid gap-4 ${showMap ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+            {filtered.map((site) => (
+              <article key={site.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-[0_2px_0_rgba(28,25,23,0.04)] hover:shadow-md transition-all group">
+                <div className="p-4">
+                  <div className="flex items-start gap-2">
+                    <Building2 size={16} className="text-[#1E3A5F] shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <h3 className="text-[14px] font-black text-stone-900 leading-tight truncate">{site.name}</h3>
+                      <p className="text-[11px] font-semibold text-stone-500 mt-1">{site.location}</p>
+                      <p className={`text-[10px] font-black uppercase mt-2 w-fit px-2 py-0.5 rounded-md ${site.status.includes('active') || site.status.includes('open') ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-600'}`}>{site.status.replace('_', ' ')}</p>
+                      <div className="flex justify-between items-center mt-3 pt-3 border-t border-stone-100">
+                        <span className="text-[9px] font-black text-stone-400 uppercase">Funding</span>
+                        <span className="text-[13px] font-black text-[#1E3A5F]">{site.funding}</span>
                       </div>
                     </div>
                   </div>
-                </article>
-              ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        {showMap && (
+          <div className="flex-1 min-w-0 bg-stone-100 border-l border-stone-200 p-3 sm:p-4 relative shadow-[inset_8px_0_24px_-12px_rgba(0,0,0,0.06)]">
+            <div className="absolute inset-3 sm:inset-4 rounded-2xl overflow-hidden border border-stone-200 shadow-inner bg-white">
+              <OwnerLeafletMap sites={filtered as any} />
             </div>
           </div>
-          {showMap && (
-            <div className="flex-1 min-w-0 bg-stone-100 border-l border-stone-200 p-3 sm:p-4 relative shadow-[inset_8px_0_24px_-12px_rgba(0,0,0,0.06)]">
-              <div className="absolute inset-3 sm:inset-4 rounded-2xl overflow-hidden border border-stone-200 shadow-inner bg-white">
-                <OwnerLeafletMap sites={filtered} />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
