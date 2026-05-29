@@ -29,7 +29,7 @@ const InvestorRelations = () => {
   const avgInvestment = investors.length > 0 ? totalRaised / investors.length : 0;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#F0EFEC]">
+    <div className="flex-1 flex flex-col h-full bg-white">
       <div className="bg-white border-b border-stone-200 px-8 py-6 z-10 sticky top-0">
         <h2 className="text-2xl font-black text-stone-900 tracking-tight shrink-0">Investor Relations</h2>
         <p className="text-[13px] text-stone-500 font-medium mt-1">

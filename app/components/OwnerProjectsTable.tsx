@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Building, MoreHorizontal, Inbox } from "lucide-react";
+import { Building, MoreHorizontal } from "lucide-react";
 
 interface Project {
   id: string;
@@ -36,46 +36,82 @@ const OwnerProjectsTable = () => {
   const projects = DEMO_PROJECTS;
 
   return (
-    <section className="px-8 py-4">
-      <div className="rounded-sm border-2 border-stone-400 bg-stone-100/40 overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
-        <div className="flex items-center justify-between px-4 py-3 bg-stone-300/90 border-b-2 border-stone-400">
-          <h3 className="text-[11px] font-black text-stone-800 uppercase tracking-[0.15em]">Your property projects</h3>
-          <span className="text-[10px] font-bold text-stone-600">{projects.length} total</span>
+    <section className="px-8 py-4 font-sans">
+      <div className="w-full">
+        {/* Clean, spacing section header */}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-[11px] font-bold text-stone-400 uppercase tracking-[0.2em]">Your Property Projects</h3>
+          <span className="text-[11px] font-semibold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-md border border-stone-200/40">{projects.length} total</span>
         </div>
 
-        <div className="w-full overflow-x-auto">
-          <div className="min-w-[640px]">
-            <div className="grid grid-cols-[2.2fr_1.4fr_1.6fr_1fr_0.6fr] px-4 py-2.5 bg-stone-200/80 border-b border-stone-300 text-[10px] font-black text-stone-600 uppercase tracking-wider">
-              {["Project", "Location", "Status", "Raised", ""].map((header) => (
-                <span key={header} className="last:text-right">{header}</span>
-              ))}
+        {/* Clean list view matching the Investor Portal style */}
+        <div className="w-full overflow-x-auto select-none">
+          <div className="min-w-[800px]">
+            {/* Header row labels */}
+            <div className="grid grid-cols-[2.2fr_1.4fr_1.6fr_1.8fr_0.4fr] px-6 py-2.5 text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+              <span>Project Name</span>
+              <span>Location</span>
+              <span>Status</span>
+              <span>Raised</span>
+              <span></span>
             </div>
 
-            <div>
-              {projects.map((project, i) => {
+            {/* Floating rounded cards representing rows */}
+            <div className="space-y-3 mt-1.5">
+              {projects.map((project) => {
                 const location = `${project.property.address.sector}, ${project.property.address.district}`;
                 const fundingPct = project.funding_goal > 0
                   ? `${Math.min(100, Math.round((project.current_funding / project.funding_goal) * 100))}%`
-                  : "—";
+                  : "0%";
 
                 return (
                   <div
                     key={project.id}
-                    className={`grid grid-cols-[2.2fr_1.4fr_1.6fr_1fr_0.6fr] items-center px-4 py-3 border-b border-stone-300/80 last:border-b-0 transition-colors ${
-                      i % 2 === 0 ? "bg-white" : "bg-stone-50"
-                    } hover:bg-[#1E3A5F]/5`}
+                    className="grid grid-cols-[2.2fr_1.4fr_1.6fr_1.8fr_0.4fr] items-center px-6 py-3.5 bg-white border border-stone-200/60 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md hover:border-stone-300 transition-all duration-200"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="p-1.5 bg-stone-100 border border-stone-300 rounded-sm shrink-0">
-                        <Building size={18} className="text-[#1E3A5F]" />
+                    {/* Project Name column */}
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="p-2.5 bg-stone-50 border border-stone-100 rounded-xl shrink-0">
+                        <Building size={16} className="text-[#1E3A5F]" />
                       </div>
-                      <span className="font-bold text-stone-900 text-[13px] truncate">{project.title}</span>
+                      <span className="font-bold text-stone-900 text-[13.5px] truncate">{project.title}</span>
                     </div>
-                    <span className="text-[12px] font-semibold text-stone-600 truncate">{location}</span>
-                    <span className="text-[11px] font-semibold text-stone-800 truncate">{statusLabel[project.project_status] || project.project_status}</span>
-                    <span className="text-[12px] font-black text-[#1E3A5F]">{fundingPct}</span>
+
+                    {/* Location column */}
+                    <span className="text-[12.5px] font-semibold text-stone-500 truncate pr-2">{location}</span>
+
+                    {/* Status column */}
+                    <div className="flex items-center">
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg ${
+                        project.project_status === 'funding_open' || project.project_status === 'active'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                          : 'bg-stone-50 text-stone-600 border border-stone-100'
+                      }`}>
+                        {statusLabel[project.project_status] || project.project_status}
+                      </span>
+                    </div>
+
+                    {/* Raised / Progress Column */}
+                    <div className="flex flex-col pr-6">
+                      <div className="flex justify-between items-center mb-1.5 max-w-[140px]">
+                        <span className="text-[10px] text-stone-400 font-medium">Raised</span>
+                        <span className="text-[12.5px] font-bold text-[#1E3A5F]">{fundingPct}</span>
+                      </div>
+                      <div className="w-full max-w-[140px] h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                        <div
+                          className="bg-[#1E3A5F] h-full rounded-full transition-all duration-500 shadow-[0_0_4px_rgba(30,58,95,0.25)]"
+                          style={{ width: fundingPct }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Actions Column */}
                     <div className="flex justify-end">
-                      <button type="button" className="p-1.5 rounded-sm text-stone-400 hover:bg-stone-200 hover:text-[#1E3A5F]" aria-label="More">
+                      <button
+                        type="button"
+                        className="p-2 rounded-xl text-stone-400 hover:bg-stone-50 hover:text-[#1E3A5F] transition-all cursor-pointer"
+                        aria-label="Actions"
+                      >
                         <MoreHorizontal size={16} />
                       </button>
                     </div>

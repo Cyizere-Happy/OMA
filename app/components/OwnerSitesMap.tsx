@@ -31,7 +31,7 @@ const OwnerSitesMap = () => {
   );
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#F0EFEC] min-h-0">
+    <div className="flex-1 flex flex-col h-full bg-white min-h-0">
       <div className="bg-white border-b border-stone-200 px-6 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shrink-0 z-30">
         <div className="flex items-center gap-3 flex-1 min-w-0 max-w-2xl">
           <div className="relative flex-1 min-w-0">

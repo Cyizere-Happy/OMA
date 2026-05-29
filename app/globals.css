@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #f3f2ef;
+  --background: #ffffff;
   --foreground: #1c1917;
   --est-blue: #1e3a5f;
   --est-stone: #78716c;
@@ -10,13 +11,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-outfit);
+  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-gray: #F5F5F5;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  @apply font-sans bg-white text-stone-900 antialiased;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

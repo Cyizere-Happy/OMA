@@ -23,90 +23,118 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
+  const navItems = [
+    { icon: <Layout size={13} />, label: "Dashboard", id: "dashboard" },
+    { icon: <MapPin size={13} />, label: "Project map", id: "map" },
+    { icon: <FileUp size={13} />, label: "Submit project", id: "submit" },
+    { icon: <ShieldCheck size={13} />, label: "Verification Status", id: "gov-checks" },
+    { icon: <Flag size={13} />, label: "Evaluation Verdicts", id: "verdicts" },
+    { icon: <Flag size={13} />, label: "Milestones", id: "milestones" },
+    { icon: <Users size={13} />, label: "Investors", id: "investors" },
+    { icon: <Banknote size={13} />, label: "Revenue", id: "revenue" },
+    { icon: <FolderOpen size={13} />, label: "Documents", id: "documents" },
+    { icon: <Wallet size={13} />, label: "Fund requests", id: "funds" },
+    { icon: <MessageSquare size={13} />, label: "Appeals", id: "appeals" },
+  ];
+
   return (
-    <aside className="w-[220px] bg-stone-100/95 flex flex-col h-screen sticky top-0 z-20 mr-2 rounded-r-3xl border border-stone-300/60 shadow-[6px_0_32px_-16px_rgba(28,25,23,0.15)]">
-      <div className="px-5 py-6 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-[#1E3A5F] flex items-center justify-center shadow-inner">
-            <Building size={20} className="text-white fill-white" />
-          </div>
-          <div>
-            <h1 className="text-[15px] font-black tracking-tight text-stone-800 leading-tight">EstateX</h1>
-            <p className="text-[9px] font-bold text-[#1E3A5F] uppercase tracking-widest mt-1">Site &amp; build</p>
-          </div>
+    <aside className="w-[240px] bg-white flex flex-col h-screen sticky top-0 z-20 shrink-0 font-sans">
+      {/* Brand logo at the top over a white background */}
+      <div className="px-5 py-6 shrink-0 flex items-center gap-2.5">
+        <div className="h-7 w-7 rounded-lg bg-[#1E3A5F] flex items-center justify-center shadow-md">
+          <Building size={13} className="text-white fill-white" />
+        </div>
+        <div>
+          <h1 className="text-[14px] font-black tracking-tight text-[#1E3A5F] leading-tight">EstateX</h1>
+          <p className="text-[8px] font-bold text-stone-400 uppercase tracking-widest mt-0.5">Owner Portal</p>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col px-3 pb-3 overflow-hidden">
+      {/* Main navigation body in deep blue container with curved top-right corner */}
+      <div className="flex-1 flex flex-col bg-[#1E3A5F] rounded-tr-[36px] px-3 py-4 overflow-hidden text-white shadow-2xl">
+        
+        {/* New Project primary action button */}
         <button
           type="button"
           onClick={() => onNavigate("submit")}
-          className="bg-[#1E3A5F] text-white py-2.5 px-4 rounded-lg font-bold shadow-[0_4px_0_#152a45] hover:shadow-[0_2px_0_#152a45] hover:translate-y-0.5 transition-all duration-200 mb-5 text-[12px] flex items-center justify-center gap-2 group shrink-0 uppercase tracking-wide"
+          className="w-full bg-white text-[#1E3A5F] hover:bg-stone-50 active:scale-[0.98] py-2 px-3 rounded-full font-bold shadow-md transition-all duration-200 mb-4 text-[11px] flex items-center justify-center gap-1.5 group shrink-0 uppercase tracking-wide cursor-pointer"
         >
-          <Plus size={14} className="group-hover:rotate-90 transition-transform" />
+          <Plus size={11} className="group-hover:rotate-90 transition-transform text-[#1E3A5F]" />
           New project
         </button>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto pr-1 custom-scrollbar -mr-1">
-          {[
-            { icon: <Layout size={16} />, label: "Dashboard", id: "dashboard" },
-            { icon: <MapPin size={16} />, label: "Project map", id: "map" },
-            { icon: <FileUp size={16} />, label: "Submit project", id: "submit" },
-            { icon: <ShieldCheck size={16} />, label: "Verification Status", id: "gov-checks" },
-            { icon: <Flag size={16} />, label: "Evaluation Verdicts", id: "verdicts" },
-            { icon: <Flag size={16} />, label: "Milestones", id: "milestones" },
-            { icon: <Users size={16} />, label: "Investors", id: "investors" },
-            { icon: <Banknote size={16} />, label: "Revenue", id: "revenue" },
-            { icon: <FolderOpen size={16} />, label: "Documents", id: "documents" },
-            { icon: <Wallet size={16} />, label: "Fund requests", id: "funds" },
-            { icon: <MessageSquare size={16} />, label: "Appeals", id: "appeals" },
-          ].map((item, i) => (
+        {/* Navigation links */}
+        <nav className="flex-1 space-y-0.5 overflow-y-auto pr-1 sidebar-scrollbar -mr-1">
+          {navItems.map((item, i) => (
             <div
               key={i}
               onClick={() => onNavigate(item.id)}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-full cursor-pointer transition-all duration-200 group border ${
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-xl cursor-pointer transition-all duration-150 group text-white/80 hover:text-white ${
                 activeView === item.id
-                  ? "bg-white text-[#0d6660] border-stone-200 shadow-sm font-semibold"
-                  : "border-transparent text-stone-500 hover:bg-white/70 hover:text-stone-900"
+                  ? "bg-white/15 text-white font-semibold shadow-inner border border-white/5"
+                  : "hover:bg-white/5 border border-transparent"
               }`}
             >
-              <span
-                className={`transition-colors ${
-                  activeView === item.id ? "text-[#1E3A5F]" : "text-stone-400 group-hover:text-stone-700"
-                }`}
-              >
+              <span className={`transition-colors shrink-0 ${
+                activeView === item.id ? "text-white" : "text-white/40 group-hover:text-white/70"
+              }`}>
                 {item.icon}
               </span>
-              <span className="font-medium text-[12.5px]">{item.label}</span>
+              <span className="text-[11.5px] tracking-wide font-medium">{item.label}</span>
             </div>
           ))}
         </nav>
 
-        <div className="mt-4 pt-5 border-t border-stone-300/80 shrink-0">
-          <p className="text-[9px] uppercase tracking-widest font-black mb-4 text-stone-500">Project health</p>
+        {/* Footer widgets section */}
+        <div className="mt-3 pt-3.5 border-t border-white/10 shrink-0">
+          <p className="text-[8px] uppercase tracking-widest font-black mb-3 text-white/40 px-1">Project health</p>
 
-          <div className="space-y-4">
-            <div className="rounded-xl bg-white/80 border border-stone-200/80 p-3 flex items-start gap-2.5">
-              <Hammer size={16} className="text-[#1E3A5F] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-[12px] font-bold text-stone-800">Active builds</p>
-                <p className="text-[9px] font-medium text-stone-500 mt-0.5">3 listed · 1 in review</p>
+          <div className="space-y-3 px-1">
+            {/* Active Builds Widget */}
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-white/70 shrink-0">
+                <Hammer size={13} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold text-white leading-tight">Active Builds</p>
+                <p className="text-[9px] text-white/60 mt-0.5">3 listed · 1 in review</p>
               </div>
             </div>
 
-            <div className="rounded-xl bg-white/80 border border-stone-200/80 p-3">
-              <div className="flex justify-between items-center mb-2">
-                <p className="text-[12px] font-bold text-stone-800">Raised (all)</p>
-                <span className="text-[10px] font-black text-[#1E3A5F]">58%</span>
+            {/* Raised (all) Widget */}
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-white/70 shrink-0">
+                <Banknote size={13} />
               </div>
-              <div className="w-full h-1.5 bg-stone-200 rounded-full overflow-hidden">
-                <div className="bg-[#1E3A5F] h-full w-[58%] rounded-full shadow-[0_0_8px_rgba(30,58,95,0.35)]" />
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-center mb-1">
+                  <p className="text-[11px] font-bold text-white leading-tight">Raised (all)</p>
+                  <span className="text-[9px] font-black text-white/85">58%</span>
+                </div>
+                <div className="w-full h-[3px] bg-white/15 rounded-full overflow-hidden">
+                  <div className="bg-white h-full w-[58%] rounded-full shadow-[0_0_6px_rgba(255,255,255,0.4)]" />
+                </div>
               </div>
-              <p className="text-[9px] font-medium text-stone-500 mt-1.5">Of combined targets</p>
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .sidebar-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .sidebar-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .sidebar-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 10px;
+        }
+        .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.25);
+        }
+      `}</style>
     </aside>
   );
 };
