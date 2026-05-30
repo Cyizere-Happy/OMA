@@ -47,6 +47,12 @@ function Dropdown({
 // ── Notifications panel ───────────────────────────────────────────
 const NOTIFICATIONS = [
   {
+    id: 5, type: "info", icon: <ShieldCheck size={14} className="text-[#1E3A5F]" />,
+    title: "Accreditation Approved",
+    body: "Rugando Commercial Complex has passed all zoning audits. You can now define funding targets.",
+    time: "5 min ago", unread: true,
+  },
+  {
     id: 1, type: "success", icon: <CheckCircle size={14} className="text-emerald-500" />,
     title: "Milestone verified",
     body: "Phase 1 of Kigali Heights Residences has been verified by the notary.",

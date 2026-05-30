@@ -27,14 +27,9 @@ const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
     { icon: <Layout size={13} />, label: "Dashboard", id: "dashboard" },
     { icon: <MapPin size={13} />, label: "Project map", id: "map" },
     { icon: <FileUp size={13} />, label: "Submit project", id: "submit" },
-    { icon: <ShieldCheck size={13} />, label: "Verification Status", id: "gov-checks" },
-    { icon: <Flag size={13} />, label: "Evaluation Verdicts", id: "verdicts" },
-    { icon: <Flag size={13} />, label: "Milestones", id: "milestones" },
+    { icon: <ShieldCheck size={13} />, label: "My Applications", id: "gov-checks" },
     { icon: <Users size={13} />, label: "Investors", id: "investors" },
     { icon: <Banknote size={13} />, label: "Revenue", id: "revenue" },
-    { icon: <FolderOpen size={13} />, label: "Documents", id: "documents" },
-    { icon: <Wallet size={13} />, label: "Fund requests", id: "funds" },
-    { icon: <MessageSquare size={13} />, label: "Appeals", id: "appeals" },
   ];
 
   return (

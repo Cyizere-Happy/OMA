@@ -29,8 +29,30 @@ import Appeals from "./components/Appeals";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [currentView, setCurrentView] = useState("dashboard");
+  const [activeSidebarView, setActiveSidebarView] = useState("dashboard");
+  const [wizardStep, setWizardStep] = useState<number | null>(null);
+
+  const handleNavigate = (view: string) => {
+    setActiveSidebarView(view);
+    if (view === "documents") {
+      setWizardStep(1);
+      setCurrentView("submit");
+    } else if (view === "appeals") {
+      setWizardStep(2);
+      setCurrentView("submit");
+    } else if (view === "funds") {
+      setWizardStep(3);
+      setCurrentView("submit");
+    } else if (view === "milestones") {
+      setWizardStep(4);
+      setCurrentView("submit");
+    } else {
+      setWizardStep(null);
+      setCurrentView(view);
+    }
+  };
 
   // Dashboard view preferences
   const [prefs, setPrefs] = useState<{
@@ -81,7 +103,7 @@ export default function Home() {
   const renderContent = () => {
     switch (currentView) {
       case "submit":
-        return <ProjectSubmission />;
+        return <ProjectSubmission onNavigate={handleNavigate} initialStep={wizardStep} mode="new" />;
       case "milestones":
         return <MilestoneReporting />;
       case "documents":
@@ -95,7 +117,7 @@ export default function Home() {
       case "revenue":
         return <RevenuePayouts />;
       case "gov-checks":
-        return <GovVerificationStatus />;
+        return <ProjectSubmission onNavigate={handleNavigate} initialStep={wizardStep} mode="existing" />;
       case "verdicts":
         return <EvaluatorVerdicts />;
       case "appeals":
@@ -107,7 +129,7 @@ export default function Home() {
             <QuickAccess 
               density={prefs.density} 
               showStats={prefs.showStats} 
-              onOpenChecklist={() => setCurrentView("documents")} 
+              onOpenChecklist={() => handleNavigate("documents")} 
             />
             <OwnerProjectsTable density={prefs.density} />
           </div>
@@ -366,7 +388,7 @@ export default function Home() {
   // Dashboard content if logged in
   return (
     <div className="flex h-screen bg-white overflow-hidden text-stone-900 font-sans">
-      <Sidebar activeView={currentView} onNavigate={setCurrentView} />
+      <Sidebar activeView={activeSidebarView} onNavigate={handleNavigate} />
 
       <div className="flex-1 flex flex-col min-w-0">
         <Header prefs={prefs} onApplyPrefs={setPrefs} />
