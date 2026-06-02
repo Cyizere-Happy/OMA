@@ -27,6 +27,7 @@ import GovVerificationStatus from "./components/GovVerificationStatus";
 import EvaluatorVerdicts from "./components/EvaluatorVerdicts";
 import Appeals from "./components/Appeals";
 
+
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);

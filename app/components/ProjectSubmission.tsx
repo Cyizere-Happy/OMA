@@ -642,6 +642,12 @@ const ProjectSubmission = ({
   const currentProject = projects[activeProjectId] || DEFAULT_PROJECTS[activeProjectId] || DEFAULT_PROJECTS["kigali_heights"];
   const currentStep = currentProject.currentStep;
 
+  const [propertySubStep, setPropertySubStep] = useState<"details" | "location">("details");
+
+  useEffect(() => {
+    setPropertySubStep("details");
+  }, [currentStep, activeProjectId]);
+
   // Final Budget upload simulation states
   const [budgetUploading, setBudgetUploading] = useState(false);
   const [budgetUploadProgress, setBudgetUploadProgress] = useState(0);
@@ -1500,97 +1506,124 @@ const ProjectSubmission = ({
               {/* STEP 1: Property Details */}
               {currentStep === 0 && (
                 <div className="space-y-4 animate-fade-in">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label className="block">
-                      <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Project Title</span>
-                      <input 
-                        value={currentProject.title}
-                        onChange={e => updateCurrentProject({ title: e.target.value })}
-                        disabled={!isProjectEditable(currentProject)}
-                        className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                        placeholder="e.g. Rugando Commercial Complex" 
-                      />
-                    </label>
- 
-                    <label className="block">
-                      <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Project Type</span>
-                      <select 
-                        value={currentProject.type}
-                        onChange={e => updateCurrentProject({ type: e.target.value as any })}
-                        disabled={!isProjectEditable(currentProject)}
-                        className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm cursor-pointer disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                      >
-                        <option value="raise_to_complete">Raise funds to complete — sell units to fund construction</option>
-                        <option value="new_project">New development — gather investors from scratch</option>
-                      </select>
-                    </label>
+                  {/* Sub-step indicator */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all ${
+                      propertySubStep === "details" 
+                        ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
+                        : "bg-stone-50 text-stone-400 border-stone-200"
+                    }`}>
+                      1. General Details
+                    </span>
+                    <span className="text-stone-300">/</span>
+                    <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all ${
+                      propertySubStep === "location" 
+                        ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
+                        : "bg-stone-50 text-stone-400 border-stone-200"
+                    }`}>
+                      2. Location & Parcel
+                    </span>
                   </div>
- 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label className="block">
-                      <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Construction Progress</span>
-                      <select 
-                        value={currentProject.progressState}
-                        onChange={e => updateCurrentProject({ progressState: e.target.value as any })}
-                        disabled={!isProjectEditable(currentProject)}
-                        className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm cursor-pointer disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                      >
-                        <option value="planning">Planning stage</option>
-                        <option value="foundation">Foundation complete</option>
-                        <option value="structure">Structure complete</option>
-                        <option value="finishing">Finishing works</option>
-                        <option value="completed">Fully completed</option>
-                      </select>
-                    </label>
- 
-                    <label className="block">
-                      <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Land Parcel Reference (UPI)</span>
-                      <input 
-                        value={currentProject.landParcelRef}
-                        onChange={e => updateCurrentProject({ landParcelRef: e.target.value })}
-                        disabled={!isProjectEditable(currentProject)}
-                        className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                        placeholder="UPI, e.g., 1/02/08/04/4921" 
-                      />
-                    </label>
-                  </div>
- 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label className="block md:col-span-2">
-                      <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Province, District, Sector & Cell</span>
-                      <input 
-                        value={currentProject.locationProvince}
-                        onChange={e => updateCurrentProject({ locationProvince: e.target.value })}
-                        disabled={!isProjectEditable(currentProject)}
-                        className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                        placeholder="e.g. Kigali City, Gasabo, Kimihurura, Rugando" 
-                      />
-                    </label>
- 
-                    <label className="block">
-                      <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Land size (m²)</span>
-                      <input 
-                        type="number"
-                        value={currentProject.landSizeSqm}
-                        onChange={e => updateCurrentProject({ landSizeSqm: e.target.value })}
-                        disabled={!isProjectEditable(currentProject)}
-                        className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                        placeholder="e.g. 3450" 
-                      />
-                    </label>
-                  </div>
- 
-                  <label className="block">
-                    <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Project Description</span>
-                    <textarea 
-                      value={currentProject.description}
-                      onChange={e => updateCurrentProject({ description: e.target.value })}
-                      disabled={!isProjectEditable(currentProject)}
-                      rows={3} 
-                      className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm resize-none disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                      placeholder="Detail the scope of works, commercial viability, architectural structure, and expected timeline..." 
-                    />
-                  </label>
+
+                  {propertySubStep === "details" ? (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Project Title</span>
+                          <input 
+                            value={currentProject.title}
+                            onChange={e => updateCurrentProject({ title: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. Rugando Commercial Complex" 
+                          />
+                        </label>
+     
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Project Type</span>
+                          <select 
+                            value={currentProject.type}
+                            onChange={e => updateCurrentProject({ type: e.target.value as any })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm cursor-pointer disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                          >
+                            <option value="raise_to_complete">Raise funds to complete — sell units to fund construction</option>
+                            <option value="new_project">New development — gather investors from scratch</option>
+                          </select>
+                        </label>
+                      </div>
+     
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Construction Progress</span>
+                          <select 
+                            value={currentProject.progressState}
+                            onChange={e => updateCurrentProject({ progressState: e.target.value as any })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm cursor-pointer disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                          >
+                            <option value="planning">Planning stage</option>
+                            <option value="foundation">Foundation complete</option>
+                            <option value="structure">Structure complete</option>
+                            <option value="finishing">Finishing works</option>
+                            <option value="completed">Fully completed</option>
+                          </select>
+                        </label>
+                      </div>
+     
+                      <label className="block">
+                        <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Project Description</span>
+                        <textarea 
+                          value={currentProject.description}
+                          onChange={e => updateCurrentProject({ description: e.target.value })}
+                          disabled={!isProjectEditable(currentProject)}
+                          rows={3} 
+                          className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm resize-none disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                          placeholder="Detail the scope of works, commercial viability, architectural structure, and expected timeline..." 
+                        />
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Land Parcel Reference (UPI)</span>
+                          <input 
+                            value={currentProject.landParcelRef}
+                            onChange={e => updateCurrentProject({ landParcelRef: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="UPI, e.g., 1/02/08/04/4921" 
+                          />
+                        </label>
+                      </div>
+     
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <label className="block md:col-span-2">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Province, District, Sector & Cell</span>
+                          <input 
+                            value={currentProject.locationProvince}
+                            onChange={e => updateCurrentProject({ locationProvince: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. Kigali City, Gasabo, Kimihurura, Rugando" 
+                          />
+                        </label>
+     
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Land size (m²)</span>
+                          <input 
+                            type="number"
+                            value={currentProject.landSizeSqm}
+                            onChange={e => updateCurrentProject({ landSizeSqm: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. 3450" 
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -2541,13 +2574,12 @@ const ProjectSubmission = ({
                                               showToastMsg("Error: Report summary cannot be empty.");
                                               return;
                                             }
-
                                             // Simulating Review
                                             setProjects(prev => {
                                               const proj = { ...prev[activeProjectId] };
                                               const mils = proj.milestones.map((mItem, mIdx) => {
                                                 if (mIdx === idx) {
-                                                  return { ...mItem, status: "reviewing" };
+                                                  return { ...mItem, status: "reviewing" as const };
                                                 }
                                                 return mItem;
                                               });
@@ -2599,16 +2631,35 @@ const ProjectSubmission = ({
 
             {/* Footer Nav Buttons */}
             <div className="flex justify-between items-center pt-4 border-t border-stone-100 shrink-0">
-              <button
-                type="button"
-                onClick={handleBack}
-                disabled={currentStep === 0}
-                className="px-4 py-2 text-[11px] font-bold text-stone-500 disabled:opacity-40 hover:text-stone-800 transition-colors"
-              >
-                Back
-              </button>
+              {currentStep === 0 && propertySubStep === "location" ? (
+                <button
+                  type="button"
+                  onClick={() => setPropertySubStep("details")}
+                  className="px-4 py-2 text-[11px] font-bold text-stone-500 hover:text-stone-800 transition-colors cursor-pointer"
+                >
+                  Back
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  disabled={currentStep === 0}
+                  className="px-4 py-2 text-[11px] font-bold text-stone-500 disabled:opacity-40 hover:text-stone-800 transition-colors"
+                >
+                  Back
+                </button>
+              )}
 
-              {currentStep < WIZARD_STEPS.length - 1 ? (
+              {currentStep === 0 && propertySubStep === "details" ? (
+                <button
+                  type="button"
+                  onClick={() => setPropertySubStep("location")}
+                  disabled={!currentProject.title || !currentProject.description}
+                  className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
+                >
+                  Next: Location Details
+                </button>
+              ) : currentStep < WIZARD_STEPS.length - 1 ? (
                 <button
                   type="button"
                   onClick={handleNext}

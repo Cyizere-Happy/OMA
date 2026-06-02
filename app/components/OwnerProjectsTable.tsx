@@ -32,7 +32,11 @@ const DEMO_PROJECTS: Project[] = [
   { id: "4", title: "Rubavu Waterfront Apartments", slug: "rubavu-waterfront", project_status: "draft", funding_goal: 1600000, current_funding: 0, created_at: "2026-04-01T16:45:00Z", property: { address: { district: "Rubavu", sector: "Gisenyi" } } },
 ];
 
-const OwnerProjectsTable = () => {
+interface OwnerProjectsTableProps {
+  density?: "comfortable" | "compact";
+}
+
+const OwnerProjectsTable = ({ density = "comfortable" }: OwnerProjectsTableProps) => {
   const projects = DEMO_PROJECTS;
 
   return (

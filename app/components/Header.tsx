@@ -6,7 +6,7 @@ import {
   CheckCircle, Clock, AlertTriangle, X, ChevronRight,
   BookOpen, MessageCircle, Phone, ShieldCheck, User,
   LogOut, CreditCard, Eye, EyeOff, LayoutDashboard,
-  List, BarChart2, Map, Toggle
+  List, BarChart2, Map
 } from "lucide-react";
 
 // ── Dropdown wrapper ──────────────────────────────────────────────
@@ -353,7 +353,20 @@ function FiltersPanel({ onClose }: { onClose: () => void }) {
 }
 
 // ── Main Header ───────────────────────────────────────────────────
-const Header = () => {
+interface HeaderProps {
+  prefs?: {
+    density: "comfortable" | "compact";
+    showMap: boolean;
+    showStats: boolean;
+  };
+  onApplyPrefs?: React.Dispatch<React.SetStateAction<{
+    density: "comfortable" | "compact";
+    showMap: boolean;
+    showStats: boolean;
+  }>>;
+}
+
+const Header = ({ prefs, onApplyPrefs }: HeaderProps) => {
   const [openPanel, setOpenPanel] = useState<"notifications" | "help" | "settings" | "profile" | "filters" | null>(null);
   const toggle = (panel: typeof openPanel) =>
     setOpenPanel((prev) => (prev === panel ? null : panel));
