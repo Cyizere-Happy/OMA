@@ -291,7 +291,7 @@ function FilePreviewModal({
             </div>
             <div>
               <p className="text-[9px] uppercase tracking-wider text-stone-400 font-sans">Location Sector</p>
-              <p className="font-bold text-stone-850 mt-0.5">{project.locationSector || project.locationProvince || "Kimihurura, Gasabo"}</p>
+              <p className="font-bold text-stone-850 mt-0.5">{project.locationSector ? `${project.locationSector}, ${project.locationDistrict}` : "Kimihurura, Gasabo"}</p>
             </div>
             <div>
               <p className="text-[9px] uppercase tracking-wider text-stone-400 font-sans">Owner Submitted Valuation</p>
@@ -438,7 +438,9 @@ interface ProjectApp {
   
   // Location
   locationProvince: string;
+  locationDistrict: string;
   locationSector: string;
+  locationCell: string;
   landParcelRef: string;
   landSizeSqm: string;
   
@@ -490,8 +492,10 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     type: "raise_to_complete",
     progressState: "structure",
     description: "Commercial and high-density residential towers in the heart of Gasabo.",
-    locationProvince: "Kigali City, Gasabo",
-    locationSector: "Kimihurura, Rugando",
+    locationProvince: "Kigali City",
+    locationDistrict: "Gasabo",
+    locationSector: "Kimihurura",
+    locationCell: "Rugando",
     landParcelRef: "1/02/08/04/4921",
     landSizeSqm: "3450",
     docs: {
@@ -534,7 +538,9 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     progressState: "planning",
     description: "",
     locationProvince: "",
+    locationDistrict: "",
     locationSector: "",
+    locationCell: "",
     landParcelRef: "",
     landSizeSqm: "",
     docs: {
@@ -560,8 +566,10 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     type: "new_project",
     progressState: "foundation",
     description: "Eco-friendly luxury residential villas in the premium residential sector of Nyarutarama.",
-    locationProvince: "Kigali City, Gasabo",
-    locationSector: "Nyarutarama, Kamatamu",
+    locationProvince: "Kigali City",
+    locationDistrict: "Gasabo",
+    locationSector: "Remera",
+    locationCell: "Kamatamu",
     landParcelRef: "1/02/08/04/7712",
     landSizeSqm: "5200",
     docs: {
@@ -1008,7 +1016,7 @@ const ProjectSubmission = ({
   };
 
   // Validation checkers for active navigation buttons
-  const isStep1Valid = currentProject.title && currentProject.description && currentProject.locationProvince && currentProject.landParcelRef;
+  const isStep1Valid = currentProject.title && currentProject.description && currentProject.locationProvince && currentProject.locationDistrict && currentProject.locationSector && currentProject.locationCell && currentProject.landParcelRef;
   const isStep2Valid = Object.values(currentProject.docs).every(d => d.state === "pending" || d.state === "verified");
   const isStep3Valid = currentProject.reviewStatus === "approved";
   const isStep4Valid = parseFloat(currentProject.fundingTarget) > 0 && parseFloat(currentProject.propertyValuation) >= parseFloat(currentProject.fundingTarget);
@@ -1082,7 +1090,7 @@ const ProjectSubmission = ({
           {Object.values(projects).map(proj => {
             const displayTitle = proj.title || "New Project Application Draft";
             const displayDesc = proj.description || "Incomplete draft. Click Track Project to continue entering details.";
-            const displayLocation = proj.locationProvince ? proj.locationProvince : "Kimihurura, Kigali";
+            const displayLocation = proj.locationProvince ? `${proj.locationSector}, ${proj.locationDistrict}` : "Kimihurura, Kigali";
             
             const valuationText = proj.propertyValuation ? `${parseFloat(proj.propertyValuation).toLocaleString()} RWF` : "-- RWF";
             const targetText = proj.fundingTarget ? `${parseFloat(proj.fundingTarget).toLocaleString()} RWF` : "-- RWF";
@@ -1585,8 +1593,8 @@ const ProjectSubmission = ({
                     </div>
                   ) : (
                     <div className="space-y-4 animate-fade-in">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <label className="block">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <label className="block md:col-span-2">
                           <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Land Parcel Reference (UPI)</span>
                           <input 
                             value={currentProject.landParcelRef}
@@ -1594,19 +1602,6 @@ const ProjectSubmission = ({
                             disabled={!isProjectEditable(currentProject)}
                             className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
                             placeholder="UPI, e.g., 1/02/08/04/4921" 
-                          />
-                        </label>
-                      </div>
-     
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <label className="block md:col-span-2">
-                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Province, District, Sector & Cell</span>
-                          <input 
-                            value={currentProject.locationProvince}
-                            onChange={e => updateCurrentProject({ locationProvince: e.target.value })}
-                            disabled={!isProjectEditable(currentProject)}
-                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
-                            placeholder="e.g. Kigali City, Gasabo, Kimihurura, Rugando" 
                           />
                         </label>
      
@@ -1619,6 +1614,49 @@ const ProjectSubmission = ({
                             disabled={!isProjectEditable(currentProject)}
                             className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
                             placeholder="e.g. 3450" 
+                          />
+                        </label>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Province</span>
+                          <input 
+                            value={currentProject.locationProvince}
+                            onChange={e => updateCurrentProject({ locationProvince: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. Kigali City" 
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">District</span>
+                          <input 
+                            value={currentProject.locationDistrict}
+                            onChange={e => updateCurrentProject({ locationDistrict: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. Gasabo" 
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Sector</span>
+                          <input 
+                            value={currentProject.locationSector}
+                            onChange={e => updateCurrentProject({ locationSector: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. Kimihurura" 
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Cell</span>
+                          <input 
+                            value={currentProject.locationCell}
+                            onChange={e => updateCurrentProject({ locationCell: e.target.value })}
+                            disabled={!isProjectEditable(currentProject)}
+                            className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all shadow-sm disabled:bg-stone-100 disabled:text-stone-500 disabled:cursor-not-allowed"
+                            placeholder="e.g. Rugando" 
                           />
                         </label>
                       </div>
