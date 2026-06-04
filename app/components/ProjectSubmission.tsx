@@ -453,7 +453,7 @@ interface ProjectApp {
   };
 
   // Review & Appeal states
-  reviewStatus: "draft" | "under_review" | "reverted" | "under_appeal_review" | "approved";
+  reviewStatus: "draft" | "under_review" | "reverted" | "under_appeal_review" | "approved" | "funded";
   revertReason?: string;
   appealMessage?: string;
   appealSubmitted?: boolean;
@@ -466,6 +466,7 @@ interface ProjectApp {
   // Milestones
   milestones: Milestone[];
   currentStep: number;
+  adminStageComments?: Record<number, string>;
   
   // Budget Allocation Document
   budgetFile?: {
@@ -529,7 +530,12 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
       uploadedAt: "2026-05-29"
     },
     isFinalized: true,
-    siteVisitStatus: "pending"
+    siteVisitStatus: "pending",
+    adminStageComments: {
+      0: "Basic characteristics match physical blueprint. Approved.",
+      1: "The submitted House Plan is missing the digital seal of the Certified Structural Architect of Record on page 3. Please re-upload.",
+      2: "All background registry query checks passed cleanly."
+    }
   },
   rugando_draft: {
     id: "rugando_draft",
@@ -558,7 +564,8 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     milestones: [],
     currentStep: 0,
     isFinalized: false,
-    siteVisitStatus: "pending"
+    siteVisitStatus: "pending",
+    adminStageComments: {}
   },
   nyarutarama_villas: {
     id: "nyarutarama_villas",
@@ -597,11 +604,19 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
       uploadedAt: "2026-05-28"
     },
     isFinalized: true,
-    siteVisitStatus: "approved"
+    siteVisitStatus: "approved",
+    adminStageComments: {
+      0: "Zoning match approved. Land bounds verified.",
+      1: "All structural blueprint permits verified. Structural engineering audit cleared.",
+      2: "RDB lookup and national land registration records match registrant.",
+      3: "Crowdfunding tranche limits verified by surveyor David.",
+      4: "Comparative market value appraisal approved. Value cap matches 1.5B RWF."
+    }
   }
 };
 
 // ── Stepper Definition ────────────────────────────────────────────────────────
+// All 6 steps — shown in My Applications (existing mode)
 const WIZARD_STEPS = [
   { index: 0, title: "Property Details", desc: "Title, type & progress", icon: <Building size={18} /> },
   { index: 1, title: "Compliance Documents", desc: "Upload NLA, plans & certificates", icon: <FileText size={18} /> },
@@ -609,6 +624,14 @@ const WIZARD_STEPS = [
   { index: 3, title: "Funding Setup", desc: "Set valuation & target amount", icon: <Landmark size={18} /> },
   { index: 4, title: "Evaluator Site Valuation", desc: "Site visit verdict & funding appeal", icon: <Eye size={18} /> },
   { index: 5, title: "Milestones Definition", desc: "Define tranches & build progress", icon: <ClipboardList size={18} /> }
+];
+
+// 4 steps — shown in Submit New Project (new mode). Gov Verification & Evaluator Site are admin-driven.
+const SUBMIT_STEPS = [
+  { index: 0, title: "Property Details", desc: "Title, type & progress state", icon: <Building size={18} /> },
+  { index: 1, title: "Compliance Documents", desc: "Upload NLA, plans & certificates", icon: <FileText size={18} /> },
+  { index: 3, title: "Funding Setup", desc: "Set valuation & target amount", icon: <Landmark size={18} /> },
+  { index: 5, title: "Milestones & Budget", desc: "Define tranches & build progress", icon: <ClipboardList size={18} /> }
 ];
 
 // ── Main Component ───────────────────────────────────────────────────────────
@@ -690,6 +713,41 @@ const ProjectSubmission = ({
 
   useEffect(() => {
     setSelectedProjectId(mode === "new" ? "rugando_draft" : null);
+    if (mode === "new") {
+      setProjects(prev => ({
+        ...prev,
+        rugando_draft: {
+          id: "rugando_draft",
+          title: "",
+          type: "new_project",
+          progressState: "planning",
+          description: "",
+          locationProvince: "",
+          locationDistrict: "",
+          locationSector: "",
+          locationCell: "",
+          landParcelRef: "",
+          landSizeSqm: "",
+          docs: {
+            nla: { state: "missing", progress: 0 },
+            house_plan: { state: "missing", progress: 0 },
+            environmental: { state: "missing", progress: 0 },
+            tax_reg: { state: "missing", progress: 0 },
+          },
+          reviewStatus: "draft",
+          appealMessage: "",
+          appealSubmitted: false,
+          fundingTarget: "",
+          expectedCompletionDate: "",
+          propertyValuation: "",
+          milestones: [],
+          currentStep: 0,
+          isFinalized: false,
+          siteVisitStatus: "pending",
+          adminStageComments: {}
+        }
+      }));
+    }
   }, [mode]);
 
   // Persistence effect
@@ -698,6 +756,60 @@ const ProjectSubmission = ({
       localStorage.setItem("estatex_acc_wizard_projects_v2", JSON.stringify(projects));
     }
   }, [projects]);
+
+  // Sync all project details from server (comments, milestones, statuses)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch("/api/sync")
+        .then(res => res.json())
+        .then(data => {
+          if (data && Object.keys(data).length > 0) {
+            setProjects(prev => {
+              let changed = false;
+              const next = { ...prev };
+              for (const pid of Object.keys(data)) {
+                if (next[pid]) {
+                  const dbProj = data[pid];
+                  const oldProjStr = JSON.stringify({
+                    comments: next[pid].adminStageComments || {},
+                    milestones: next[pid].milestones || [],
+                    isFinalized: next[pid].isFinalized || false,
+                    reviewStatus: next[pid].reviewStatus
+                  });
+                  
+                  const dbComments = dbProj.adminStageComments || dbProj.stage_comments || {};
+                  const dbMilestones = dbProj.milestones || [];
+                  const dbIsFinalized = dbProj.isFinalized || dbProj.project_status === "approved" || dbProj.project_status === "funded" || false;
+                  const dbReviewStatus = dbProj.project_status || next[pid].reviewStatus;
+
+                  const newProjStr = JSON.stringify({
+                    comments: dbComments,
+                    milestones: dbMilestones,
+                    isFinalized: dbIsFinalized,
+                    reviewStatus: dbReviewStatus
+                  });
+
+                  if (oldProjStr !== newProjStr) {
+                    next[pid] = {
+                      ...next[pid],
+                      adminStageComments: dbComments,
+                      milestones: dbMilestones,
+                      isFinalized: dbIsFinalized,
+                      reviewStatus: dbReviewStatus as any
+                    };
+                    changed = true;
+                  }
+                }
+              }
+              return changed ? next : prev;
+            });
+          }
+        })
+        .catch(err => console.error("Sync error:", err));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Set currentStep if initialStep is passed
   useEffect(() => {
@@ -733,12 +845,17 @@ const ProjectSubmission = ({
     }));
   };
 
-  const handleNext = () => {
-    // If transitioning from Documents (Step 2) to Verification (Step 3) for the first time
-    if (currentStep === 1 && currentProject.reviewStatus === "draft") {
+  const handleNext = (activeSteps: typeof WIZARD_STEPS) => {
+    // In new/submit mode: skip from step 1 → 3 → 5 (bypass Gov Verification & Evaluator)
+    // In existing mode: normal sequential progression
+    const currentVisualIdx = activeSteps.findIndex(s => s.index === currentStep);
+    const nextStep = activeSteps[currentVisualIdx + 1];
+
+    if (!nextStep) return;
+
+    // In existing mode only: trigger gov verification simulation when moving from docs → gov verify
+    if (mode === "existing" && currentStep === 1 && currentProject.reviewStatus === "draft") {
       updateCurrentProject({ currentStep: 2, reviewStatus: "under_review" });
-      
-      // Simulate audit after delay
       setTimeout(() => {
         setProjects(prev => {
           const proj = prev[activeProjectId];
@@ -765,12 +882,10 @@ const ProjectSubmission = ({
       return;
     }
 
-    updateCurrentProject({ currentStep: Math.min(WIZARD_STEPS.length - 1, currentStep + 1) });
+    updateCurrentProject({ currentStep: nextStep.index });
   };
 
-  const handleBack = () => {
-    updateCurrentProject({ currentStep: Math.max(0, currentStep - 1) });
-  };
+
 
   // Project switching
   const handleProjectSwitch = (id: string) => {
@@ -837,7 +952,8 @@ const ProjectSubmission = ({
               state: "pending", // In Review / Uploaded
               progress: 100,
               name: doc.name,
-              size: doc.size
+              size: doc.size,
+              evaluatorComment: undefined
             }
           };
           
@@ -1021,25 +1137,38 @@ const ProjectSubmission = ({
   const isStep3Valid = currentProject.reviewStatus === "approved";
   const isStep4Valid = parseFloat(currentProject.fundingTarget) > 0 && parseFloat(currentProject.propertyValuation) >= parseFloat(currentProject.fundingTarget);
 
-  const canContinue = () => {
+  // In submit (new) mode, steps 2 & 4 are skipped — so canContinue uses step index directly
+  const canContinue = (activeMode = mode) => {
     if (currentStep === 0) return isStep1Valid;
     if (currentStep === 1) return isStep2Valid;
+    // existing mode only — gov verification gate
     if (currentStep === 2) return isStep3Valid;
-    if (currentStep === 3) return isStep4Valid;
+    // funding setup — in submit mode docs uploaded is enough; in existing mode need approval
+    if (currentStep === 3) return activeMode === "new" ? isStep4Valid : isStep4Valid;
     if (currentStep === 4) return currentProject.siteVisitStatus === "approved";
     return false;
   };
 
-  const isStepUnlocked = (idx: number) => {
+  // isStepUnlocked uses the actual step index (from WIZARD_STEPS or SUBMIT_STEPS)
+  const isStepUnlocked = (idx: number, activeMode = mode) => {
     if (idx === 0) return true;
     if (idx === 1) return !!isStep1Valid;
     if (idx === 2) {
+      // Gov Verification (existing mode only)
       const docsUploaded = Object.values(currentProject.docs).every(d => d.state !== "missing");
       return !!isStep1Valid && docsUploaded;
     }
-    if (idx === 3) return currentProject.reviewStatus === "approved";
+    if (idx === 3) {
+      // In submit mode: just need docs uploaded; in existing mode: need approved
+      if (activeMode === "new") return !!isStep1Valid && isStep2Valid;
+      return currentProject.reviewStatus === "approved";
+    }
     if (idx === 4) return currentProject.reviewStatus === "approved" && !!isStep4Valid;
-    if (idx === 5) return currentProject.reviewStatus === "approved" && !!isStep4Valid && currentProject.siteVisitStatus === "approved";
+    if (idx === 5) {
+      // In submit mode: just need funding set; in existing: full approval chain
+      if (activeMode === "new") return !!isStep1Valid && isStep2Valid && isStep4Valid;
+      return currentProject.reviewStatus === "approved" && !!isStep4Valid && currentProject.siteVisitStatus === "approved";
+    }
     return false;
   };
 
@@ -1049,7 +1178,18 @@ const ProjectSubmission = ({
     return false;
   };
 
+  const isDocEditable = (proj: ProjectApp, docKey: keyof ProjectApp["docs"]) => {
+    if (proj.isFinalized === true) return false;
+    if (proj.reviewStatus === "draft") return true;
+    if (proj.reviewStatus === "reverted") {
+      const docVal = proj.docs[docKey];
+      return !!docVal.evaluatorComment || docVal.state !== "verified";
+    }
+    return false;
+  };
+
   const isFundingSetupEditable = (proj: ProjectApp) => {
+    if (mode === "new") return true;
     if (proj.isFinalized === true) return false;
     if (proj.reviewStatus !== "approved") return false;
     if (proj.siteVisitStatus === "approved") return false;
@@ -1286,59 +1426,64 @@ const ProjectSubmission = ({
           <ArrowLeft size={13} /> {mode === "existing" ? "Back to Applications" : "Quit to Dashboard"}
         </button>
 
-        {/* Node connectors list */}
-        <div className="flex-1 flex flex-col relative space-y-6">
-          {WIZARD_STEPS.map((s, idx) => {
-            const isActive = currentStep === idx;
-            const isCompleted = currentStep > idx;
-            const unlocked = isStepUnlocked(idx);
+        {/* Node connectors list — use SUBMIT_STEPS in new mode, WIZARD_STEPS in existing mode */}
+        {(() => {
+          const activeSteps = mode === "new" ? SUBMIT_STEPS : WIZARD_STEPS;
+          return (
+            <div className="flex-1 flex flex-col relative space-y-6">
+              {activeSteps.map((s, visualIdx) => {
+                const isActive = currentStep === s.index;
+                const isCompleted = activeSteps.findIndex(st => st.index === currentStep) > visualIdx;
+                const unlocked = isStepUnlocked(s.index, mode);
 
-            return (
-              <div 
-                key={idx} 
-                onClick={() => {
-                  if (unlocked) {
-                    updateCurrentProject({ currentStep: idx });
-                  } else {
-                    showToastMsg(`Step "${s.title}" is locked until previous stages are completed/approved.`);
-                  }
-                }}
-                className={`flex items-start gap-4 relative group ${unlocked ? "cursor-pointer" : "cursor-not-allowed"}`}
-              >
-                {idx < WIZARD_STEPS.length - 1 && (
-                  <div className={`absolute left-[13px] top-[28px] bottom-[-24px] w-[2px] transition-colors ${
-                    currentStep > idx ? "bg-[#1E3A5F]" : "bg-stone-100"
-                  }`} />
-                )}
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center border text-[9px] shrink-0 z-10 transition-all ${
-                  isActive 
-                    ? "bg-[#1E3A5F] text-white border-[#1E3A5F] shadow-sm shadow-[#1E3A5F]/20 font-black" 
-                    : isCompleted 
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-200 font-bold" 
-                      : !unlocked
-                        ? "bg-stone-50 text-stone-300 border-stone-150"
-                        : "bg-white text-stone-600 border-stone-200 hover:border-[#1E3A5F] hover:text-[#1E3A5F]"
-                }`}>
-                  {!unlocked ? <Lock size={10} className="text-stone-400" /> : isCompleted ? "✓" : idx + 1}
-                </div>
-                <div className="min-w-0">
-                  <p className={`text-[12px] font-bold leading-tight ${
-                    isActive 
-                      ? "text-[#1E3A5F]" 
-                      : isCompleted 
-                        ? "text-stone-850 font-bold" 
-                        : !unlocked
-                          ? "text-stone-350 font-normal"
-                          : "text-stone-650 group-hover:text-[#1E3A5F] transition-colors font-semibold"
-                  }`}>{s.title}</p>
-                  <p className={`text-[10px] mt-0.5 leading-normal ${
-                    !unlocked ? "text-stone-200" : "text-stone-400"
-                  }`}>{s.desc}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                return (
+                  <div
+                    key={s.index}
+                    onClick={() => {
+                      if (unlocked) {
+                        updateCurrentProject({ currentStep: s.index });
+                      } else {
+                        showToastMsg(`Step "${s.title}" is locked until previous stages are completed.`);
+                      }
+                    }}
+                    className={`flex items-start gap-4 relative group ${unlocked ? "cursor-pointer" : "cursor-not-allowed"}`}
+                  >
+                    {visualIdx < activeSteps.length - 1 && (
+                      <div className={`absolute left-[13px] top-[28px] bottom-[-24px] w-[2px] transition-colors ${
+                        isCompleted ? "bg-[#1E3A5F]" : "bg-stone-100"
+                      }`} />
+                    )}
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center border text-[9px] shrink-0 z-10 transition-all ${
+                      isActive
+                        ? "bg-[#1E3A5F] text-white border-[#1E3A5F] shadow-sm shadow-[#1E3A5F]/20 font-black"
+                        : isCompleted
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-200 font-bold"
+                          : !unlocked
+                            ? "bg-stone-50 text-stone-300 border-stone-150"
+                            : "bg-white text-stone-600 border-stone-200 hover:border-[#1E3A5F] hover:text-[#1E3A5F]"
+                    }`}>
+                      {!unlocked ? <Lock size={10} className="text-stone-400" /> : isCompleted ? "✓" : visualIdx + 1}
+                    </div>
+                    <div className="min-w-0">
+                      <p className={`text-[12px] font-bold leading-tight ${
+                        isActive
+                          ? "text-[#1E3A5F]"
+                          : isCompleted
+                            ? "text-stone-850 font-bold"
+                            : !unlocked
+                              ? "text-stone-350 font-normal"
+                              : "text-stone-650 group-hover:text-[#1E3A5F] transition-colors font-semibold"
+                      }`}>{s.title}</p>
+                      <p className={`text-[10px] mt-0.5 leading-normal ${
+                        !unlocked ? "text-stone-200" : "text-stone-400"
+                      }`}>{s.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Footer info/controls inside sidebar */}
         <div className="pt-6 border-t border-stone-100 mt-auto">
@@ -1500,17 +1645,34 @@ const ProjectSubmission = ({
             </div>
 
             {/* Top Stage Icon */}
-            <div className="flex flex-col items-center mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-[#1E3A5F]/5 border border-[#1E3A5F]/10 text-[#1E3A5F] flex items-center justify-center shadow-inner">
-                {WIZARD_STEPS[currentStep].icon}
-              </div>
-              <h3 className="text-[17px] font-black text-stone-900 tracking-tight mt-3">{WIZARD_STEPS[currentStep].title}</h3>
-              <p className="text-[11px] text-stone-400 font-medium text-center mt-0.5">{WIZARD_STEPS[currentStep].desc}</p>
-            </div>
+            {(() => {
+              const activeSteps = mode === "new" ? SUBMIT_STEPS : WIZARD_STEPS;
+              const stepDef = activeSteps.find(s => s.index === currentStep) || WIZARD_STEPS.find(s => s.index === currentStep) || WIZARD_STEPS[0];
+              return (
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-[#1E3A5F]/5 border border-[#1E3A5F]/10 text-[#1E3A5F] flex items-center justify-center shadow-inner">
+                    {stepDef.icon}
+                  </div>
+                  <h3 className="text-[17px] font-black text-stone-900 tracking-tight mt-3">{stepDef.title}</h3>
+                  <p className="text-[11px] text-stone-400 font-medium text-center mt-0.5">{stepDef.desc}</p>
+                </div>
+              );
+            })()}
 
             {/* Stepper Content Body */}
             <div className="space-y-5 mb-8">
               
+              {/* Admin Stage Feedback Notes */}
+              {currentProject.adminStageComments?.[currentStep]?.trim() && (
+                <div className="bg-amber-50/50 border border-amber-200/80 rounded-2xl p-4 text-[12px] font-medium text-amber-800 flex items-start gap-3 shadow-sm">
+                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-amber-900 text-[12.5px]">Admin Compliance Feedback</p>
+                    <p className="mt-1 leading-relaxed text-amber-800/90">{currentProject.adminStageComments[currentStep]}</p>
+                  </div>
+                </div>
+              )}
+
               {/* STEP 1: Property Details */}
               {currentStep === 0 && (
                 <div className="space-y-4 animate-fade-in">
@@ -1719,7 +1881,7 @@ const ProjectSubmission = ({
 
                               {/* Actions */}
                               {docVal.state === "missing" ? (
-                                isProjectEditable(currentProject) ? (
+                                isDocEditable(currentProject, docItem.key as keyof ProjectApp["docs"]) ? (
                                   <button
                                     onClick={() => triggerDocUpload(docItem.key as keyof ProjectApp["docs"])}
                                     className="flex items-center gap-1 text-[11px] font-bold text-[#1E3A5F] hover:underline"
@@ -1737,10 +1899,10 @@ const ProjectSubmission = ({
                                   >
                                     <Eye size={12} /> Preview
                                   </button>
-                                  {isProjectEditable(currentProject) && (
+                                  {isDocEditable(currentProject, docItem.key as keyof ProjectApp["docs"]) && (
                                     <button
                                       onClick={() => triggerDocUpload(docItem.key as keyof ProjectApp["docs"])}
-                                      className="text-stone-300 hover:text-stone-500"
+                                      className="text-stone-300 hover:text-stone-500 cursor-pointer font-bold hover:underline"
                                     >
                                       Re-upload
                                     </button>
@@ -2668,56 +2830,67 @@ const ProjectSubmission = ({
             </div>
 
             {/* Footer Nav Buttons */}
-            <div className="flex justify-between items-center pt-4 border-t border-stone-100 shrink-0">
-              {currentStep === 0 && propertySubStep === "location" ? (
-                <button
-                  type="button"
-                  onClick={() => setPropertySubStep("details")}
-                  className="px-4 py-2 text-[11px] font-bold text-stone-500 hover:text-stone-800 transition-colors cursor-pointer"
-                >
-                  Back
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleBack}
-                  disabled={currentStep === 0}
-                  className="px-4 py-2 text-[11px] font-bold text-stone-500 disabled:opacity-40 hover:text-stone-800 transition-colors"
-                >
-                  Back
-                </button>
-              )}
+            {(() => {
+              const activeSteps = mode === "new" ? SUBMIT_STEPS : WIZARD_STEPS;
+              const currentVisualIdx = activeSteps.findIndex(s => s.index === currentStep);
+              const isLastStep = currentVisualIdx === activeSteps.length - 1;
+              const hasPrev = currentVisualIdx > 0;
 
-              {currentStep === 0 && propertySubStep === "details" ? (
-                <button
-                  type="button"
-                  onClick={() => setPropertySubStep("location")}
-                  disabled={!currentProject.title || !currentProject.description}
-                  className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
-                >
-                  Next: Location Details
-                </button>
-              ) : currentStep < WIZARD_STEPS.length - 1 ? (
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={!canContinue()}
-                  className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
-                >
-                  Continue
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleFinalSubmit}
-                  disabled={!isMilestonesBalanced || !currentProject.budgetFile}
-                  className="px-6 py-2.5 bg-emerald-600 text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-emerald-600/10 cursor-pointer flex items-center gap-1.5"
-                >
-                  <Send size={13} />
-                  Submit Application
-                </button>
-              )}
-            </div>
+              const handleBack = () => {
+                if (currentStep === 0 && propertySubStep === "location") {
+                  setPropertySubStep("details");
+                  return;
+                }
+                if (currentVisualIdx > 0) {
+                  updateCurrentProject({ currentStep: activeSteps[currentVisualIdx - 1].index });
+                }
+              };
+
+              return (
+                <div className="flex justify-between items-center pt-4 border-t border-stone-100 shrink-0">
+                  {/* Back button */}
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    disabled={!hasPrev && !(currentStep === 0 && propertySubStep === "location")}
+                    className="px-4 py-2 text-[11px] font-bold text-stone-500 disabled:opacity-40 hover:text-stone-800 transition-colors cursor-pointer"
+                  >
+                    Back
+                  </button>
+
+                  {/* Forward button */}
+                  {currentStep === 0 && propertySubStep === "details" ? (
+                    <button
+                      type="button"
+                      onClick={() => setPropertySubStep("location")}
+                      disabled={!currentProject.title || !currentProject.description}
+                      className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
+                    >
+                      Next: Location Details
+                    </button>
+                  ) : isLastStep ? (
+                    <button
+                      type="button"
+                      onClick={handleFinalSubmit}
+                      disabled={!isMilestonesBalanced || !currentProject.budgetFile}
+                      className="px-6 py-2.5 bg-emerald-600 text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-emerald-600/10 cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Send size={13} />
+                      Submit Application
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleNext(activeSteps)}
+                      disabled={!canContinue(mode)}
+                      className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
+                    >
+                      Continue
+                    </button>
+                  )}
+                </div>
+              );
+            })()}
           </div>
           </div>
         )}
