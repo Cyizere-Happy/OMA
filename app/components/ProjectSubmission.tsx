@@ -429,6 +429,16 @@ interface Milestone {
   reportFile?: string;
 }
 
+interface PropertyUnit {
+  id: string;
+  unit_number: string;
+  unit_type: "apartment" | "office" | "retail" | "villa" | "commercial";
+  area_sqm: number;
+  quantity: number;
+  price?: number;
+  floor?: number | null;
+}
+
 interface ProjectApp {
   id: string;
   title: string;
@@ -444,6 +454,9 @@ interface ProjectApp {
   landParcelRef: string;
   landSizeSqm: string;
   
+  // Registered Units
+  units: PropertyUnit[];
+
   // Documents
   docs: {
     nla: DocumentState;
@@ -499,6 +512,11 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     locationCell: "Rugando",
     landParcelRef: "1/02/08/04/4921",
     landSizeSqm: "3450",
+    units: [
+      { id: "u1", unit_number: "A-101", unit_type: "apartment", area_sqm: 65, quantity: 12, price: 45000000, floor: 1 },
+      { id: "u2", unit_number: "B-201", unit_type: "office", area_sqm: 120, quantity: 6, price: 95000000, floor: 2 },
+      { id: "u3", unit_number: "R-001", unit_type: "retail", area_sqm: 150, quantity: 4, price: 120000000, floor: 0 }
+    ],
     docs: {
       nla: { state: "verified", progress: 100, name: "NLA_Certificate_Gasabo_4921.pdf", size: 1024 * 1024 * 1.2 },
       house_plan: { 
@@ -549,6 +567,7 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     locationCell: "",
     landParcelRef: "",
     landSizeSqm: "",
+    units: [],
     docs: {
       nla: { state: "missing", progress: 0 },
       house_plan: { state: "missing", progress: 0 },
@@ -579,6 +598,10 @@ const DEFAULT_PROJECTS: Record<string, ProjectApp> = {
     locationCell: "Kamatamu",
     landParcelRef: "1/02/08/04/7712",
     landSizeSqm: "5200",
+    units: [
+      { id: "v1", unit_number: "V-01", unit_type: "villa", area_sqm: 250, quantity: 8, price: 150000000, floor: 2 },
+      { id: "v2", unit_number: "V-09", unit_type: "villa", area_sqm: 320, quantity: 4, price: 210000000, floor: 2 }
+    ],
     docs: {
       nla: { state: "verified", progress: 100, name: "NLA_Lease_Nyarutarama_7712.pdf", size: 1024 * 1024 * 1.8 },
       house_plan: { state: "verified", progress: 100, name: "Villa_Eco_Blueprint_Certified.pdf", size: 1024 * 1024 * 8.2 },
@@ -673,7 +696,7 @@ const ProjectSubmission = ({
   const currentProject = projects[activeProjectId] || DEFAULT_PROJECTS[activeProjectId] || DEFAULT_PROJECTS["kigali_heights"];
   const currentStep = currentProject.currentStep;
 
-  const [propertySubStep, setPropertySubStep] = useState<"details" | "location">("details");
+  const [propertySubStep, setPropertySubStep] = useState<"details" | "location" | "units">("details");
 
   useEffect(() => {
     setPropertySubStep("details");
@@ -728,6 +751,7 @@ const ProjectSubmission = ({
           locationCell: "",
           landParcelRef: "",
           landSizeSqm: "",
+          units: [],
           docs: {
             nla: { state: "missing", progress: 0 },
             house_plan: { state: "missing", progress: 0 },
@@ -1107,6 +1131,62 @@ const ProjectSubmission = ({
     });
   };
 
+  // Step 0 Units Form States
+  const [newUnitNumber, setNewUnitNumber] = useState("");
+  const [newUnitType, setNewUnitType] = useState<"apartment" | "office" | "retail" | "villa" | "commercial">("apartment");
+  const [newUnitArea, setNewUnitArea] = useState("");
+  const [newUnitQuantity, setNewUnitQuantity] = useState("1");
+  const [newUnitPrice, setNewUnitPrice] = useState("");
+  const [newUnitFloor, setNewUnitFloor] = useState("");
+
+  const addUnit = () => {
+    if (!newUnitNumber.trim() || !newUnitArea || !newUnitQuantity) return;
+    const area = parseFloat(newUnitArea);
+    const qty = parseInt(newUnitQuantity, 10);
+    if (isNaN(area) || area <= 0) {
+      showToastMsg("Error: Area must be a positive number.");
+      return;
+    }
+    if (isNaN(qty) || qty <= 0) {
+      showToastMsg("Error: Quantity must be at least 1.");
+      return;
+    }
+
+    const price = newUnitPrice ? parseFloat(newUnitPrice) : undefined;
+    const floor = newUnitFloor ? parseInt(newUnitFloor, 10) : null;
+
+    const newUnit: PropertyUnit = {
+      id: `unit-${Date.now()}`,
+      unit_number: newUnitNumber,
+      unit_type: newUnitType,
+      area_sqm: area,
+      quantity: qty,
+      price: (price !== undefined && !isNaN(price)) ? price : undefined,
+      floor: (floor !== null && !isNaN(floor)) ? floor : null
+    };
+
+    const currentList = currentProject.units || [];
+    updateCurrentProject({
+      units: [...currentList, newUnit]
+    });
+
+    setNewUnitNumber("");
+    setNewUnitType("apartment");
+    setNewUnitArea("");
+    setNewUnitQuantity("1");
+    setNewUnitPrice("");
+    setNewUnitFloor("");
+    showToastMsg("Unit configuration added successfully.");
+  };
+
+  const removeUnit = (unitId: string) => {
+    const currentList = currentProject.units || [];
+    updateCurrentProject({
+      units: currentList.filter(u => u.id !== unitId)
+    });
+    showToastMsg("Unit configuration removed.");
+  };
+
   const fundingTargetNum = parseFloat(currentProject.fundingTarget) || 0;
   const milestonesSum = (currentProject.milestones || []).reduce((s, m) => s + (parseFloat(m.amountRwf) || 0), 0);
   const isMilestonesBalanced = milestonesSum === fundingTargetNum && fundingTargetNum > 0;
@@ -1132,7 +1212,17 @@ const ProjectSubmission = ({
   };
 
   // Validation checkers for active navigation buttons
-  const isStep1Valid = currentProject.title && currentProject.description && currentProject.locationProvince && currentProject.locationDistrict && currentProject.locationSector && currentProject.locationCell && currentProject.landParcelRef;
+  const isStep1Valid = !!(
+    currentProject.title &&
+    currentProject.description &&
+    currentProject.locationProvince &&
+    currentProject.locationDistrict &&
+    currentProject.locationSector &&
+    currentProject.locationCell &&
+    currentProject.landParcelRef &&
+    currentProject.units &&
+    currentProject.units.length > 0
+  );
   const isStep2Valid = Object.values(currentProject.docs).every(d => d.state === "pending" || d.state === "verified");
   const isStep3Valid = currentProject.reviewStatus === "approved";
   const isStep4Valid = parseFloat(currentProject.fundingTarget) > 0 && parseFloat(currentProject.propertyValuation) >= parseFloat(currentProject.fundingTarget);
@@ -1678,21 +1768,41 @@ const ProjectSubmission = ({
                 <div className="space-y-4 animate-fade-in">
                   {/* Sub-step indicator */}
                   <div className="flex items-center gap-2 mb-4">
-                    <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all ${
-                      propertySubStep === "details" 
-                        ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
-                        : "bg-stone-50 text-stone-400 border-stone-200"
-                    }`}>
+                    <button
+                      type="button"
+                      onClick={() => setPropertySubStep("details")}
+                      className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                        propertySubStep === "details" 
+                          ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
+                          : "bg-stone-50 text-stone-400 border-stone-200 hover:border-stone-300"
+                      }`}
+                    >
                       1. General Details
-                    </span>
+                    </button>
                     <span className="text-stone-300">/</span>
-                    <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all ${
-                      propertySubStep === "location" 
-                        ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
-                        : "bg-stone-50 text-stone-400 border-stone-200"
-                    }`}>
+                    <button
+                      type="button"
+                      onClick={() => setPropertySubStep("location")}
+                      className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                        propertySubStep === "location" 
+                          ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
+                          : "bg-stone-50 text-stone-400 border-stone-200 hover:border-stone-300"
+                      }`}
+                    >
                       2. Location & Parcel
-                    </span>
+                    </button>
+                    <span className="text-stone-300">/</span>
+                    <button
+                      type="button"
+                      onClick={() => setPropertySubStep("units")}
+                      className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                        propertySubStep === "units" 
+                          ? "bg-[#1E3A5F] text-white border-[#1E3A5F]" 
+                          : "bg-stone-50 text-stone-400 border-stone-200 hover:border-stone-300"
+                      }`}
+                    >
+                      3. Registered Units
+                    </button>
                   </div>
 
                   {propertySubStep === "details" ? (
@@ -1753,7 +1863,7 @@ const ProjectSubmission = ({
                         />
                       </label>
                     </div>
-                  ) : (
+                  ) : propertySubStep === "location" ? (
                     <div className="space-y-4 animate-fade-in">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <label className="block md:col-span-2">
@@ -1821,6 +1931,193 @@ const ProjectSubmission = ({
                             placeholder="e.g. Rugando" 
                           />
                         </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 animate-fade-in">
+                      {/* Summary Cards */}
+                      <div className="grid grid-cols-3 gap-3">
+                        <div className="bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 shadow-sm">
+                          <span className="text-[8.5px] font-black text-stone-400 uppercase tracking-widest block leading-tight">Total Units</span>
+                          <p className="text-base font-black text-[#1E3A5F] mt-0.5 font-mono">
+                            {(currentProject.units || []).reduce((sum, u) => sum + u.quantity, 0)}
+                          </p>
+                        </div>
+                        <div className="bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 shadow-sm">
+                          <span className="text-[8.5px] font-black text-stone-400 uppercase tracking-widest block leading-tight">Total Area (m²)</span>
+                          <p className="text-base font-black text-stone-800 mt-0.5 font-mono">
+                            {(currentProject.units || []).reduce((sum, u) => sum + (u.area_sqm * u.quantity), 0).toLocaleString()} m²
+                          </p>
+                        </div>
+                        <div className="bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 shadow-sm">
+                          <span className="text-[8.5px] font-black text-stone-400 uppercase tracking-widest block leading-tight">Calculated Valuation</span>
+                          <p className="text-base font-black text-emerald-600 mt-0.5 font-mono">
+                            {(currentProject.units || []).reduce((sum, u) => sum + ((u.price || 0) * u.quantity), 0) > 0 ? (
+                              (currentProject.units || []).reduce((sum, u) => sum + ((u.price || 0) * u.quantity), 0).toLocaleString() + " RWF"
+                            ) : (
+                              "N/A"
+                            )}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Add Unit Form */}
+                      {isProjectEditable(currentProject) && (
+                        <div className="bg-white border border-stone-200/80 rounded-2xl p-4.5 space-y-3 shadow-sm">
+                          <div className="border-b border-stone-100 pb-2">
+                            <h4 className="text-[10px] font-black text-[#1E3A5F] uppercase tracking-wider">Register Unit Configuration</h4>
+                            <p className="text-[9px] text-stone-400 mt-0.5">Specify unit features and total count of this exact configuration.</p>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <label className="block">
+                              <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">Unit Name / Number *</span>
+                              <input
+                                value={newUnitNumber}
+                                onChange={e => setNewUnitNumber(e.target.value)}
+                                className="mt-1.5 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-3 py-2 text-[11px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all"
+                                placeholder="e.g. Apartment Type A"
+                              />
+                            </label>
+
+                            <label className="block">
+                              <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">Unit Type *</span>
+                              <select
+                                value={newUnitType}
+                                onChange={e => setNewUnitType(e.target.value as any)}
+                                className="mt-1.5 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-3 py-2 text-[11px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all cursor-pointer"
+                              >
+                                <option value="apartment">Apartment</option>
+                                <option value="office">Office</option>
+                                <option value="retail">Retail</option>
+                                <option value="villa">Villa</option>
+                                <option value="commercial">Commercial</option>
+                              </select>
+                            </label>
+
+                            <label className="block">
+                              <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">Unit Area (m²) *</span>
+                              <input
+                                type="number"
+                                value={newUnitArea}
+                                onChange={e => setNewUnitArea(e.target.value)}
+                                className="mt-1.5 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-3 py-2 text-[11px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all"
+                                placeholder="e.g. 75"
+                              />
+                            </label>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <label className="block">
+                              <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">Quantity (Count) *</span>
+                              <input
+                                type="number"
+                                min="1"
+                                value={newUnitQuantity}
+                                onChange={e => setNewUnitQuantity(e.target.value)}
+                                className="mt-1.5 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-3 py-2 text-[11px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all"
+                                placeholder="e.g. 10"
+                              />
+                            </label>
+
+                            <label className="block">
+                              <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">Floor (Optional)</span>
+                              <input
+                                type="number"
+                                value={newUnitFloor}
+                                onChange={e => setNewUnitFloor(e.target.value)}
+                                className="mt-1.5 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-3 py-2 text-[11px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all"
+                                placeholder="e.g. 2"
+                              />
+                            </label>
+
+                            <label className="block">
+                              <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">Price per Unit RWF (Optional)</span>
+                              <input
+                                type="number"
+                                value={newUnitPrice}
+                                onChange={e => setNewUnitPrice(e.target.value)}
+                                className="mt-1.5 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-3 py-2 text-[11px] font-medium outline-none focus:border-[#1E3A5F] focus:bg-white transition-all"
+                                placeholder="e.g. 55000000"
+                              />
+                            </label>
+                          </div>
+
+                          <div className="flex justify-end pt-0.5">
+                            <button
+                              type="button"
+                              onClick={addUnit}
+                              disabled={!newUnitNumber.trim() || !newUnitArea || !newUnitQuantity}
+                              className="px-4 py-2 bg-[#1E3A5F] hover:brightness-110 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow-md shadow-[#1E3A5F]/10 disabled:opacity-40 flex items-center gap-1.5 cursor-pointer"
+                            >
+                              <Plus size={12} /> Add Unit Configuration
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Units List Table */}
+                      <div className="border border-stone-200/80 rounded-2xl bg-white shadow-sm overflow-hidden">
+                        <div className="bg-stone-50/50 px-5 py-3 border-b border-stone-100 flex items-center justify-between">
+                          <h4 className="text-[11px] font-black text-stone-700 uppercase tracking-wider">Registered Unit Configurations</h4>
+                          <span className="text-[10px] text-stone-400 font-bold font-mono">
+                            {(currentProject.units || []).length} layout(s)
+                          </span>
+                        </div>
+
+                        {(!currentProject.units || currentProject.units.length === 0) ? (
+                          <div className="p-8 text-center text-stone-400 text-[12px] font-medium">
+                            No units registered yet. Use the form above to register the property's units.
+                          </div>
+                        ) : (
+                          <div className="divide-y divide-stone-100 max-h-[280px] overflow-y-auto custom-scrollbar">
+                            {currentProject.units.map((unit) => (
+                              <div key={unit.id} className="px-5 py-3 flex items-center justify-between gap-4 hover:bg-stone-50/40 transition-colors">
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-[12.5px] font-black text-stone-800">{unit.unit_number}</span>
+                                    <span className={`text-[8.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                      unit.unit_type === "apartment" ? "bg-blue-50 text-blue-700 border border-blue-100" :
+                                      unit.unit_type === "office" ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                                      unit.unit_type === "retail" ? "bg-purple-50 text-purple-700 border border-purple-100" :
+                                      unit.unit_type === "villa" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                                      "bg-stone-50 text-stone-700 border border-stone-200"
+                                    }`}>
+                                      {unit.unit_type}
+                                    </span>
+                                    {unit.floor !== null && unit.floor !== undefined && (
+                                      <span className="text-[10px] text-stone-400 font-semibold">
+                                        Floor {unit.floor}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-3 text-[10.5px] text-stone-400 mt-1 font-semibold flex-wrap">
+                                    <span>Area: <strong>{unit.area_sqm} m²</strong></span>
+                                    <span className="text-stone-300">|</span>
+                                    <span>Quantity: <strong className="text-stone-750">× {unit.quantity}</strong></span>
+                                    {unit.price && (
+                                      <>
+                                        <span className="text-stone-300">|</span>
+                                        <span>Price/Unit: <strong className="text-emerald-600">{unit.price.toLocaleString()} RWF</strong></span>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {isProjectEditable(currentProject) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => removeUnit(unit.id)}
+                                    className="p-1.5 rounded-lg text-stone-350 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer border-0 bg-transparent"
+                                    title="Remove unit configuration"
+                                  >
+                                    <Trash2 size={14} />
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -2837,9 +3134,15 @@ const ProjectSubmission = ({
               const hasPrev = currentVisualIdx > 0;
 
               const handleBack = () => {
-                if (currentStep === 0 && propertySubStep === "location") {
-                  setPropertySubStep("details");
-                  return;
+                if (currentStep === 0) {
+                  if (propertySubStep === "location") {
+                    setPropertySubStep("details");
+                    return;
+                  }
+                  if (propertySubStep === "units") {
+                    setPropertySubStep("location");
+                    return;
+                  }
                 }
                 if (currentVisualIdx > 0) {
                   updateCurrentProject({ currentStep: activeSteps[currentVisualIdx - 1].index });
@@ -2852,7 +3155,7 @@ const ProjectSubmission = ({
                   <button
                     type="button"
                     onClick={handleBack}
-                    disabled={!hasPrev && !(currentStep === 0 && propertySubStep === "location")}
+                    disabled={!hasPrev && !(currentStep === 0 && (propertySubStep === "location" || propertySubStep === "units"))}
                     className="px-4 py-2 text-[11px] font-bold text-stone-500 disabled:opacity-40 hover:text-stone-800 transition-colors cursor-pointer"
                   >
                     Back
@@ -2867,6 +3170,15 @@ const ProjectSubmission = ({
                       className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
                     >
                       Next: Location Details
+                    </button>
+                  ) : currentStep === 0 && propertySubStep === "location" ? (
+                    <button
+                      type="button"
+                      onClick={() => setPropertySubStep("units")}
+                      disabled={!currentProject.locationProvince || !currentProject.locationDistrict || !currentProject.locationSector || !currentProject.locationCell || !currentProject.landParcelRef}
+                      className="px-6 py-2.5 bg-[#1E3A5F] text-white text-[11px] font-black uppercase tracking-wider rounded-xl hover:brightness-110 disabled:opacity-45 transition-all shadow-md shadow-[#1E3A5F]/10 cursor-pointer"
+                    >
+                      Next: Register Units
                     </button>
                   ) : isLastStep ? (
                     <button
