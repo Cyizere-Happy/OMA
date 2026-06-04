@@ -30,7 +30,7 @@ import Appeals from "./components/Appeals";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const isSignUp = false;
   const [currentView, setCurrentView] = useState("dashboard");
   const [activeSidebarView, setActiveSidebarView] = useState("dashboard");
   const [wizardStep, setWizardStep] = useState<number | null>(null);
@@ -63,8 +63,6 @@ export default function Home() {
   }>({ density: "comfortable", showMap: true, showStats: true });
 
   // Form states
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -72,25 +70,15 @@ export default function Home() {
 
   // Determine active step based on form filling progress
   const getActiveStep = () => {
-    if (!isSignUp) return 1;
-    if (!firstName || !lastName || !email) return 1;
-    if (!password || password.length < 8) return 2;
-    return 3;
+    return 1;
   };
   const activeStep = getActiveStep();
 
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSignUp) {
-      if (!firstName.trim() || !lastName.trim() || !email.trim() || password.length < 8) {
-        setErrorMsg("Please fill out all fields correctly.");
-        return;
-      }
-    } else {
-      if (!email.trim() || password.length < 8) {
-        setErrorMsg("Please enter valid credentials.");
-        return;
-      }
+    if (!email.trim() || password.length < 8) {
+      setErrorMsg("Please enter valid credentials.");
+      return;
     }
     setErrorMsg("");
     setIsLoggedIn(true);
@@ -233,12 +221,10 @@ export default function Home() {
             {/* Header */}
             <div className="space-y-2">
               <h1 className="text-3xl font-black tracking-tight text-stone-900">
-                {isSignUp ? "Create Owner Profile" : "Access Your Space"}
+                Access Your Space
               </h1>
               <p className="text-stone-500 text-sm">
-                {isSignUp 
-                  ? "Input your basic details to begin the journey." 
-                  : "Provide your login credentials to continue."}
+                Provide your login credentials to continue.
               </p>
             </div>
 
@@ -276,36 +262,6 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Name fields in grid for Sign Up, hidden for Sign In */}
-              <AnimatePresence mode="popLayout">
-                {isSignUp && (
-                  <motion.div 
-                    className="grid grid-cols-2 gap-4"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <InputGroup 
-                      label="First Name" 
-                      placeholder="e.g. Jean" 
-                      type="text" 
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                    <InputGroup 
-                      label="Last Name" 
-                      placeholder="e.g. Mugisha" 
-                      type="text" 
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
               {/* Email */}
               <InputGroup 
                 label="Email Address" 
@@ -339,11 +295,9 @@ export default function Home() {
                 <span className="text-[11px] text-stone-400">
                   Requires at least 8 symbols.
                 </span>
-                {!isSignUp && (
-                  <button type="button" className="text-[11px] text-[#1E3A5F] hover:underline font-semibold">
-                    Forgot Password?
-                  </button>
-                )}
+                <button type="button" className="text-[11px] text-[#1E3A5F] hover:underline font-semibold">
+                  Forgot Password?
+                </button>
               </div>
 
               {/* Submit Button (styled with brand main color #1E3A5F) */}
@@ -351,33 +305,11 @@ export default function Home() {
                 type="submit" 
                 className="w-full h-14 bg-[#1E3A5F] text-white hover:bg-[#1E3A5F]/95 active:scale-[0.98] font-semibold rounded-xl transition-all mt-4 cursor-pointer flex items-center justify-center gap-2 group shadow-md shadow-[#1E3A5F]/20"
               >
-                <span>{isSignUp ? "Create Account" : "Access Workspace"}</span>
+                <span>Access Workspace</span>
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
 
             </form>
-
-            {/* Footer switcher link */}
-            <div className="text-center">
-              <button 
-                type="button" 
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setErrorMsg("");
-                }}
-                className="text-sm text-stone-500 hover:text-stone-800 transition-colors cursor-pointer"
-              >
-                {isSignUp ? (
-                  <>
-                    Member of the team? <span className="text-[#1E3A5F] font-semibold hover:underline">Log in</span>
-                  </>
-                ) : (
-                  <>
-                    New to EstateX? <span className="text-[#1E3A5F] font-semibold hover:underline">Create an owner account</span>
-                  </>
-                )}
-              </button>
-            </div>
             
           </motion.div>
         </div>
