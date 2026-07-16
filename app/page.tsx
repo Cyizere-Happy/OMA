@@ -300,7 +300,7 @@ export default function Home() {
 
         {/* 9. From Our Newsroom */}
         <AnimatedSection as="section" className="py-20 bg-[#0ea5e9] sticky top-0 z-[50] relative">
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-100px] z-30 pointer-events-none translate-x-[35%]">
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-150px] z-30 pointer-events-none translate-x-[35%]">
             <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl" />
           </AnimatedChild>
 
