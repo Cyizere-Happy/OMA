@@ -6,13 +6,13 @@ import { Carousel, Product } from "./components/Carousel";
 import { AnimatedSection, AnimatedChild } from "./components/AnimatedSection";
 
 const juiceProducts: Product[] = [
-  { id: "j1", src: "/Juices/Juices/0000.png", alt: "Juice 0", color: "#ffcc99" }, // Orange-ish
-  { id: "j2", src: "/Juices/Juices/0001.png", alt: "Juice 1", color: "#fdfd96" }, // Yellow-ish
-  { id: "j3", src: "/Juices/Juices/0002.png", alt: "Juice 2", color: "#e0b0ff" }, // Purple-ish
-  { id: "j4", src: "/Juices/Juices/0003.png", alt: "Juice 3", color: "#b3e5be" }, // Green-ish
-  { id: "j5", src: "/Juices/Juices/0004.png", alt: "Juice 4", color: "#ffb6c1" }, // Pink-ish
-  { id: "j6", src: "/Juices/Juices/0005.png", alt: "Juice 5", color: "#ffcccb" }, // Light Red
-  { id: "j7", src: "/Juices/Juices/0006 (1).png", alt: "Juice 6", color: "#ffdca8" }, // Mango/Apricot
+  { id: "j1", src: "/Juices/Juices/0000.png", alt: "Passion Fruit Juice", color: "#cbaacb" }, // Purple
+  { id: "j2", src: "/Juices/Juices/0001.png", alt: "Orange Juice", color: "#ffb347" }, // Orange
+  { id: "j3", src: "/Juices/Juices/0002.png", alt: "Mango Juice", color: "#ffcc5c" }, // Yellow/Orange
+  { id: "j4", src: "/Juices/Juices/0003.png", alt: "Guava Juice", color: "#dcedc1" }, // Pale Green
+  { id: "j5", src: "/Juices/Juices/0004.png", alt: "Cocktail Juice", color: "#ffb6b9" }, // Pink/Red
+  { id: "j6", src: "/Juices/Juices/0005.png", alt: "Apple Juice", color: "#a8e6cf" }, // Fresh Green
+  { id: "j7", src: "/Juices/Juices/0006 (1).png", alt: "Pineapple Juice", color: "#ffeb99" }, // Yellow
 ];
 
 const yogurtProducts: Product[] = [
