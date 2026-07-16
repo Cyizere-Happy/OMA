@@ -62,20 +62,7 @@ export default function Home() {
         <header className="relative w-[90%] max-w-[1600px] mx-auto bg-inyange-blue rounded-b-[40px] md:rounded-b-[60px] shadow-lg z-50 pt-5 pb-5">
           <div className="w-full flex flex-col">
             <div className="flex justify-center mb-6 mt-2">
-              <svg width="300" height="95" viewBox="0 0 350 95" className="overflow-visible drop-shadow-sm">
-                <path
-                  d="M 30,35 Q 175,5 320,35 A 25,25 0 0,1 320,85 Q 175,55 30,85 A 25,25 0 0,1 30,35 Z"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="3.5"
-                />
-                <path id="textPath" d="M 30,71 Q 175,41 320,71" fill="none" />
-                <text className="font-voyager font-bold uppercase" fill="white" fontSize="32" letterSpacing="0.18em">
-                  <textPath href="#textPath" startOffset="50%" textAnchor="middle">
-                    INYANGE
-                  </textPath>
-                </text>
-              </svg>
+              <Image src="/inyange-logo.jpeg" alt="Inyange Logo" width={240} height={80} className="object-contain" />
             </div>
             <nav className="w-full max-w-[850px] mx-auto flex flex-wrap justify-between text-white font-gill font-semibold text-[12px] tracking-wider uppercase px-4 md:px-0">
               <a href="#" className="text-yellow-400 smooth-hover">HOME</a>
@@ -122,12 +109,12 @@ export default function Home() {
 
             <AnimatedChild delay={0.3} from="bottom">
               <div className="w-full max-w-[1400px] mx-auto mt-0">
-                <Carousel 
-                  products={getActiveProducts()} 
+                <Carousel
+                  products={getActiveProducts()}
                   imageClassName={
-                    activeTab === "Juice" ? "scale-[1.65]" : 
-                    activeTab === "Milk Products" ? "scale-[1.8]" : 
-                    ""
+                    activeTab === "Juice" ? "scale-[1.65]" :
+                      activeTab === "Milk Products" ? "scale-[1.8]" :
+                        ""
                   }
                 />
               </div>

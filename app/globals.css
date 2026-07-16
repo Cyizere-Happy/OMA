@@ -51,7 +51,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --inyange-blue: #0075A9;
+  --inyange-blue: #116bb3;
   --inyange-green: #B1D135;
   --inyange-beige: #F4EAD1;
   --inyange-grey: #EAEBE9;
@@ -60,7 +60,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-inyange-blue: var(--inyange-blue);
+  --color-inyange-blue: #116bb3;
   --color-inyange-green: var(--inyange-green);
   --color-inyange-beige: var(--inyange-beige);
   --color-inyange-grey: var(--inyange-grey);
