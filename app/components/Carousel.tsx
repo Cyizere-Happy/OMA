@@ -8,6 +8,7 @@ export interface Product {
   id: string | number;
   src: string;
   alt: string;
+  color?: string;
 }
 
 interface CarouselProps {
@@ -78,8 +79,11 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
 
   return (
     <div className="relative flex justify-between items-center w-full h-[380px] md:h-[440px]">
-      {/* Soft blue glow behind center product */}
-      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-[#c7e9fb] rounded-full blur-[80px] opacity-60 z-0"></div>
+      {/* Dynamic glow behind center product */}
+      <div 
+        className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full blur-[80px] opacity-60 z-0 transition-colors duration-700"
+        style={{ backgroundColor: products[safeIndex]?.color || '#c7e9fb' }}
+      ></div>
 
       {/* Left Button */}
       <button 

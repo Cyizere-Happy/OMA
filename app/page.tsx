@@ -6,28 +6,28 @@ import { Carousel, Product } from "./components/Carousel";
 import { AnimatedSection, AnimatedChild } from "./components/AnimatedSection";
 
 const juiceProducts: Product[] = [
-  { id: "j1", src: "/Juices/Juices/0000.png", alt: "Juice 0" },
-  { id: "j2", src: "/Juices/Juices/0001.png", alt: "Juice 1" },
-  { id: "j3", src: "/Juices/Juices/0002.png", alt: "Juice 2" },
-  { id: "j4", src: "/Juices/Juices/0003.png", alt: "Juice 3" },
-  { id: "j5", src: "/Juices/Juices/0004.png", alt: "Juice 4" },
-  { id: "j6", src: "/Juices/Juices/0005.png", alt: "Juice 5" },
-  { id: "j7", src: "/Juices/Juices/0006 (1).png", alt: "Juice 6" },
+  { id: "j1", src: "/Juices/Juices/0000.png", alt: "Juice 0", color: "#ffcc99" }, // Orange-ish
+  { id: "j2", src: "/Juices/Juices/0001.png", alt: "Juice 1", color: "#fdfd96" }, // Yellow-ish
+  { id: "j3", src: "/Juices/Juices/0002.png", alt: "Juice 2", color: "#e0b0ff" }, // Purple-ish
+  { id: "j4", src: "/Juices/Juices/0003.png", alt: "Juice 3", color: "#b3e5be" }, // Green-ish
+  { id: "j5", src: "/Juices/Juices/0004.png", alt: "Juice 4", color: "#ffb6c1" }, // Pink-ish
+  { id: "j6", src: "/Juices/Juices/0005.png", alt: "Juice 5", color: "#ffcccb" }, // Light Red
+  { id: "j7", src: "/Juices/Juices/0006 (1).png", alt: "Juice 6", color: "#ffdca8" }, // Mango/Apricot
 ];
 
 const yogurtProducts: Product[] = [
-  { id: "y1", src: "/Yorgurt/Yorgurt/0001 (1).png", alt: "Yogurt 1" },
-  { id: "y2", src: "/Yorgurt/Yorgurt/0002 (1).png", alt: "Yogurt 2" },
-  { id: "y3", src: "/Yorgurt/Yorgurt/0003 (1).png", alt: "Yogurt 3" },
-  { id: "y4", src: "/Yorgurt/Yorgurt/0004 (1).png", alt: "Yogurt 4" },
-  { id: "y5", src: "/Yorgurt/Yorgurt/0005 (2).png", alt: "Yogurt 5" },
-  { id: "y6", src: "/Yorgurt/Yorgurt/0006 (2).png", alt: "Yogurt 6" },
+  { id: "y1", src: "/Yorgurt/Yorgurt/0001 (1).png", alt: "Strawberry Yogurt", color: "#ffc6d9" }, // Strawberry (Pink)
+  { id: "y2", src: "/Yorgurt/Yorgurt/0002 (1).png", alt: "Vanilla Yogurt", color: "#b3e5be" }, // Vanilla (Green)
+  { id: "y3", src: "/Yorgurt/Yorgurt/0003 (1).png", alt: "Strawberry Yogurt", color: "#ffc6d9" }, // Strawberry (Pink)
+  { id: "y4", src: "/Yorgurt/Yorgurt/0004 (1).png", alt: "Apricot Yogurt", color: "#ffdca8" }, // Apricot (Orange)
+  { id: "y5", src: "/Yorgurt/Yorgurt/0005 (2).png", alt: "Vanilla Yogurt", color: "#b3e5be" }, // Vanilla (Green)
+  { id: "y6", src: "/Yorgurt/Yorgurt/0006 (2).png", alt: "Apricot Yogurt", color: "#ffdca8" }, // Apricot (Orange)
 ];
 
 const milkProducts: Product[] = [
-  { id: "m1", src: "/Low fat milk.png", alt: "Low Fat Milk" },
-  { id: "m2", src: "/Low fat milk-bw.png", alt: "Milk BW" },
-  { id: "m3", src: "/Low fat milk.png", alt: "Whole Milk" }
+  { id: "m1", src: "/Low fat milk.png", alt: "Low Fat Milk", color: "#c7e9fb" }, // Blue
+  { id: "m2", src: "/Low fat milk-bw.png", alt: "Milk BW", color: "#e2e3e5" }, // Grey
+  { id: "m3", src: "/Low fat milk.png", alt: "Whole Milk", color: "#c7e9fb" } // Blue
 ];
 
 export default function Home() {
