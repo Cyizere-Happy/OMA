@@ -65,7 +65,7 @@ export function Carousel({ products }: CarouselProps) {
       z: 1,
       x: 0,
       opacity: 1,
-      scale: 1.1
+      scale: 1.0
     },
     exit: (direction: number) => ({
       z: 0,
@@ -76,9 +76,9 @@ export function Carousel({ products }: CarouselProps) {
   };
 
   return (
-    <div className="relative flex justify-between items-center w-full h-[650px] md:h-[750px]">
+    <div className="relative flex justify-between items-center w-full h-[380px] md:h-[440px]">
       {/* Soft blue glow behind center product */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#c7e9fb] rounded-full blur-[90px] opacity-70 z-0"></div>
+      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-[#c7e9fb] rounded-full blur-[80px] opacity-60 z-0"></div>
 
       {/* Left Button */}
       <button 
@@ -89,7 +89,7 @@ export function Carousel({ products }: CarouselProps) {
       </button>
 
       {/* Products Display Container */}
-      <div className="relative w-full h-full flex justify-center items-center overflow-hidden px-12">
+      <div className="relative w-full h-full flex justify-center items-center overflow-hidden px-12" style={{clipPath: 'none'}}>
         
         {/* Side Product (Left) */}
         {products.length > 1 && (

@@ -31,12 +31,12 @@ const milkProducts: Product[] = [
 ];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"Milk" | "Yogurt" | "Juice" | "Water">("Juice");
+  const [activeTab, setActiveTab] = useState<"Milk" | "Milk Products" | "Juice" | "Water">("Juice");
 
   const getActiveProducts = () => {
     switch (activeTab) {
       case "Juice": return juiceProducts;
-      case "Yogurt": return yogurtProducts;
+      case "Milk Products": return yogurtProducts;
       case "Milk": return milkProducts;
       default: return juiceProducts;
     }
@@ -88,7 +88,7 @@ export default function Home() {
       <main className="flex-1 w-full flex flex-col">
 
         {/* 3. Our Brand Range */}
-        <AnimatedSection as="section" className="pt-12 pb-24 bg-white relative" delay={0}>
+        <AnimatedSection as="section" className="pt-10 pb-6 bg-white relative" delay={0}>
           <div className="w-full relative z-10">
             <div className="max-w-[850px] mx-auto px-4 md:px-0 text-center w-full">
               <AnimatedChild delay={0} from="bottom">
@@ -100,9 +100,9 @@ export default function Home() {
                 </p>
               </AnimatedChild>
               <AnimatedChild delay={0.22} from="bottom">
-                <div className="bg-[#EAEAE2] rounded-full inline-flex p-1.5 mb-16 space-x-1">
+                <div className="bg-[#EAEAE2] rounded-full inline-flex p-1.5 mb-6 space-x-1">
                   <button onClick={() => setActiveTab("Milk")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Milk' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk</button>
-                  <button onClick={() => setActiveTab("Yogurt")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Yogurt' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Yogurt</button>
+                  <button onClick={() => setActiveTab("Milk Products")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Milk Products' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk Products</button>
                   <button onClick={() => setActiveTab("Juice")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Juice' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Juice</button>
                   <button onClick={() => setActiveTab("Water")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Water' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Water</button>
                 </div>
@@ -110,23 +110,24 @@ export default function Home() {
             </div>
 
             <AnimatedChild delay={0.3} from="bottom">
-              <div className="w-full max-w-[1400px] mx-auto mt-4">
+              <div className="w-full max-w-[1400px] mx-auto mt-0">
                 <Carousel products={getActiveProducts()} />
               </div>
             </AnimatedChild>
           </div>
 
-          {/* Floating Fruits */}
-          <AnimatedChild delay={0.1} from="left" className="absolute left-[2%] bottom-[-140px] z-30 pointer-events-none">
-            <Image src="/apple.png" alt="Apples" width={180} height={360} className="object-contain" />
-          </AnimatedChild>
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 bottom-[-180px] z-30 pointer-events-none translate-x-[45%]">
-            <Image src="/brand-orange.png" alt="Orange" width={500} height={500} className="object-contain drop-shadow-lg" />
-          </AnimatedChild>
         </AnimatedSection>
 
         {/* 4. Our Picks */}
-        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative">
+        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative sticky top-0 z-[10]">
+          {/* Fruits anchored to Our Picks but positioned into Our Brand Range above */}
+          <AnimatedChild delay={0.1} from="left" className="absolute left-[2%] top-[-200px] z-[5] pointer-events-none">
+            <Image src="/apple.png" alt="Apples" width={180} height={360} className="object-contain" />
+          </AnimatedChild>
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-240px] z-[5] pointer-events-none translate-x-[45%]">
+            <Image src="/brand-orange.png" alt="Orange" width={500} height={500} className="object-contain drop-shadow-lg" />
+          </AnimatedChild>
+
           <div className="max-w-[850px] mx-auto px-4 md:px-0 text-center w-full relative z-10">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-5xl md:text-[65px] font-gothic text-inyange-blue uppercase leading-none tracking-tight mb-3">Our Picks</h2>
@@ -159,7 +160,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 5. Trusted By People Worldwide */}
-        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end z-20">
+        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end sticky top-0 z-[20]">
           <AnimatedChild delay={0} from="bottom">
             <div className="w-full max-w-[700px] mx-auto relative flex justify-center h-[410px] md:h-[460px]">
               <div className="absolute bottom-0 w-[120%] md:w-full h-[500px] md:h-[550px] z-30 pointer-events-none">
@@ -181,7 +182,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 6. The Pride of Rwanda's Beverage Industry */}
-        <AnimatedSection as="section" className="bg-inyange-green py-24 relative z-10">
+        <AnimatedSection as="section" className="bg-inyange-green py-24 relative sticky top-0 z-[30]">
           <div className="max-w-[850px] mx-auto px-4 md:px-0 flex flex-col md:flex-row items-center gap-12">
             <AnimatedChild delay={0} from="left" className="w-full md:w-1/2 flex flex-col justify-center">
               <h2 className="text-5xl md:text-[60px] font-gothic text-white uppercase leading-[0.9] tracking-tight mb-6">
@@ -198,13 +199,16 @@ export default function Home() {
             </AnimatedChild>
           </div>
 
-          <AnimatedChild delay={0.2} from="left" className="absolute left-0 bottom-[-150px] z-30 pointer-events-none translate-x-[-25%]">
-            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl" />
-          </AnimatedChild>
         </AnimatedSection>
 
-        {/* 7. Vision & Mission */}
-        <AnimatedSection as="section" className="pt-12 pb-4 bg-white">
+        {/* 7 & 8. Vision, Mission & Leaders Wrapper */}
+        <div className="sticky top-0 z-[40] bg-white relative">
+          <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-150px] z-30 pointer-events-none translate-x-[-25%]">
+            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl" />
+          </AnimatedChild>
+          
+          {/* 7. Vision & Mission */}
+          <AnimatedSection as="section" className="pt-12 pb-4">
           <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[760px]">
             <AnimatedChild delay={0} from="left">
               <div className="bg-[#f6f3e1] rounded-[24px] p-6 md:p-8 flex flex-col relative overflow-hidden shadow-sm">
@@ -241,7 +245,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 8. Visionary Leaders */}
-        <AnimatedSection as="section" className="pt-10 pb-16 bg-white relative">
+        <AnimatedSection as="section" className="pt-10 pb-16 relative">
           <div className="container mx-auto px-4 text-center relative z-10">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-[40px] md:text-[54px] font-gothic text-inyange-blue uppercase mb-4 tracking-tight">Visionary Leaders</h2>
@@ -273,14 +277,15 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Floating passion fruit - animates on scroll, original position */}
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 bottom-[-100px] z-20 pointer-events-none translate-x-[35%]">
-            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl" />
-          </AnimatedChild>
         </AnimatedSection>
+        </div>
 
         {/* 9. From Our Newsroom */}
-        <AnimatedSection as="section" className="py-20 bg-[#0ea5e9]">
+        <AnimatedSection as="section" className="py-20 bg-[#0ea5e9] sticky top-0 z-[50] relative">
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-100px] z-30 pointer-events-none translate-x-[35%]">
+            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl" />
+          </AnimatedChild>
+
           <div className="container mx-auto px-4 text-center">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-5xl md:text-[65px] font-gothic text-inyange-green uppercase leading-none mb-20 tracking-tight">From Our Newsroom</h2>
@@ -326,7 +331,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 10. Want To Get In Touch? */}
-        <AnimatedSection as="section" className="pt-24 pb-20 bg-white">
+        <AnimatedSection as="section" className="pt-24 pb-20 bg-white sticky top-0 z-[60]">
           <div className="container mx-auto px-4 text-center flex flex-col items-center">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-5xl md:text-[75px] font-gothic text-inyange-blue uppercase mb-6 leading-[0.9] tracking-tight">
@@ -353,7 +358,7 @@ export default function Home() {
       </main>
 
       {/* 11. Footer */}
-      <AnimatedSection as="footer" className="bg-[#0072a6] pt-20 pb-48">
+      <AnimatedSection as="footer" className="bg-[#0072a6] pt-20 pb-48 sticky top-0 z-[70]">
         <div className="max-w-[1000px] mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 text-white font-calibre text-[15px] leading-relaxed">
           <AnimatedChild delay={0} from="bottom" className="col-span-2 md:col-span-1 pr-4">
             <h4 className="uppercase text-white text-[16px] mb-6">Inyange Industries</h4>
