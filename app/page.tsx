@@ -15,6 +15,7 @@ const juiceProducts: Product[] = [
   { id: "j7", src: "/Juices/Juices/0006 (1).png", alt: "Pineapple Juice", color: "#ffeb99" }, // Yellow
 ];
 
+//changes
 const yogurtProducts: Product[] = [
   { id: "y1", src: "/Yorgurt/Yorgurt/0001 (1).png", alt: "Strawberry Yogurt", color: "#ffc6d9" }, // Strawberry (Pink)
   { id: "y2", src: "/Yorgurt/Yorgurt/0002 (1).png", alt: "Vanilla Yogurt", color: "#b3e5be" }, // Vanilla (Green)
