@@ -12,6 +12,7 @@ export interface Product {
 
 interface CarouselProps {
   products: Product[];
+  imageClassName?: string;
 }
 
 const swipeConfidenceThreshold = 10000;
@@ -19,7 +20,7 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-export function Carousel({ products }: CarouselProps) {
+export function Carousel({ products, imageClassName = "" }: CarouselProps) {
   const [[currentIndex, direction], setPage] = useState([0, 1]);
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export function Carousel({ products }: CarouselProps) {
       {/* Left Button */}
       <button 
         onClick={prevSlide}
-        className="absolute left-[2%] md:left-[5%] w-12 h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
+        className="absolute left-[8%] md:left-[16%] w-12 h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
       >
         <svg className="w-5 h-5 ml-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"></path></svg>
       </button>
@@ -106,7 +107,7 @@ export function Carousel({ products }: CarouselProps) {
               alt={products[prevIndex].alt} 
               width={250} 
               height={500} 
-              className="object-contain max-h-[85%]" 
+              className={`object-contain max-h-[85%] ${imageClassName}`} 
             />
           </motion.div>
         )}
@@ -132,7 +133,7 @@ export function Carousel({ products }: CarouselProps) {
               alt={products[safeIndex].alt} 
               width={350} 
               height={650} 
-              className="object-contain drop-shadow-2xl max-h-[95%]" 
+              className={`object-contain drop-shadow-2xl max-h-[95%] ${imageClassName}`} 
             />
           </motion.div>
         </AnimatePresence>
@@ -152,7 +153,7 @@ export function Carousel({ products }: CarouselProps) {
               alt={products[nextIndex].alt} 
               width={250} 
               height={500} 
-              className="object-contain max-h-[85%]" 
+              className={`object-contain max-h-[85%] ${imageClassName}`} 
             />
           </motion.div>
         )}
@@ -161,7 +162,7 @@ export function Carousel({ products }: CarouselProps) {
       {/* Right Button */}
       <button 
         onClick={nextSlide}
-        className="absolute right-[2%] md:right-[5%] w-12 h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
+        className="absolute right-[8%] md:right-[16%] w-12 h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
       >
         <svg className="w-5 h-5 mr-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7"></path></svg>
       </button>
