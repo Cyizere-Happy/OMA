@@ -8,8 +8,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "EstateX — Project Owner Portal",
-  description: "EstateX project submission, milestones, and fund requests.",
+  title: "Intare Hospital System",
+  description: "Intare Hospital patient admissions and management.",
 };
 
 export default function RootLayout({

@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://estatex-backend.onrender.com';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://Intare-backend.onrender.com';
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;

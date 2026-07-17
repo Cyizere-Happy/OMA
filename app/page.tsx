@@ -17,15 +17,7 @@ import Header from "./components/Header";
 import QuickAccess from "./components/QuickAccess";
 import OwnerProjectsTable from "./components/OwnerProjectsTable";
 import ProjectSubmission from "./components/ProjectSubmission";
-import MilestoneReporting from "./components/MilestoneReporting";
-import OwnerDocuments from "./components/OwnerDocuments";
-import FundRequests from "./components/FundRequests";
-import OwnerSitesMap from "./components/OwnerSitesMap";
-import InvestorRelations from "./components/InvestorRelations";
-import RevenuePayouts from "./components/RevenuePayouts";
-import GovVerificationStatus from "./components/GovVerificationStatus";
-import EvaluatorVerdicts from "./components/EvaluatorVerdicts";
-import Appeals from "./components/Appeals";
+
 
 
 export default function Home() {
@@ -92,25 +84,11 @@ export default function Home() {
   const renderContent = () => {
     switch (currentView) {
       case "submit":
-        return <ProjectSubmission onNavigate={handleNavigate} initialStep={wizardStep} mode="new" />;
-      case "milestones":
-        return <MilestoneReporting />;
-      case "documents":
-        return <OwnerDocuments />;
-      case "funds":
-        return <FundRequests />;
-      case "map":
-        return <OwnerSitesMap />;
-      case "investors":
-        return <InvestorRelations />;
-      case "revenue":
-        return <RevenuePayouts />;
-      case "gov-checks":
-        return <ProjectSubmission onNavigate={handleNavigate} initialStep={wizardStep} mode="existing" />;
-      case "verdicts":
-        return <EvaluatorVerdicts />;
-      case "appeals":
-        return <Appeals />;
+        return (
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <ProjectSubmission onNavigate={handleNavigate} initialStep={wizardStep} mode="new" />
+          </div>
+        );
       case "dashboard":
       default:
         return (
@@ -128,17 +106,16 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <main className="flex min-h-screen w-full bg-white selection:bg-[#1E3A5F]/20 p-2 transition-all duration-500 lg:h-screen lg:overflow-hidden lg:p-4 text-stone-900">
+      <main className="flex min-h-screen w-full bg-white selection:bg-[#0B5B3E]/20 p-2 transition-all duration-500 lg:h-screen lg:overflow-hidden lg:p-4 text-stone-900">
         
         {/* Left Column — Property photo background with overlay + step cards */}
         <div className="w-[52%] hidden lg:flex relative flex-col rounded-3xl overflow-hidden shadow-2xl h-full">
-          {/* Background photo */}
+          {/* Background overlay */}
           <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/estate_hero.png')" }}
+            className="absolute inset-0 bg-[#0B5B3E]/90 bg-cover bg-center bg-no-repeat"
           />
           {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/75" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/50" />
 
           {/* TOP — Brand Logo */}
           <div className="relative z-10 px-10 pt-10">
@@ -151,7 +128,7 @@ export default function Home() {
               <div className="h-8 w-8 rounded-lg bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center">
                 <Building size={15} className="text-white" />
               </div>
-              <span className="text-white font-black text-[17px] tracking-tight">EstateX</span>
+              <span className="text-white font-black text-[17px] tracking-tight">Intare</span>
             </motion.div>
           </div>
 
@@ -164,12 +141,12 @@ export default function Home() {
               className="mb-8"
             >
               <h2 className="text-[2.4rem] font-black leading-[1.1] tracking-tight text-white mb-3">
-                {isSignUp ? "Join EstateX" : "Access EstateX"}
+                {isSignUp ? "Join Intare Hospital" : "Access Intare Hospital"}
               </h2>
               <p className="text-white/70 text-[13.5px] leading-relaxed max-w-[320px]">
                 {isSignUp
-                  ? "Register your property and unlock crowdfunded investment on EstateX."
-                  : "Access your fractional real estate owner workspace."}
+                  ? "Register hospital staff credentials and manage patient admissions."
+                  : "Access your medical staff workspace."}
               </p>
             </motion.div>
 
@@ -181,24 +158,24 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               {(isSignUp ? [
-                { n: 1, text: "Register owner identity" },
-                { n: 2, text: "Verify property details" },
-                { n: 3, text: "Activate portal dashboard" },
+                { n: 1, text: "Register staff identity" },
+                { n: 2, text: "Verify medical credentials" },
+                { n: 3, text: "Activate hospital dashboard" },
               ] : [
                 { n: 1, text: "Enter your credentials" },
-                { n: 2, text: "Verify your identity (KYC)" },
-                { n: 3, text: "Access your owner dashboard" },
+                { n: 2, text: "Verify your identity" },
+                { n: 3, text: "Access your staff dashboard" },
               ]).map((step, i) => (
                 <div
                   key={step.n}
                   className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all ${
                     i === 0
-                      ? "bg-white text-[#1E3A5F]"
+                      ? "bg-white text-[#0B5B3E]"
                       : "bg-white/10 backdrop-blur-sm border border-white/15 text-white/80"
                   }`}
                 >
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0 ${
-                    i === 0 ? "bg-[#1E3A5F] text-white" : "bg-white/15 text-white/60"
+                    i === 0 ? "bg-[#0B5B3E] text-white" : "bg-white/15 text-white/60"
                   }`}>
                     {step.n}
                   </div>
@@ -231,7 +208,7 @@ export default function Home() {
             {/* Social Authentication */}
             <div className="grid grid-cols-2 gap-4">
               <SocialButton 
-                icon={<Chrome size={18} className="text-[#1E3A5F]" />} 
+                icon={<Chrome size={18} className="text-[#0B5B3E]" />} 
                 label="Google" 
                 onClick={() => handleSocialClick("Google")} 
               />
@@ -265,7 +242,7 @@ export default function Home() {
               {/* Email */}
               <InputGroup 
                 label="Email Address" 
-                placeholder="e.g. jean.mugisha@estatex.rw" 
+                placeholder="e.g. jean.mugisha@Intare.rw" 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -295,15 +272,15 @@ export default function Home() {
                 <span className="text-[11px] text-stone-400">
                   Requires at least 8 symbols.
                 </span>
-                <button type="button" className="text-[11px] text-[#1E3A5F] hover:underline font-semibold">
+                <button type="button" className="text-[11px] text-[#0B5B3E] hover:underline font-semibold">
                   Forgot Password?
                 </button>
               </div>
 
-              {/* Submit Button (styled with brand main color #1E3A5F) */}
+              {/* Submit Button (styled with brand main color #0B5B3E) */}
               <button 
                 type="submit" 
-                className="w-full h-14 bg-[#1E3A5F] text-white hover:bg-[#1E3A5F]/95 active:scale-[0.98] font-semibold rounded-xl transition-all mt-4 cursor-pointer flex items-center justify-center gap-2 group shadow-md shadow-[#1E3A5F]/20"
+                className="w-full h-14 bg-[#0B5B3E] text-white hover:bg-[#0B5B3E]/95 active:scale-[0.98] font-semibold rounded-xl transition-all mt-4 cursor-pointer flex items-center justify-center gap-2 group shadow-md shadow-[#0B5B3E]/20"
               >
                 <span>Access Workspace</span>
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -331,7 +308,7 @@ export default function Home() {
 
       <style jsx global>{`
         ::selection {
-          background-color: #1E3A5F;
+          background-color: #0B5B3E;
           color: white;
         }
 
@@ -383,14 +360,14 @@ function StepItem({ number, text, active = false }: StepItemProps) {
     <div 
       className={`flex items-center gap-4 p-4 rounded-2xl w-full border transition-all duration-300 ${
         active 
-          ? "bg-white/95 backdrop-blur-md text-[#1E3A5F] border-white/50 shadow-xl shadow-black/5" 
+          ? "bg-white/95 backdrop-blur-md text-[#0B5B3E] border-white/50 shadow-xl shadow-black/5" 
           : "bg-white/10 backdrop-blur-sm text-white/80 border-white/5"
       }`}
     >
       <div 
         className={`h-7 w-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${
           active 
-            ? "bg-[#1E3A5F] text-white shadow-sm" 
+            ? "bg-[#0B5B3E] text-white shadow-sm" 
             : "bg-white/15 text-white/40"
         }`}
       >
@@ -451,7 +428,7 @@ function InputGroup({
           value={value}
           onChange={onChange}
           required={required}
-          className="w-full bg-white border border-stone-200 rounded-xl h-11 px-4 text-stone-900 text-[13px] placeholder:text-stone-300 focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/15 outline-none transition-all shadow-sm"
+          className="w-full bg-white border border-stone-200 rounded-xl h-11 px-4 text-stone-900 text-[13px] placeholder:text-stone-300 focus:border-[#0B5B3E] focus:ring-2 focus:ring-[#0B5B3E]/15 outline-none transition-all shadow-sm"
         />
         {rightElement && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center">

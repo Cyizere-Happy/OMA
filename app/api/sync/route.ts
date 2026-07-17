@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-let SYNC_FILE = path.join(process.cwd(), "estatex_db.json");
+let SYNC_FILE = path.join(process.cwd(), "Intare_db.json");
 if (!fs.existsSync(SYNC_FILE)) {
-  SYNC_FILE = path.join(process.cwd(), "..", "estatex_db.json");
+  SYNC_FILE = path.join(process.cwd(), "..", "Intare_db.json");
 }
 
 export async function GET() {

@@ -42,7 +42,7 @@ const OwnerLeafletMap = ({ sites }: { sites: OwnerSiteMarker[] }) => {
             <div className="p-0 overflow-hidden rounded-xl border-none shadow-xl min-w-[200px]">
               <img src={site.image} alt={site.name} className="w-full h-24 object-cover" />
               <div className="p-3">
-                <p className="text-[13px] font-black text-[#1E3A5F] mb-1">{site.name}</p>
+                <p className="text-[13px] font-black text-[#0B5B3E] mb-1">{site.name}</p>
                 <p className="text-[11px] font-bold text-stone-500 mb-2">{site.location}</p>
                 <p className="text-[10px] font-semibold text-stone-600 mb-1">{site.status}</p>
                 <div className="flex justify-between items-center">
@@ -51,7 +51,7 @@ const OwnerLeafletMap = ({ sites }: { sites: OwnerSiteMarker[] }) => {
                 </div>
                 <button
                   type="button"
-                  className="w-full mt-3 bg-[#1E3A5F] text-white py-2 rounded-lg text-[10px] font-black hover:shadow-lg transition-all uppercase tracking-wider"
+                  className="w-full mt-3 bg-[#0B5B3E] text-white py-2 rounded-lg text-[10px] font-black hover:shadow-lg transition-all uppercase tracking-wider"
                 >
                   View project
                 </button>
