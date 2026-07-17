@@ -12,10 +12,16 @@ import {
   X,
   Activity,
   Bed,
-  Stethoscope
+  Stethoscope,
+  Plus,
+  Trash2
 } from "lucide-react";
 
 // ── Types ────────────────────────────────────────────────────────────────────
+export interface InsuranceRecord {
+  provider: string;
+  policyNumber: string;
+}
 interface Vitals {
   bloodPressure: string;
   temperature: string;
@@ -45,6 +51,12 @@ interface PatientRecord {
   gender?: string;
   weightKg?: string;
   anonymousIndicator?: string;
+  email?: string;
+  phone?: string;
+  insurances?: InsuranceRecord[];
+  isNewRegistration?: boolean;
+  isOutsider?: boolean;
+  passportNumber?: string;
   mockImage?: string;
 
   // Step 2: Triage
@@ -361,47 +373,178 @@ const ProjectSubmission = ({
 
                   {currentProject.patientMode !== "anonymous" ? (
                     <div className="space-y-6 animate-fade-in">
-                      <label className="block">
-                        <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">National ID / Patient ID</span>
-                        <div className="flex gap-2 mt-2">
-                          <input 
-                            value={currentProject.patientId || ""}
-                            onChange={e => updateCurrentProject({ patientId: e.target.value })}
-                            className="flex-1 bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#0B5B3E] focus:bg-white transition-all shadow-sm"
-                            placeholder="e.g. 1 1990 8 0000000 0 00 or P-12345" 
-                          />
-                          <button 
-                            type="button"
-                            onClick={() => {
-                              if (!currentProject.patientId) return;
-                              if (currentProject.patientId.length >= 16) {
-                                updateCurrentProject({
-                                  firstName: "Jean",
-                                  lastName: "Mugisha",
-                                  gender: "Male",
-                                  age: "36",
-                                  mockImage: "https://i.pravatar.cc/150?u=jean"
-                                });
-                                showToastMsg("National ID found. Details retrieved.");
-                              } else {
-                                updateCurrentProject({
-                                  firstName: "Alice",
-                                  lastName: "Uwimana",
-                                  gender: "Female",
-                                  age: "24",
-                                  mockImage: undefined
-                                });
-                                showToastMsg("Patient ID found. Details retrieved.");
-                              }
-                            }}
-                            className="bg-[#0B5B3E] text-white px-5 rounded-xl text-[12px] font-bold hover:bg-[#0B5B3E]/90 transition-all flex items-center gap-2 cursor-pointer"
-                          >
-                            <Search size={14} /> Lookup
-                          </button>
+                      {!currentProject.isOutsider ? (
+                        <label className="block">
+                          <div className="flex justify-between items-end">
+                            <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">National ID / Patient ID</span>
+                            <button 
+                              type="button" 
+                              onClick={() => updateCurrentProject({ isOutsider: true, isNewRegistration: true, patientId: "", firstName: "", lastName: "", gender: "", age: "", email: "", phone: "", insurances: [], mockImage: undefined })}
+                              className="text-[10px] font-bold text-[#0B5B3E] hover:underline"
+                            >
+                              Register International Patient
+                            </button>
+                          </div>
+                          <div className="flex gap-2 mt-2">
+                            <input 
+                              value={currentProject.patientId || ""}
+                              onChange={e => updateCurrentProject({ patientId: e.target.value })}
+                              className="flex-1 bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#0B5B3E] focus:bg-white transition-all shadow-sm"
+                              placeholder="e.g. 1 1990 8 0000000 0 00 or P-12345" 
+                            />
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                if (!currentProject.patientId) return;
+                                if (currentProject.patientId.endsWith("404")) {
+                                  updateCurrentProject({
+                                    isNewRegistration: true,
+                                    firstName: "",
+                                    lastName: "",
+                                    gender: "",
+                                    age: "",
+                                    email: "",
+                                    phone: "",
+                                    insurances: [],
+                                    mockImage: undefined
+                                  });
+                                  showToastMsg("Patient not found. Please register.");
+                                } else if (currentProject.patientId.length >= 16) {
+                                  updateCurrentProject({
+                                    isNewRegistration: false,
+                                    firstName: "Jean",
+                                    lastName: "Mugisha",
+                                    gender: "Male",
+                                    age: "36",
+                                    mockImage: "https://i.pravatar.cc/150?u=jean"
+                                  });
+                                  showToastMsg("National ID found. Details retrieved.");
+                                } else {
+                                  updateCurrentProject({
+                                    isNewRegistration: false,
+                                    firstName: "Alice",
+                                    lastName: "Uwimana",
+                                    gender: "Female",
+                                    age: "24",
+                                    mockImage: undefined
+                                  });
+                                  showToastMsg("Patient ID found. Details retrieved.");
+                                }
+                              }}
+                              className="bg-[#0B5B3E] text-white px-5 rounded-xl text-[12px] font-bold hover:bg-[#0B5B3E]/90 transition-all flex items-center gap-2 cursor-pointer"
+                            >
+                              <Search size={14} /> Lookup
+                            </button>
+                          </div>
+                        </label>
+                      ) : (
+                        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <h4 className="text-[12px] font-black text-orange-900 uppercase tracking-widest">International Patient / Outsider</h4>
+                            <button 
+                              type="button" 
+                              onClick={() => updateCurrentProject({ isOutsider: false, isNewRegistration: false, passportNumber: "" })}
+                              className="text-[10px] font-bold text-orange-700 hover:underline"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                          <label className="block">
+                            <span className="text-[10px] font-black text-orange-800 uppercase tracking-widest">Passport Number</span>
+                            <input 
+                              value={currentProject.passportNumber || ""}
+                              onChange={e => updateCurrentProject({ passportNumber: e.target.value })}
+                              className="mt-2 w-full bg-white border border-orange-200 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-orange-500 transition-all shadow-sm"
+                              placeholder="e.g. PC1234567" 
+                            />
+                          </label>
                         </div>
-                      </label>
+                      )}
 
-                      {(currentProject.firstName || currentProject.lastName) && (
+                      {currentProject.isNewRegistration ? (
+                        <div className="bg-stone-50 border border-stone-200 rounded-xl p-5 animate-fade-in space-y-4">
+                          <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+                            <h4 className="text-[13px] font-black text-stone-800 uppercase tracking-widest">New Patient Registration</h4>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <label className="block">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">First Name</span>
+                              <input value={currentProject.firstName || ""} onChange={e => updateCurrentProject({ firstName: e.target.value })} className="mt-2 w-full bg-white border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" />
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Last Name</span>
+                              <input value={currentProject.lastName || ""} onChange={e => updateCurrentProject({ lastName: e.target.value })} className="mt-2 w-full bg-white border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" />
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Gender</span>
+                              <select value={currentProject.gender || ""} onChange={e => updateCurrentProject({ gender: e.target.value })} className="mt-2 w-full bg-white border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                              </select>
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Age</span>
+                              <input type="number" value={currentProject.age || ""} onChange={e => updateCurrentProject({ age: e.target.value })} className="mt-2 w-full bg-white border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" />
+                            </label>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <label className="block">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Email</span>
+                              <input type="email" value={currentProject.email || ""} onChange={e => updateCurrentProject({ email: e.target.value })} className="mt-2 w-full bg-white border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" />
+                            </label>
+                            <label className="block">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Phone Number</span>
+                              <input value={currentProject.phone || ""} onChange={e => updateCurrentProject({ phone: e.target.value })} className="mt-2 w-full bg-white border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" />
+                            </label>
+                          </div>
+                          
+                          <div className="pt-2">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Insurance Information</span>
+                              <button 
+                                type="button"
+                                onClick={() => updateCurrentProject({ insurances: [...(currentProject.insurances || []), { provider: "", policyNumber: "" }] })}
+                                className="text-[10px] font-bold text-[#0B5B3E] hover:underline flex items-center gap-1 cursor-pointer"
+                              >
+                                <Plus size={12} /> Add Insurance
+                              </button>
+                            </div>
+                            {(currentProject.insurances || []).length === 0 && (
+                              <p className="text-[11px] text-stone-500 italic">No insurance records added.</p>
+                            )}
+                            <div className="space-y-3">
+                              {(currentProject.insurances || []).map((ins, idx) => (
+                                <div key={idx} className="flex gap-3 items-end">
+                                  <label className="flex-1 block">
+                                    <span className="text-[10px] font-bold text-stone-500 mb-1 block">Provider</span>
+                                    <input value={ins.provider} onChange={e => {
+                                      const newIns = [...(currentProject.insurances || [])];
+                                      newIns[idx].provider = e.target.value;
+                                      updateCurrentProject({ insurances: newIns });
+                                    }} className="w-full bg-white border border-stone-200/80 rounded-xl px-3 py-2.5 text-[12px] font-medium outline-none focus:border-[#0B5B3E]" placeholder="e.g. RSSB" />
+                                  </label>
+                                  <label className="flex-1 block">
+                                    <span className="text-[10px] font-bold text-stone-500 mb-1 block">Policy Number</span>
+                                    <input value={ins.policyNumber} onChange={e => {
+                                      const newIns = [...(currentProject.insurances || [])];
+                                      newIns[idx].policyNumber = e.target.value;
+                                      updateCurrentProject({ insurances: newIns });
+                                    }} className="w-full bg-white border border-stone-200/80 rounded-xl px-3 py-2.5 text-[12px] font-medium outline-none focus:border-[#0B5B3E]" placeholder="e.g. 12345678" />
+                                  </label>
+                                  <button type="button" onClick={() => {
+                                    const newIns = [...(currentProject.insurances || [])];
+                                    newIns.splice(idx, 1);
+                                    updateCurrentProject({ insurances: newIns });
+                                  }} className="h-10 w-10 shrink-0 bg-red-50 border border-red-200 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-100 transition-colors cursor-pointer">
+                                    <Trash2 size={14} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (currentProject.firstName || currentProject.lastName) ? (
                         <div className="bg-stone-50 border border-stone-200 rounded-xl p-5 flex gap-5 animate-fade-in">
                           {currentProject.mockImage && (
                             <img src={currentProject.mockImage} alt="Patient" className="w-16 h-16 rounded-full border-2 border-stone-200 object-cover shrink-0" />
@@ -425,7 +568,7 @@ const ProjectSubmission = ({
                             </div>
                           </div>
                         </div>
-                      )}
+                      ) : null}
 
                       <label className="block">
                         <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Weight (kg)</span>
