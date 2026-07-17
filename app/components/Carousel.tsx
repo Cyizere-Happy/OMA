@@ -88,7 +88,7 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
       {/* Left Button */}
       <button 
         onClick={prevSlide}
-        className="absolute left-[8%] md:left-[16%] w-12 h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
+        className="absolute left-[2%] md:left-[16%] w-10 h-10 md:w-12 md:h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
       >
         <svg className="w-5 h-5 ml-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"></path></svg>
       </button>
@@ -103,7 +103,7 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 0.5, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="absolute left-[15%] z-10 w-1/4 h-[80%] flex justify-center items-center opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
+            className="absolute left-[15%] z-10 w-1/4 h-[80%] hidden md:flex justify-center items-center opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
             onClick={prevSlide}
           >
             <Image 
@@ -130,7 +130,7 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
               opacity: { duration: 0.55 },
               scale: { duration: 0.55 }
             }}
-            className="absolute z-20 flex justify-center items-center w-1/3 h-full"
+            className="absolute z-20 flex justify-center items-center w-3/4 md:w-1/3 h-full"
           >
             <Image 
               src={products[safeIndex].src} 
@@ -149,7 +149,7 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 0.5, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="absolute right-[15%] z-10 w-1/4 h-[80%] flex justify-center items-center opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
+            className="absolute right-[15%] z-10 w-1/4 h-[80%] hidden md:flex justify-center items-center opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
             onClick={nextSlide}
           >
             <Image 
@@ -166,7 +166,7 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
       {/* Right Button */}
       <button 
         onClick={nextSlide}
-        className="absolute right-[8%] md:right-[16%] w-12 h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
+        className="absolute right-[2%] md:right-[16%] w-10 h-10 md:w-12 md:h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
       >
         <svg className="w-5 h-5 mr-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7"></path></svg>
       </button>

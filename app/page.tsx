@@ -32,6 +32,7 @@ const milkProducts: Product[] = [
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"Milk" | "Milk Products" | "Juice" | "Water">("Juice");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const getActiveProducts = () => {
     switch (activeTab) {
@@ -45,7 +46,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Top Section containing both Navbar and Hero to share the background */}
-      <div className="relative w-full h-[650px] md:h-[850px] flex flex-col justify-between pb-24 md:pb-32">
+      <div className="relative w-full h-[550px] sm:h-[650px] md:h-[850px] flex flex-col justify-between pb-16 md:pb-32">
         {/* Hero Background covering the full top area */}
         <div className="absolute inset-0 z-0 bg-black">
           <Image
@@ -59,12 +60,26 @@ export default function Home() {
         </div>
 
         {/* 1. Floating Navbar */}
-        <header className="relative w-[90%] max-w-[1600px] mx-auto bg-inyange-blue rounded-b-[40px] md:rounded-b-[60px] shadow-lg z-50 pt-5 pb-5">
+        <header className="relative w-[95%] md:w-[90%] max-w-[1600px] mx-auto bg-inyange-blue rounded-b-[30px] md:rounded-b-[60px] shadow-lg z-50 pt-4 md:pt-5 pb-4 md:pb-5">
           <div className="w-full flex flex-col">
-            <div className="flex justify-center mb-6 mt-2">
-              <Image src="/inyange-logo.jpeg" alt="Inyange Logo" width={240} height={80} className="object-contain" />
+            <div className="flex justify-between md:justify-center items-center px-5 md:px-0 mb-0 md:mb-6 mt-1 md:mt-2">
+              <Image src="/inyange-logo.jpeg" alt="Inyange Logo" width={240} height={80} className="object-contain w-[140px] md:w-[240px]" />
+              <button 
+                className="md:hidden text-white p-2"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
             </div>
-            <nav className="w-full max-w-[850px] mx-auto flex flex-wrap justify-between text-white font-gill font-semibold text-[12px] tracking-wider uppercase px-4 md:px-0">
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex w-full max-w-[850px] mx-auto flex-wrap justify-between text-white font-gill font-semibold text-[12px] tracking-wider uppercase px-4 md:px-0">
               <a href="#" className="text-yellow-400 smooth-hover">HOME</a>
               <a href="#" className="hover:text-yellow-400 smooth-hover">OUR BRANDS</a>
               <a href="#" className="hover:text-yellow-400 smooth-hover">RECIPES</a>
@@ -72,6 +87,18 @@ export default function Home() {
               <a href="#" className="hover:text-yellow-400 smooth-hover">EDITORIAL PAGE</a>
               <a href="#" className="hover:text-yellow-400 smooth-hover">REACH OUT</a>
             </nav>
+
+            {/* Mobile Navigation */}
+            {isMobileMenuOpen && (
+              <nav className="md:hidden flex flex-col items-center mt-4 space-y-4 pb-2 text-white font-gill font-semibold text-[14px] tracking-wider uppercase">
+                <a href="#" className="text-yellow-400 smooth-hover">HOME</a>
+                <a href="#" className="hover:text-yellow-400 smooth-hover">OUR BRANDS</a>
+                <a href="#" className="hover:text-yellow-400 smooth-hover">RECIPES</a>
+                <a href="#" className="hover:text-yellow-400 smooth-hover">ABOUT</a>
+                <a href="#" className="hover:text-yellow-400 smooth-hover">EDITORIAL PAGE</a>
+                <a href="#" className="hover:text-yellow-400 smooth-hover">REACH OUT</a>
+              </nav>
+            )}
           </div>
         </header>
 
@@ -98,11 +125,11 @@ export default function Home() {
                 </p>
               </AnimatedChild>
               <AnimatedChild delay={0.22} from="bottom">
-                <div className="bg-[#EAEAE2] rounded-full inline-flex p-1.5 mb-6 space-x-1">
-                  <button onClick={() => setActiveTab("Milk")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Milk' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk</button>
-                  <button onClick={() => setActiveTab("Milk Products")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Milk Products' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk Products</button>
-                  <button onClick={() => setActiveTab("Juice")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Juice' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Juice</button>
-                  <button onClick={() => setActiveTab("Water")} className={`px-8 py-2 rounded-full font-calibre font-bold text-lg smooth-hover transition-all ${activeTab === 'Water' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Water</button>
+                <div className="bg-[#EAEAE2] rounded-[2rem] sm:rounded-full flex flex-wrap justify-center p-1.5 mb-6 gap-2 sm:gap-0 sm:space-x-1">
+                  <button onClick={() => setActiveTab("Milk")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk</button>
+                  <button onClick={() => setActiveTab("Milk Products")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk Products' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk Products</button>
+                  <button onClick={() => setActiveTab("Juice")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Juice' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Juice</button>
+                  <button onClick={() => setActiveTab("Water")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Water' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Water</button>
                 </div>
               </AnimatedChild>
             </div>
@@ -124,13 +151,13 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 4. Our Picks */}
-        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative sticky top-0 z-[10]">
+        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative md:sticky md:top-0 z-[10]">
           {/* Fruits anchored to Our Picks but positioned into Our Brand Range above */}
-          <AnimatedChild delay={0.1} from="left" className="absolute left-[3%] top-[-220px] z-[5] pointer-events-none">
-            <Image src="/apple.png" alt="Apples" width={260} height={520} className="object-contain" />
+          <AnimatedChild delay={0.1} from="left" className="absolute left-0 md:left-[3%] top-[-120px] md:top-[-220px] z-[5] pointer-events-none">
+            <Image src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[140px] md:w-[260px] h-auto" />
           </AnimatedChild>
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-220px] z-[5] pointer-events-none translate-x-[47%]">
-            <Image src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg" />
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-100px] md:top-[-220px] z-[5] pointer-events-none translate-x-[20%] md:translate-x-[47%]">
+            <Image src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg w-[220px] md:w-[550px] h-auto" />
           </AnimatedChild>
 
           <div className="max-w-[850px] mx-auto px-4 md:px-0 text-center w-full relative z-10">
@@ -143,7 +170,35 @@ export default function Home() {
               </p>
             </AnimatedChild>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            {/* Mobile Infinite Scroll Marquee */}
+            <div className="md:hidden w-[calc(100%+2rem)] overflow-hidden pb-8 -mx-4">
+              <div className="flex w-max animate-scroll [animation-duration:25s] hover:[animation-play-state:paused]">
+                {[
+                  { img: "/recipe_bread.webp", title: "Classic Banana Bread", desc: "Perfectly moist homemade treat" },
+                  { img: "/recipe_soup.webp", title: "French Onion Soup", desc: "Delicious classic comfort" },
+                  { img: "/recipe_fish.webp", title: "Lemon Basil Fish", desc: "Fresh and zesty grilled fillet" },
+                  { img: "/recipe_chowder.webp", title: "Chicken Corn Chowder", desc: "Creamy and hearty delight" },
+                  // Duplicate for seamless scroll
+                  { img: "/recipe_bread.webp", title: "Classic Banana Bread", desc: "Perfectly moist homemade treat" },
+                  { img: "/recipe_soup.webp", title: "French Onion Soup", desc: "Delicious classic comfort" },
+                  { img: "/recipe_fish.webp", title: "Lemon Basil Fish", desc: "Fresh and zesty grilled fillet" },
+                  { img: "/recipe_chowder.webp", title: "Chicken Corn Chowder", desc: "Creamy and hearty delight" }
+                ].map((recipe, idx) => (
+                  <AnimatedChild key={idx} delay={0} from="fade" className="w-[280px] sm:w-[320px] px-2 flex-shrink-0">
+                    <div className="bg-white rounded-[30px] rounded-b-xl px-3 py-3 flex flex-col items-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 transition-transform h-full">
+                      <div className="w-[85%] aspect-square relative mb-3">
+                        <Image src={recipe.img} alt={recipe.title} fill className="object-cover rounded-full" />
+                      </div>
+                      <h3 className="bg-inyange-blue text-inyange-green font-calibre font-bold uppercase text-[10px] tracking-wide w-full text-center py-1.5 rounded-full mb-1.5">{recipe.title}</h3>
+                      <p className="text-inyange-blue font-calibre font-medium text-[10px] text-center leading-tight pb-1">{recipe.desc}</p>
+                    </div>
+                  </AnimatedChild>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Grid */}
+            <div className="hidden md:grid md:grid-cols-4 gap-3">
               {[
                 { img: "/recipe_bread.webp", title: "Classic Banana Bread", desc: "Perfectly moist homemade treat" },
                 { img: "/recipe_soup.webp", title: "French Onion Soup", desc: "Delicious classic comfort" },
@@ -165,7 +220,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 5. Trusted By People Worldwide */}
-        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end sticky top-0 z-[20]">
+        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end md:sticky md:top-0 z-[20]">
           <AnimatedChild delay={0.3} from="pop-up">
             <div className="w-full max-w-[700px] mx-auto relative flex justify-center h-[410px] md:h-[460px]">
               <div className="absolute bottom-0 w-[120%] md:w-full h-[500px] md:h-[550px] z-30 pointer-events-none">
@@ -178,8 +233,8 @@ export default function Home() {
             <div className="flex whitespace-nowrap animate-scroll items-center">
               {[...Array(6)].map((_, i) => (
                 <span key={i} className="flex items-center">
-                  <span className="text-inyange-green font-gothic text-3xl md:text-4xl uppercase px-4">Trusted By People Worldwide</span>
-                  <span className="text-white font-gothic text-3xl md:text-4xl uppercase px-4">Trusted By People Worldwide</span>
+                  <span className="text-inyange-green font-gothic text-2xl md:text-4xl uppercase px-4">Trusted By People Worldwide</span>
+                  <span className="text-white font-gothic text-2xl md:text-4xl uppercase px-4">Trusted By People Worldwide</span>
                 </span>
               ))}
             </div>
@@ -187,7 +242,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 6. The Pride of Rwanda's Beverage Industry */}
-        <AnimatedSection as="section" className="bg-inyange-green py-24 relative sticky top-0 z-[30]">
+        <AnimatedSection as="section" className="bg-inyange-green py-24 relative md:sticky md:top-0 z-[30]">
           <div className="max-w-[850px] mx-auto px-4 md:px-0 flex flex-col md:flex-row items-center gap-12">
             <AnimatedChild delay={0} from="left" className="w-full md:w-1/2 flex flex-col justify-center">
               <h2 className="text-5xl md:text-[60px] font-gothic text-white uppercase leading-[0.9] tracking-tight mb-6">
@@ -207,9 +262,9 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 7 & 8. Vision, Mission & Leaders Wrapper */}
-        <div className="sticky top-0 z-[40] bg-white relative">
-          <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-150px] z-30 pointer-events-none translate-x-[-25%]">
-            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl" />
+        <div className="md:sticky md:top-0 z-[40] bg-white relative">
+          <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-100px] md:top-[-150px] z-30 pointer-events-none translate-x-[-30%] md:translate-x-[-25%]">
+            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl w-[180px] md:w-[400px] h-auto" />
           </AnimatedChild>
 
           {/* 7. Vision & Mission */}
@@ -286,9 +341,9 @@ export default function Home() {
         </div>
 
         {/* 9. From Our Newsroom */}
-        <AnimatedSection as="section" className="py-20 bg-[#0ea5e9] sticky top-0 z-[50] relative">
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-150px] z-30 pointer-events-none translate-x-[35%]">
-            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl" />
+        <AnimatedSection as="section" className="py-20 bg-[#0ea5e9] md:sticky md:top-0 z-[50] relative">
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-100px] md:top-[-150px] z-30 pointer-events-none translate-x-[30%] md:translate-x-[35%]">
+            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl w-[200px] md:w-[450px] h-auto" />
           </AnimatedChild>
 
           <div className="container mx-auto px-4 text-center">
@@ -296,7 +351,7 @@ export default function Home() {
               <h2 className="text-5xl md:text-[65px] font-gothic text-inyange-green uppercase leading-none mb-20 tracking-tight">From Our Newsroom</h2>
             </AnimatedChild>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1050px] mx-auto text-left">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1050px] mx-auto text-left">
               {[
                 {
                   img: "/photo-1550583724-b2692b85b150.webp",
@@ -320,13 +375,13 @@ export default function Home() {
                 }
               ].map((news, idx) => (
                 <AnimatedChild key={idx} delay={0.1 + idx * 0.1} from="bottom">
-                  <div className="bg-white rounded-[20px] overflow-hidden flex flex-col shadow-lg smooth-hover hover:-translate-y-2">
-                    <div className="h-[200px] md:h-[230px] relative w-full">
+                  <div className="bg-white rounded-[20px] overflow-hidden flex flex-col shadow-lg smooth-hover hover:-translate-y-2 h-full">
+                    <div className="h-[160px] md:h-[230px] relative w-full">
                       <Image src={news.img} alt={news.title} fill className="object-cover" />
                     </div>
-                    <div className="p-5 flex-1 flex flex-col">
-                      <h3 className="font-calibre font-bold text-gray-700 text-[15px] mb-2 leading-tight">{news.title}</h3>
-                      <p className="text-gray-500 text-[13px] font-calibre leading-snug">{news.desc}</p>
+                    <div className="p-4 md:p-5 flex-1 flex flex-col">
+                      <h3 className="font-calibre font-bold text-gray-700 text-[14px] md:text-[15px] mb-2 leading-tight">{news.title}</h3>
+                      <p className="text-gray-500 text-[12px] md:text-[13px] font-calibre leading-snug">{news.desc}</p>
                     </div>
                   </div>
                 </AnimatedChild>
@@ -336,7 +391,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 10. Want To Get In Touch? */}
-        <AnimatedSection as="section" className="pt-24 pb-20 bg-white sticky top-0 z-[60]">
+        <AnimatedSection as="section" className="pt-24 pb-20 bg-white md:sticky md:top-0 z-[60]">
           <div className="container mx-auto px-4 text-center flex flex-col items-center">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-5xl md:text-[75px] font-gothic text-inyange-blue uppercase mb-6 leading-[0.9] tracking-tight">
@@ -363,16 +418,16 @@ export default function Home() {
       </main>
 
       {/* 11. Footer */}
-      <AnimatedSection as="footer" className="bg-[#0072a6] pt-20 pb-48 sticky top-0 z-[70]">
-        <div className="max-w-[1000px] mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 text-white font-calibre text-[15px] leading-relaxed">
+      <AnimatedSection as="footer" className="bg-[#0072a6] pt-12 md:pt-20 pb-48 md:sticky md:top-0 z-[70]">
+        <div className="max-w-[1000px] mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-10 md:gap-y-12 text-white font-calibre text-[13px] md:text-[15px] leading-relaxed">
           <AnimatedChild delay={0} from="bottom" className="col-span-2 md:col-span-1 pr-4">
-            <h4 className="uppercase text-white text-[16px] mb-6">Inyange Industries</h4>
+            <h4 className="uppercase text-white text-[14px] md:text-[16px] mb-4 md:mb-6">Inyange Industries</h4>
             <p className="text-white/80">
               Food Processing & Dairy /<br />Beverages.
             </p>
           </AnimatedChild>
           <AnimatedChild delay={0.1} from="bottom">
-            <h4 className="text-white text-[16px] mb-6">Explore</h4>
+            <h4 className="text-white text-[14px] md:text-[16px] mb-4 md:mb-6">Explore</h4>
             <ul className="space-y-2 text-white/80">
               <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
@@ -381,7 +436,7 @@ export default function Home() {
             </ul>
           </AnimatedChild>
           <AnimatedChild delay={0.2} from="bottom">
-            <h4 className="text-white text-[16px] mb-6">Connect</h4>
+            <h4 className="text-white text-[14px] md:text-[16px] mb-4 md:mb-6">Connect</h4>
             <ul className="space-y-2 text-white/80">
               <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
               <li><a href="#" className="hover:text-white transition-colors">LinkedIn</a></li>
@@ -390,7 +445,7 @@ export default function Home() {
             </ul>
           </AnimatedChild>
           <AnimatedChild delay={0.3} from="bottom">
-            <h4 className="text-white text-[16px] mb-6">Company</h4>
+            <h4 className="text-white text-[14px] md:text-[16px] mb-4 md:mb-6">Company</h4>
             <p className="text-white/80">
               Operating<br />since<br />1997.
             </p>
