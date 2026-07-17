@@ -569,17 +569,6 @@ const ProjectSubmission = ({
                           </div>
                         </div>
                       ) : null}
-
-                      <label className="block">
-                        <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Weight (kg)</span>
-                        <input 
-                          type="number"
-                          value={currentProject.weightKg || ""}
-                          onChange={e => updateCurrentProject({ weightKg: e.target.value })}
-                          className="mt-2 w-full md:w-1/2 bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#0B5B3E] focus:bg-white transition-all shadow-sm"
-                          placeholder="e.g. 70" 
-                        />
-                      </label>
                     </div>
                   ) : (
                     <div className="space-y-6 animate-fade-in">
@@ -611,15 +600,6 @@ const ProjectSubmission = ({
                           ))}
                         </div>
                       </label>
-                      <label className="block">
-                        <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Weight (kg)</span>
-                        <input 
-                          type="number"
-                          value={currentProject.weightKg || ""}
-                          onChange={e => updateCurrentProject({ weightKg: e.target.value })}
-                          className="mt-2 w-full md:w-1/2 bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium outline-none focus:border-[#0B5B3E] focus:bg-white transition-all shadow-sm"
-                          placeholder="e.g. 70" 
-                        />
                       </label>
                     </div>
                   )}
@@ -730,6 +710,10 @@ const ProjectSubmission = ({
                       <div className="bg-white border border-stone-200 rounded-xl p-5">
                         <h4 className="text-[12px] font-black text-stone-800 uppercase tracking-widest mb-4">2. Vital Signs</h4>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          <label className="block">
+                            <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Weight (kg)</span>
+                            <input value={currentProject.weightKg || ""} onChange={e => updateCurrentProject({ weightKg: e.target.value })} type="number" className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" placeholder="e.g. 70" />
+                          </label>
                           <label className="block">
                             <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">HR (bpm)</span>
                             <input value={currentProject.vitals?.heartRate || ""} onChange={e => updateCurrentProject({ vitals: { ...currentProject.vitals!, heartRate: e.target.value } })} className="mt-2 w-full bg-stone-50 border border-stone-200/80 rounded-xl px-4 py-3 text-[12px] font-medium" placeholder="e.g. 75" />
