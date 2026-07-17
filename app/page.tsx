@@ -126,11 +126,11 @@ export default function Home() {
                 </p>
               </AnimatedChild>
               <AnimatedChild delay={0.22} from="bottom">
-                <div className="bg-[#EAEAE2] rounded-[2rem] sm:rounded-full flex flex-wrap justify-center p-1.5 mb-6 gap-2 sm:gap-0 sm:space-x-1">
-                  <button onClick={() => setActiveTab("Milk")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk</button>
-                  <button onClick={() => setActiveTab("Milk Products")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk Products' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk Products</button>
-                  <button onClick={() => setActiveTab("Juice")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Juice' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Juice</button>
-                  <button onClick={() => setActiveTab("Water")} className={`px-5 sm:px-8 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-lg smooth-hover transition-all ${activeTab === 'Water' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Water</button>
+                <div className="bg-[#EAEAE2] rounded-[2rem] sm:rounded-full flex flex-wrap justify-center w-fit mx-auto p-1.5 mb-6 gap-2 sm:gap-0 sm:space-x-1">
+                  <button onClick={() => setActiveTab("Milk")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk</button>
+                  <button onClick={() => setActiveTab("Milk Products")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk Products' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk Products</button>
+                  <button onClick={() => setActiveTab("Juice")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Juice' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Juice</button>
+                  <button onClick={() => setActiveTab("Water")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Water' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Water</button>
                 </div>
               </AnimatedChild>
             </div>
@@ -152,13 +152,13 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 4. Our Picks */}
-        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative md:sticky md:top-0 z-[10]">
+        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative sticky top-0 z-[10]">
           {/* Fruits anchored to Our Picks but positioned into Our Brand Range above */}
-          <AnimatedChild delay={0.1} from="left" className="absolute left-0 md:left-[3%] top-[-120px] md:top-[-220px] z-[5] pointer-events-none">
-            <Image src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[140px] md:w-[260px] h-auto" />
+          <AnimatedChild delay={0.1} from="left" className="absolute left-0 md:left-[3%] top-[-60px] md:top-[-220px] z-[5] pointer-events-none">
+            <Image src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[110px] md:w-[260px] h-auto" />
           </AnimatedChild>
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-100px] md:top-[-220px] z-[5] pointer-events-none translate-x-[20%] md:translate-x-[47%]">
-            <Image src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg w-[220px] md:w-[550px] h-auto" />
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-50px] md:top-[-220px] z-[5] pointer-events-none translate-x-[40%] md:translate-x-[47%]">
+            <Image src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg w-[170px] md:w-[550px] h-auto" />
           </AnimatedChild>
 
           <div className="max-w-[850px] mx-auto px-4 md:px-0 text-center w-full relative z-10">
@@ -221,7 +221,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 5. Trusted By People Worldwide */}
-        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end md:sticky md:top-0 z-[20]">
+        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end sticky top-0 z-[20]">
           <AnimatedChild delay={0.3} from="pop-up">
             <div className="w-full max-w-[700px] mx-auto relative flex justify-center h-[410px] md:h-[460px]">
               <div className="absolute bottom-0 w-[120%] md:w-full h-[500px] md:h-[550px] z-30 pointer-events-none">
@@ -243,61 +243,60 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 6. The Pride of Rwanda's Beverage Industry */}
-        <AnimatedSection as="section" className="bg-inyange-green py-24 relative md:sticky md:top-0 z-[30]">
-          <div className="max-w-[850px] mx-auto px-4 md:px-0 flex flex-col md:flex-row items-center gap-12">
+        <AnimatedSection as="section" className="bg-inyange-green py-12 md:py-24 relative sticky top-0 z-[30]">
+          <div className="max-w-[850px] mx-auto px-4 md:px-0 flex flex-col md:flex-row items-center gap-6 md:gap-12">
             <AnimatedChild delay={0} from="left" className="w-full md:w-1/2 flex flex-col justify-center">
-              <h2 className="text-5xl md:text-[60px] font-gothic text-white uppercase leading-[0.9] tracking-tight mb-6">
+              <h2 className="text-4xl md:text-[60px] font-gothic text-white uppercase leading-[0.9] tracking-tight mb-4 md:mb-6">
                 The Pride<br />Of Rwanda's<br />Beverage<br />Industry
               </h2>
-              <p className="text-gray-900 font-calibre font-medium text-[15px] leading-relaxed max-w-[360px]">
+              <p className="text-gray-900 font-calibre font-medium text-[13px] md:text-[15px] leading-relaxed max-w-[360px]">
                 Inyange Industries is a leading food processing company in Rwanda, manufacturing a wide range of products under its household brand name—"Inyange". Known for high-quality mineral water, fruit juices, and dairy products, we have become the regional standard for modern and hygienic production.
               </p>
             </AnimatedChild>
             <AnimatedChild delay={0.2} from="right" className="w-full md:w-1/2 relative">
-              <div className="w-full aspect-[4/4.5] relative rounded-[40px] overflow-hidden shadow-xl">
+              <div className="w-full aspect-[16/9] md:aspect-[4/4.5] relative rounded-[20px] md:rounded-[40px] overflow-hidden shadow-xl">
                 <Image src="/freepik__enhance__29647.jpg" alt="Mother and child pouring milk" fill className="object-cover object-center" />
               </div>
             </AnimatedChild>
           </div>
-
         </AnimatedSection>
 
         {/* 7 & 8. Vision, Mission & Leaders Wrapper */}
-        <div className="md:sticky md:top-0 z-[40] bg-white relative">
-          <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-100px] md:top-[-150px] z-30 pointer-events-none translate-x-[-30%] md:translate-x-[-25%]">
-            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl w-[180px] md:w-[400px] h-auto" />
+        <div className="sticky top-0 z-[40] bg-white relative">
+          <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-60px] md:top-[-150px] z-30 pointer-events-none translate-x-[-30%] md:translate-x-[-25%]">
+            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl w-[160px] md:w-[400px] h-auto" />
           </AnimatedChild>
 
           {/* 7. Vision & Mission */}
-          <AnimatedSection as="section" className="pt-12 pb-4">
-            <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[760px]">
+          <AnimatedSection as="section" className="pt-20 md:pt-12 pb-8 md:pb-4">
+            <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-8 max-w-[760px]">
               <AnimatedChild delay={0} from="left">
-                <div className="bg-[#f6f3e1] rounded-[24px] p-6 md:p-8 flex flex-col relative overflow-hidden shadow-sm">
-                  <div className="flex justify-between w-full items-center mb-4">
-                    <h3 className="text-3xl md:text-[38px] font-gothic text-inyange-blue uppercase leading-none">Vision</h3>
-                    <svg className="w-14 h-14 text-inyange-blue stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-[#f6f3e1] rounded-[16px] md:rounded-[24px] p-6 md:p-8 flex flex-col relative overflow-hidden shadow-sm h-full">
+                  <div className="flex justify-between w-full items-center mb-2 md:mb-4">
+                    <h3 className="text-2xl md:text-[38px] font-gothic text-inyange-blue uppercase leading-none">Vision</h3>
+                    <svg className="w-8 h-8 md:w-14 md:h-14 text-inyange-blue stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5c-4 0-7 4.5-7 4.5s3 4.5 7 4.5 7-4.5 7-4.5-3-4.5-7-4.5z" />
                       <circle cx="12" cy="12" r="2.5" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5V4M7 8.5L5.5 5.5M17 8.5L18.5 5.5" />
                     </svg>
                   </div>
-                  <p className="text-[#0089c4] font-calibre font-medium text-[15px] leading-snug">
+                  <p className="text-[#0089c4] font-calibre font-medium text-[11px] md:text-[15px] leading-snug">
                     To be the leading East and Central African dairy and beverage brand, producing high quality products while enhancing shareholder value.
                   </p>
                 </div>
               </AnimatedChild>
               <AnimatedChild delay={0.15} from="right">
-                <div className="bg-[#f6f3e1] rounded-[24px] p-6 md:p-8 flex flex-col relative overflow-hidden shadow-sm">
-                  <div className="flex justify-between w-full items-center mb-4">
-                    <h3 className="text-3xl md:text-[38px] font-gothic text-inyange-blue uppercase leading-none">Mission</h3>
-                    <svg className="w-14 h-14 text-inyange-blue stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-[#f6f3e1] rounded-[16px] md:rounded-[24px] p-6 md:p-8 flex flex-col relative overflow-hidden shadow-sm h-full">
+                  <div className="flex justify-between w-full items-center mb-2 md:mb-4">
+                    <h3 className="text-2xl md:text-[38px] font-gothic text-inyange-blue uppercase leading-none">Mission</h3>
+                    <svg className="w-8 h-8 md:w-14 md:h-14 text-inyange-blue stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <circle cx="12" cy="12" r="8" />
                       <circle cx="12" cy="12" r="4" />
                       <circle cx="12" cy="12" r="1.5" fill="currentColor" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 9l6-6m0 0h-4m4 0v4" />
                     </svg>
                   </div>
-                  <p className="text-[#0089c4] font-calibre font-medium text-[15px] leading-snug">
+                  <p className="text-[#0089c4] font-calibre font-medium text-[11px] md:text-[15px] leading-snug">
                     To secure the highest value for all stakeholders while enriching lives through nutritious and tasty dairy and beverage choices.
                   </p>
                 </div>
@@ -306,20 +305,20 @@ export default function Home() {
           </AnimatedSection>
 
           {/* 8. Visionary Leaders */}
-          <AnimatedSection as="section" className="pt-10 pb-16 relative">
+          <AnimatedSection as="section" className="pt-8 md:pt-10 pb-24 md:pb-16 relative">
             <div className="container mx-auto px-4 text-center relative z-10">
               <AnimatedChild delay={0} from="bottom">
-                <h2 className="text-[40px] md:text-[54px] font-gothic text-inyange-blue uppercase mb-4 tracking-tight">Visionary Leaders</h2>
+                <h2 className="text-[28px] md:text-[54px] font-gothic text-inyange-blue uppercase mb-2 md:mb-4 tracking-tight">Visionary Leaders</h2>
               </AnimatedChild>
               <AnimatedChild delay={0.1} from="bottom">
-                <p className="text-[#556980] font-calibre font-medium text-[15px] max-w-[850px] mx-auto mb-10 leading-relaxed">
+                <p className="hidden md:block text-[#556980] font-calibre font-medium text-[15px] max-w-[850px] mx-auto mb-10 leading-relaxed">
                   Inyange Industries is a leading food processing company in Rwanda, manufacturing a wide range of products<br className="hidden md:block" />
                   under its household brand name—"Inyange". Known for high-quality mineral water, fruit juices, and dairy<br className="hidden md:block" />
                   products, we have become the regional standard for modern and hygienic production.
                 </p>
               </AnimatedChild>
 
-              <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+              <div className="flex flex-wrap justify-center gap-4 md:gap-12 mt-4 md:mt-0">
                 {[
                   { img: "/black-man-posing.jpg", name: "John Doe" },
                   { img: "/confident-business-woman-portrait-smiling-face.jpg", name: "Jane Doe" },
@@ -328,61 +327,60 @@ export default function Home() {
                 ].map((leader, idx) => (
                   <AnimatedChild key={idx} delay={0.1 + idx * 0.1} from="bottom">
                     <div className="flex flex-col items-center">
-                      <div className="w-24 h-24 md:w-[130px] md:h-[130px] rounded-full overflow-hidden mb-4 shadow-lg">
+                      <div className="w-16 h-16 md:w-[130px] md:h-[130px] rounded-full overflow-hidden mb-2 md:mb-4 shadow-lg">
                         <Image src={leader.img} alt={leader.name} width={130} height={130} className="object-cover w-full h-full" />
                       </div>
-                      <span className="text-inyange-blue font-calibre font-medium text-[15px]">{leader.name}</span>
+                      <span className="text-inyange-blue font-calibre font-medium text-[12px] md:text-[15px]">{leader.name}</span>
                     </div>
                   </AnimatedChild>
                 ))}
               </div>
             </div>
-
           </AnimatedSection>
         </div>
 
         {/* 9. From Our Newsroom */}
-        <AnimatedSection as="section" className="py-20 bg-[#0ea5e9] md:sticky md:top-0 z-[50] relative">
-          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-100px] md:top-[-150px] z-30 pointer-events-none translate-x-[30%] md:translate-x-[35%]">
-            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl w-[200px] md:w-[450px] h-auto" />
+        <AnimatedSection as="section" className="py-10 md:py-20 bg-[#0ea5e9] sticky top-0 z-[50] relative">
+          <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-80px] md:top-[-150px] z-30 pointer-events-none translate-x-[30%] md:translate-x-[35%]">
+            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl w-[160px] md:w-[450px] h-auto" />
           </AnimatedChild>
 
           <div className="container mx-auto px-4 text-center">
             <AnimatedChild delay={0} from="bottom">
-              <h2 className="text-5xl md:text-[65px] font-gothic text-inyange-green uppercase leading-none mb-20 tracking-tight">From Our Newsroom</h2>
+              <h2 className="text-4xl md:text-[65px] font-gothic text-inyange-green uppercase leading-none mb-8 md:mb-20 tracking-tight">From Our Newsroom</h2>
             </AnimatedChild>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1050px] mx-auto text-left">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 max-w-[1050px] mx-auto text-left">
               {[
                 {
                   img: "/photo-1550583724-b2692b85b150.webp",
-                  title: "Sustainable Farming: Our Commitment to the Future",
-                  desc: "Inyange remains at the forefront of agricultural innovation, supporting local farmers with modern techniques."
+                  title: "Sustainable Farming",
+                  desc: "Inyange remains at the forefront of agricultural innovation."
                 },
                 {
                   img: "/photo-1488521787991-ed7bbaae773c.webp",
-                  title: "Awarded Best Beverage Producer of the Year",
-                  desc: "We are honored to receive the 2023 Excellence Award for our consistent quality and safety standards."
+                  title: "Awarded Best Producer",
+                  desc: "Honored to receive the 2023 Excellence Award."
                 },
                 {
                   img: "/photo-1550989460-0adf9ea622e2.webp",
-                  title: "New Fortified Milk Range: Nutrition Redefined",
-                  desc: "Introducing our latest product line designed to meet the growing nutritional needs of the East African market."
+                  title: "New Fortified Milk",
+                  desc: "Meeting the growing nutritional needs."
                 },
                 {
                   img: "/photo-1500382017468-9049fed747ef.webp",
-                  title: "Community Outreach: Supporting Local Schools",
-                  desc: "Our recent initiative provided nutritional dairy products to school children across Rwanda villages."
+                  title: "Community Outreach",
+                  desc: "Providing dairy products to school children."
                 }
               ].map((news, idx) => (
                 <AnimatedChild key={idx} delay={0.1 + idx * 0.1} from="bottom">
-                  <div className="bg-white rounded-[20px] overflow-hidden flex flex-col shadow-lg smooth-hover hover:-translate-y-2 h-full">
-                    <div className="h-[160px] md:h-[230px] relative w-full">
+                  <div className="bg-white rounded-[16px] md:rounded-[20px] overflow-hidden flex flex-col shadow-lg smooth-hover hover:-translate-y-2 h-full">
+                    <div className="h-[100px] md:h-[230px] relative w-full">
                       <Image src={news.img} alt={news.title} fill className="object-cover" />
                     </div>
-                    <div className="p-4 md:p-5 flex-1 flex flex-col">
-                      <h3 className="font-calibre font-bold text-gray-700 text-[14px] md:text-[15px] mb-2 leading-tight">{news.title}</h3>
-                      <p className="text-gray-500 text-[12px] md:text-[13px] font-calibre leading-snug">{news.desc}</p>
+                    <div className="p-3 md:p-5 flex-1 flex flex-col">
+                      <h3 className="font-calibre font-bold text-gray-700 text-[12px] md:text-[15px] mb-1 md:mb-2 leading-tight">{news.title}</h3>
+                      <p className="text-gray-500 text-[10px] md:text-[13px] font-calibre leading-snug">{news.desc}</p>
                     </div>
                   </div>
                 </AnimatedChild>
@@ -392,7 +390,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 10. Want To Get In Touch? */}
-        <AnimatedSection as="section" className="pt-24 pb-20 bg-white md:sticky md:top-0 z-[60]">
+        <AnimatedSection as="section" className="pt-24 pb-20 bg-white sticky top-0 z-[60]">
           <div className="container mx-auto px-4 text-center flex flex-col items-center">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-5xl md:text-[75px] font-gothic text-inyange-blue uppercase mb-6 leading-[0.9] tracking-tight">
@@ -419,7 +417,7 @@ export default function Home() {
       </main>
 
       {/* 11. Footer */}
-      <AnimatedSection as="footer" className="bg-[#0072a6] pt-12 md:pt-20 pb-48 md:sticky md:top-0 z-[70]">
+      <AnimatedSection as="footer" className="bg-[#0072a6] pt-12 md:pt-20 pb-48 sticky top-0 z-[70]">
         <div className="max-w-[1000px] mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-10 md:gap-y-12 text-white font-calibre text-[13px] md:text-[15px] leading-relaxed">
           <AnimatedChild delay={0} from="bottom" className="col-span-2 md:col-span-1 pr-4">
             <h4 className="uppercase text-white text-[14px] md:text-[16px] mb-4 md:mb-6">Inyange Industries</h4>
