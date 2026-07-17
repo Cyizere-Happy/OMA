@@ -155,10 +155,10 @@ export default function Home() {
         <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative sticky top-0 z-[10]">
           {/* Fruits anchored to Our Picks but positioned into Our Brand Range above */}
           <AnimatedChild delay={0.1} from="left" className="absolute left-0 lg:left-[3%] top-[-60px] md:top-[-100px] lg:top-[-220px] z-[5] pointer-events-none">
-            <Image src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[110px] md:w-[180px] lg:w-[260px] h-auto" />
+            <Image unoptimized src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[110px] md:w-[180px] lg:w-[260px] h-auto" />
           </AnimatedChild>
           <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-50px] md:top-[-100px] lg:top-[-220px] z-[5] pointer-events-none translate-x-[40%] md:translate-x-[45%] lg:translate-x-[47%]">
-            <Image src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg w-[170px] md:w-[300px] lg:w-[550px] h-auto" />
+            <Image unoptimized src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg w-[170px] md:w-[300px] lg:w-[550px] h-auto" />
           </AnimatedChild>
 
           <div className="max-w-[850px] mx-auto px-4 md:px-0 text-center w-full relative z-10">
@@ -264,7 +264,7 @@ export default function Home() {
         {/* 7 & 8. Vision, Mission & Leaders Wrapper */}
         <div className="sticky top-0 z-[40] bg-white relative">
           <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-60px] md:top-[-100px] lg:top-[-150px] z-30 pointer-events-none translate-x-[-30%] md:translate-x-[-25%] lg:translate-x-[-25%]">
-            <Image src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl w-[160px] md:w-[250px] lg:w-[400px] h-auto" />
+            <Image unoptimized src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl w-[160px] md:w-[250px] lg:w-[400px] h-auto" />
           </AnimatedChild>
 
           {/* 7. Vision & Mission */}
@@ -342,7 +342,7 @@ export default function Home() {
         {/* 9. From Our Newsroom */}
         <AnimatedSection as="section" className="py-10 md:py-20 bg-[#0ea5e9] sticky top-0 z-[50] relative">
           <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-80px] md:top-[-100px] lg:top-[-150px] z-30 pointer-events-none translate-x-[30%] md:translate-x-[30%] lg:translate-x-[35%]">
-            <Image src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl w-[160px] md:w-[280px] lg:w-[450px] h-auto" />
+            <Image unoptimized src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl w-[160px] md:w-[280px] lg:w-[450px] h-auto" />
           </AnimatedChild>
 
           <div className="container mx-auto px-4 text-center">
