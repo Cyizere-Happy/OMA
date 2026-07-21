@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 export interface Product {
@@ -14,67 +14,89 @@ export interface Product {
 interface CarouselProps {
   products: Product[];
   imageClassName?: string;
+  onActiveColorChange?: (color: string) => void;
 }
 
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset: number, velocity: number) => {
-  return Math.abs(offset) * velocity;
-};
-
-export function Carousel({ products, imageClassName = "" }: CarouselProps) {
-  const [[currentIndex, direction], setPage] = useState([0, 1]);
-
-  useEffect(() => {
-    // Reset to start when products change
-    setPage([0, 1]);
-    
-    if (!products || products.length === 0) return;
-    const timer = setInterval(() => {
-      paginate(1);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [products]);
+export function Carousel({ products, imageClassName = "", onActiveColorChange }: CarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const paginate = (newDirection: number) => {
-    setPage(([prevIndex, _]) => {
+    setCurrentIndex((prevIndex) => {
       let nextIndex = prevIndex + newDirection;
       if (nextIndex < 0) {
         nextIndex = products.length - 1;
       } else if (nextIndex >= products.length) {
         nextIndex = 0;
       }
-      return [nextIndex, newDirection];
+      return nextIndex;
     });
   };
 
   const nextSlide = () => paginate(1);
   const prevSlide = () => paginate(-1);
 
+  const safeIndex = currentIndex >= 0 && currentIndex < products?.length ? currentIndex : 0;
+  const activeColor = products?.[safeIndex]?.color || '#c7e9fb';
+
+  useEffect(() => {
+    if (onActiveColorChange) {
+      onActiveColorChange(activeColor);
+    }
+  }, [activeColor, onActiveColorChange]);
+
   if (!products || products.length === 0) return null;
 
-  // Safe index calculations
-  const safeIndex = currentIndex >= 0 && currentIndex < products.length ? currentIndex : 0;
-  const prevIndex = (safeIndex - 1 + products.length) % products.length;
-  const nextIndex = (safeIndex + 1) % products.length;
+  const getPosition = (idx: number) => {
+    if (products.length === 1) return 'center';
+    
+    const distance = (idx - safeIndex + products.length) % products.length;
+    
+    if (distance === 0) return 'center';
+    if (distance === 1) return 'right';
+    if (distance === products.length - 1) return 'left';
+    
+    if (distance > 1 && distance <= Math.floor(products.length / 2)) {
+      return 'hiddenRight';
+    }
+    return 'hiddenLeft';
+  };
 
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? -100 : 100,
-      opacity: 0,
-      scale: 0.95
-    }),
+  const itemVariants = {
     center: {
-      z: 1,
-      x: 0,
+      x: "0%",
+      scale: 1,
       opacity: 1,
-      scale: 1.0
+      zIndex: 20,
+      filter: "grayscale(0%)",
     },
-    exit: (direction: number) => ({
-      z: 0,
-      x: direction > 0 ? 100 : -100,
+    left: {
+      x: "-65%",
+      scale: 0.65,
+      opacity: 0.4,
+      zIndex: 10,
+      filter: "grayscale(100%)",
+    },
+    right: {
+      x: "65%",
+      scale: 0.65,
+      opacity: 0.4,
+      zIndex: 10,
+      filter: "grayscale(100%)",
+    },
+    hiddenLeft: {
+      x: "-130%",
+      scale: 0.3,
       opacity: 0,
-      scale: 0.95
-    })
+      zIndex: 0,
+      filter: "grayscale(100%)",
+    },
+    hiddenRight: {
+      x: "130%",
+      scale: 0.3,
+      opacity: 0,
+      zIndex: 0,
+      filter: "grayscale(100%)",
+    }
   };
 
   return (
@@ -82,91 +104,52 @@ export function Carousel({ products, imageClassName = "" }: CarouselProps) {
       {/* Dynamic glow behind center product */}
       <div 
         className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full blur-[80px] opacity-60 z-0 transition-colors duration-700"
-        style={{ backgroundColor: products[safeIndex]?.color || '#c7e9fb' }}
+        style={{ backgroundColor: activeColor }}
       ></div>
 
       {/* Left Button */}
       <button 
         onClick={prevSlide}
-        className="absolute left-[2%] md:left-[16%] w-10 h-10 md:w-12 md:h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
+        className="absolute left-[2%] md:left-[16%] w-10 h-10 md:w-12 md:h-12 text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-all duration-700 shadow-md"
+        style={{ backgroundColor: activeColor }}
       >
         <svg className="w-5 h-5 ml-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"></path></svg>
       </button>
 
       {/* Products Display Container */}
       <div className="relative w-full h-full flex justify-center items-center overflow-hidden px-12" style={{clipPath: 'none'}}>
-        
-        {/* Side Product (Left) */}
-        {products.length > 1 && (
-          <motion.div
-            key={`left-${products[prevIndex].id}`}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 0.5, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="absolute left-[15%] z-10 w-1/4 h-[80%] hidden md:flex justify-center items-center opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
-            onClick={prevSlide}
-          >
-            <Image 
-              src={products[prevIndex].src} 
-              alt={products[prevIndex].alt} 
-              width={250} 
-              height={500} 
-              className={`object-contain max-h-[85%] ${imageClassName}`} 
-            />
-          </motion.div>
-        )}
-
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          {/* Main Product (Center) */}
-          <motion.div
-            key={`center-${products[safeIndex].id}`}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 160, damping: 28, mass: 1.1 },
-              opacity: { duration: 0.55 },
-              scale: { duration: 0.55 }
-            }}
-            className="absolute z-20 flex justify-center items-center w-3/4 md:w-1/3 h-full"
-          >
-            <Image 
-              src={products[safeIndex].src} 
-              alt={products[safeIndex].alt} 
-              width={350} 
-              height={650} 
-              className={`object-contain drop-shadow-2xl max-h-[95%] ${imageClassName}`} 
-            />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Side Product (Right) */}
-        {products.length > 1 && (
-          <motion.div
-            key={`right-${products[nextIndex].id}`}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 0.5, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="absolute right-[15%] z-10 w-1/4 h-[80%] hidden md:flex justify-center items-center opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
-            onClick={nextSlide}
-          >
-            <Image 
-              src={products[nextIndex].src} 
-              alt={products[nextIndex].alt} 
-              width={250} 
-              height={500} 
-              className={`object-contain max-h-[85%] ${imageClassName}`} 
-            />
-          </motion.div>
-        )}
+        {products.map((product, idx) => {
+          const pos = getPosition(idx);
+          return (
+            <motion.div
+              key={product.id}
+              animate={pos}
+              variants={itemVariants}
+              initial={false}
+              transition={{ type: "spring", stiffness: 180, damping: 25, mass: 1.1 }}
+              className={`absolute top-0 bottom-0 left-0 right-0 m-auto flex justify-center items-center w-[60%] md:w-[35%] h-full ${pos === 'left' || pos === 'right' ? 'cursor-pointer hover:opacity-80' : ''} ${pos === 'hiddenLeft' || pos === 'hiddenRight' ? 'pointer-events-none' : ''}`}
+              onClick={() => {
+                if (pos === 'left') prevSlide();
+                if (pos === 'right') nextSlide();
+              }}
+            >
+              <Image 
+                src={product.src} 
+                alt={product.alt} 
+                width={350} 
+                height={650} 
+                className={`object-contain drop-shadow-2xl max-h-[95%] ${imageClassName}`} 
+              />
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Right Button */}
       <button 
         onClick={nextSlide}
-        className="absolute right-[2%] md:right-[16%] w-10 h-10 md:w-12 md:h-12 bg-inyange-blue text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-transform shadow-md"
+        className="absolute right-[2%] md:right-[16%] w-10 h-10 md:w-12 md:h-12 text-white rounded-full flex items-center justify-center z-30 hover:scale-105 transition-all duration-700 shadow-md"
+        style={{ backgroundColor: activeColor }}
       >
         <svg className="w-5 h-5 mr-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7"></path></svg>
       </button>

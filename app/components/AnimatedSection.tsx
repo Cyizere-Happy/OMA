@@ -24,16 +24,13 @@ export function AnimatedChild({
   delay = 0,
   from = "bottom",
 }: AnimatedChildProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-80px" });
-
   const initial = {
     bottom: { opacity: 0, y: 40 },
     left: { opacity: 0, x: -50 },
     right: { opacity: 0, x: 50 },
     fade: { opacity: 0 },
-    "pop-up": { opacity: 0, y: 150, scale: 0.9 },
-    "scale-up": { opacity: 0, scale: 0.8 },
+    "pop-up": { opacity: 0, y: 100, scale: 0.9 },
+    "scale-up": { opacity: 0, scale: 0.85 },
   }[from];
 
   const animate = {
@@ -47,12 +44,12 @@ export function AnimatedChild({
 
   return (
     <motion.div
-      ref={ref}
       initial={initial}
-      animate={isInView ? animate : initial}
+      whileInView={animate}
+      viewport={{ once: false, amount: 0.15, margin: "0px" }}
       transition={{
-        duration: 0.75,
-        ease: [0.22, 1, 0.36, 1],
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
         delay,
       }}
       className={className}
@@ -68,13 +65,16 @@ export function AnimatedSection({
   delay = 0,
   as = "section",
 }: AnimatedSectionProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-100px" });
-
-  const Tag = motion[as] as typeof motion.section;
+  const Tag = motion[as] as any;
 
   return (
-    <Tag ref={ref} className={className}>
+    <Tag 
+      className={className}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: false, amount: 0.15, margin: "0px" }}
+      transition={{ duration: 0.6, delay }}
+    >
       {children}
     </Tag>
   );

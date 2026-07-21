@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Carousel, Product } from "./components/Carousel";
 import { AnimatedSection, AnimatedChild } from "./components/AnimatedSection";
 
@@ -26,14 +27,85 @@ const yogurtProducts: Product[] = [
 ];
 
 const milkProducts: Product[] = [
-  { id: "m1", src: "/Low fat milk.png", alt: "Low Fat Milk", color: "#c7e9fb" }, // Blue
+  { id: "m1", src: "/Low fat milk.png", alt: "Low Fat Milk", color: "#215fb3" }, // Blue
   { id: "m2", src: "/Low fat milk-bw.png", alt: "Milk BW", color: "#e2e3e5" }, // Grey
-  { id: "m3", src: "/Low fat milk.png", alt: "Whole Milk", color: "#c7e9fb" } // Blue
+  { id: "m3", src: "/Low fat milk.png", alt: "Whole Milk", color: "#215fb3" } // Blue
 ];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"Milk" | "Milk Products" | "Juice" | "Water">("Juice");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [activeCarouselColor, setActiveCarouselColor] = useState<string>('#c7e9fb');
+
+  const targetRef = useRef<HTMLDivElement>(null);
+  const newsCarouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (newsCarouselRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = newsCarouselRef.current;
+        setCanScrollLeft(scrollLeft > 0);
+        setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
+      }
+    };
+    
+    const carousel = newsCarouselRef.current;
+    if (carousel) {
+      carousel.addEventListener('scroll', handleScroll);
+      // Run once to set initial state
+      handleScroll();
+    }
+    return () => {
+      if (carousel) carousel.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+  const scrollNews = (dir: 'left' | 'right') => {
+    if (newsCarouselRef.current) {
+      const child = newsCarouselRef.current.children[0] as HTMLElement;
+      const scrollAmount = child ? child.offsetWidth + 24 : newsCarouselRef.current.clientWidth / 3;
+      newsCarouselRef.current.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
+  };
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-3%"]);
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-3%", "0%"]);
+  const x3 = useTransform(scrollYProgress, [0, 1], ["-1%", "-4%"]);
+
+  const heroSlides = [
+    {
+      img: "/wqety.jpg",
+      alt: "Football, Friends",
+      text: <>Football,<br />Friends, and<br />Inyange</>,
+      alignment: "object-top"
+    },
+    {
+      img: "/feast_hq.png",
+      alt: "Feast of Food",
+      text: <>Food, Drinks,<br />And Smiles<br />Shared Together</>,
+      alignment: "object-top"
+    },
+    {
+      img: "/friends_hq.png",
+      alt: "Friends Drinking",
+      text: <>Refresh<br />Your Soul With<br />Every Sip</>,
+      alignment: "object-center"
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const getActiveProducts = () => {
     switch (activeTab) {
@@ -47,67 +119,123 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white overflow-x-clip">
       {/* Top Section containing both Navbar and Hero to share the background */}
-      <div className="relative w-full h-[550px] sm:h-[650px] md:h-[850px] flex flex-col justify-between pb-16 md:pb-32">
+      <div className="relative w-full h-[100svh] max-h-[1080px] min-h-[500px] flex flex-col justify-between pb-16 md:pb-32">
         {/* Hero Background covering the full top area */}
-        <div className="absolute inset-0 z-0 bg-black">
-          <Image
-            src="/wqety.jpg"
-            alt="Football, Friends"
-            fill
-            className="object-cover object-[center_15%] opacity-90"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute inset-0 z-0 bg-black overflow-hidden">
+          {heroSlides.map((slide, index) => (
+            <div 
+              key={index} 
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentSlide === index ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <Image
+                src={slide.img}
+                alt={slide.alt}
+                fill
+                className={`object-cover ${slide.alignment} w-full h-full opacity-90`}
+                priority={index === 0}
+              />
+            </div>
+          ))}
+          <div className="absolute inset-0 bg-black/20"></div>
         </div>
 
         {/* 1. Floating Navbar */}
-        <header className="relative w-[95%] md:w-[90%] max-w-[1600px] mx-auto bg-inyange-blue rounded-b-[30px] md:rounded-b-[60px] shadow-lg z-50 pt-4 md:pt-5 pb-4 md:pb-5">
-          <div className="w-full flex flex-col">
-            <div className="flex justify-between md:justify-center items-center px-5 md:px-0 mb-0 md:mb-6 mt-1 md:mt-2">
-              <Image src="/inyange-logo.jpeg" alt="Inyange Logo" width={240} height={80} className="object-contain w-[140px] md:w-[240px]" />
-              <button 
-                className="md:hidden text-white p-2"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {isMobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
+        <header className="relative w-[95%] md:w-[90%] max-w-[1600px] mx-auto bg-inyange-blue rounded-b-xl shadow-lg z-50 py-2 md:py-2.5 px-5 md:px-8">
+          <div className="w-full flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Image src="/inyange-logo.jpeg" alt="Inyange Logo" width={160} height={50} className="object-contain w-[100px] md:w-[130px]" />
             </div>
             
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex w-full max-w-[850px] mx-auto flex-wrap justify-between text-white font-gill font-semibold text-[12px] tracking-wider uppercase px-4 md:px-0">
-              <a href="#" className="text-yellow-400 smooth-hover">HOME</a>
-              <a href="#" className="hover:text-yellow-400 smooth-hover">OUR BRANDS</a>
-              <a href="#" className="hover:text-yellow-400 smooth-hover">RECIPES</a>
-              <a href="#" className="hover:text-yellow-400 smooth-hover">ABOUT</a>
-              <a href="#" className="hover:text-yellow-400 smooth-hover">EDITORIAL PAGE</a>
-              <a href="#" className="hover:text-yellow-400 smooth-hover">REACH OUT</a>
+            <nav className="hidden md:flex flex-1 justify-center items-center space-x-6 lg:space-x-8 text-white font-gill font-semibold text-[10px] lg:text-[11px] tracking-wider uppercase px-4">
+              <a href="#" className="flex items-center text-yellow-400 smooth-hover">HOME</a>
+              <a href="#" className="flex items-center hover:text-yellow-400 smooth-hover group">
+                OUR BRANDS
+                <svg className="w-3 h-3 lg:w-4 lg:h-4 ml-1 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </a>
+              <a href="#" className="flex items-center hover:text-yellow-400 smooth-hover">RECIPES</a>
+              <a href="#" className="flex items-center hover:text-yellow-400 smooth-hover group">
+                ABOUT
+                <svg className="w-3 h-3 lg:w-4 lg:h-4 ml-1 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </a>
+              <a href="#" className="flex items-center hover:text-yellow-400 smooth-hover">EDITORIAL PAGE</a>
+              <a href="#" className="flex items-center hover:text-yellow-400 smooth-hover">REACH OUT</a>
             </nav>
 
-            {/* Mobile Navigation */}
-            {isMobileMenuOpen && (
-              <nav className="md:hidden flex flex-col items-center mt-4 space-y-4 pb-2 text-white font-gill font-semibold text-[14px] tracking-wider uppercase">
-                <a href="#" className="text-yellow-400 smooth-hover">HOME</a>
-                <a href="#" className="hover:text-yellow-400 smooth-hover">OUR BRANDS</a>
-                <a href="#" className="hover:text-yellow-400 smooth-hover">RECIPES</a>
-                <a href="#" className="hover:text-yellow-400 smooth-hover">ABOUT</a>
-                <a href="#" className="hover:text-yellow-400 smooth-hover">EDITORIAL PAGE</a>
-                <a href="#" className="hover:text-yellow-400 smooth-hover">REACH OUT</a>
-              </nav>
-            )}
+            {/* Desktop Icons */}
+            <div className="hidden md:flex items-center space-x-4 lg:space-x-5 text-white flex-shrink-0">
+              <button className="hover:text-yellow-400 transition-colors">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+              <button className="hover:text-yellow-400 transition-colors">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden text-white p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
+          
+          {/* Mobile Navigation Dropdown */}
+          {isMobileMenuOpen && (
+            <nav className="md:hidden flex flex-col items-center mt-4 space-y-4 pb-4 text-white font-gill font-semibold text-[14px] tracking-wider uppercase border-t border-white/10 pt-6">
+              <a href="#" className="text-yellow-400 smooth-hover">HOME</a>
+              <a href="#" className="hover:text-yellow-400 smooth-hover flex items-center">
+                OUR BRANDS
+                <svg className="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </a>
+              <a href="#" className="hover:text-yellow-400 smooth-hover">RECIPES</a>
+              <a href="#" className="hover:text-yellow-400 smooth-hover flex items-center">
+                ABOUT
+                <svg className="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </a>
+              <a href="#" className="hover:text-yellow-400 smooth-hover">EDITORIAL PAGE</a>
+              <a href="#" className="hover:text-yellow-400 smooth-hover">REACH OUT</a>
+
+              <div className="flex items-center space-x-6 pt-4 border-t border-white/10 w-3/4 justify-center">
+                <button className="hover:text-yellow-400 transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+                <button className="hover:text-yellow-400 transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
+            </nav>
+          )}
         </header>
 
         {/* 2. Hero Text */}
-        <div className="relative z-10 w-full max-w-[850px] mx-auto px-4 md:px-0 mt-auto mb-16 md:mb-24">
-          <h1 className="text-4xl md:text-[55px] lg:text-[65px] text-white font-gothic leading-[0.9] uppercase drop-shadow-2xl tracking-tight max-w-2xl">
-            Football,<br />Friends, and<br />Inyange
-          </h1>
+        <div className="relative z-10 w-full max-w-[850px] mx-auto px-4 md:px-0 mt-auto mb-16 md:mb-24 min-h-[140px] md:min-h-[220px]">
+          {heroSlides.map((slide, index) => (
+            <div 
+              key={index} 
+              className={`absolute bottom-0 left-4 md:left-0 transition-all duration-1000 ease-in-out ${currentSlide === index ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'}`}
+            >
+              <h1 className="text-4xl md:text-[55px] lg:text-[65px] text-white font-gothic leading-[0.9] uppercase tracking-tight max-w-2xl animate-text-glow">
+                {slide.text}
+              </h1>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -126,11 +254,11 @@ export default function Home() {
                 </p>
               </AnimatedChild>
               <AnimatedChild delay={0.22} from="bottom">
-                <div className="bg-[#EAEAE2] rounded-[2rem] sm:rounded-full flex flex-wrap justify-center w-fit mx-auto p-1.5 mb-6 gap-2 sm:gap-0 sm:space-x-1">
-                  <button onClick={() => setActiveTab("Milk")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk</button>
-                  <button onClick={() => setActiveTab("Milk Products")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Milk Products' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Milk Products</button>
-                  <button onClick={() => setActiveTab("Juice")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Juice' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Juice</button>
-                  <button onClick={() => setActiveTab("Water")} className={`px-4 sm:px-8 py-2 rounded-full font-calibre font-bold text-[14px] sm:text-lg smooth-hover transition-all ${activeTab === 'Water' ? 'bg-inyange-green text-inyange-blue shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`}>Water</button>
+                <div className="bg-[#EAEAE2] rounded-[2rem] sm:rounded-full flex flex-wrap justify-center w-fit mx-auto p-2 mb-6 gap-2 sm:gap-0 sm:space-x-1 lg:space-x-2">
+                  <button onClick={() => setActiveTab("Milk")} className={`px-5 sm:px-10 lg:px-12 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-[18px] smooth-hover transition-colors duration-700 ${activeTab === 'Milk' ? 'text-white shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`} style={activeTab === 'Milk' ? { backgroundColor: activeCarouselColor } : {}}>Milk</button>
+                  <button onClick={() => setActiveTab("Milk Products")} className={`px-5 sm:px-10 lg:px-12 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-[18px] smooth-hover transition-colors duration-700 ${activeTab === 'Milk Products' ? 'text-white shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`} style={activeTab === 'Milk Products' ? { backgroundColor: activeCarouselColor } : {}}>Milk Products</button>
+                  <button onClick={() => setActiveTab("Juice")} className={`px-5 sm:px-10 lg:px-12 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-[18px] smooth-hover transition-colors duration-700 ${activeTab === 'Juice' ? 'text-white shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`} style={activeTab === 'Juice' ? { backgroundColor: activeCarouselColor } : {}}>Juice</button>
+                  <button onClick={() => setActiveTab("Water")} className={`px-5 sm:px-10 lg:px-12 py-2 rounded-full font-calibre font-bold text-[15px] sm:text-[18px] smooth-hover transition-colors duration-700 ${activeTab === 'Water' ? 'text-white shadow-sm' : 'text-inyange-blue hover:bg-white/50'}`} style={activeTab === 'Water' ? { backgroundColor: activeCarouselColor } : {}}>Water</button>
                 </div>
               </AnimatedChild>
             </div>
@@ -139,10 +267,12 @@ export default function Home() {
               <div className="w-full max-w-[1400px] mx-auto mt-0">
                 <Carousel
                   products={getActiveProducts()}
+                  onActiveColorChange={setActiveCarouselColor}
                   imageClassName={
-                    activeTab === "Juice" ? "scale-[1.65]" :
-                      activeTab === "Milk Products" ? "scale-[1.8]" :
-                        ""
+                    activeTab === "Juice" ? "scale-[1.25]" :
+                      activeTab === "Milk Products" ? "scale-[1.4]" :
+                        activeTab === "Milk" ? "scale-[0.85]" :
+                          ""
                   }
                 />
               </div>
@@ -152,10 +282,10 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 4. Our Picks */}
-        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative sticky top-0 z-[10]">
+        <AnimatedSection as="section" className="pt-16 pb-24 bg-[#E8E8DF] relative z-[10]">
           {/* Fruits anchored to Our Picks but positioned into Our Brand Range above */}
-          <AnimatedChild delay={0.1} from="left" className="absolute left-0 lg:left-[3%] top-[-60px] md:top-[-100px] lg:top-[-220px] z-[5] pointer-events-none">
-            <Image unoptimized src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[110px] md:w-[180px] lg:w-[260px] h-auto" />
+          <AnimatedChild delay={0.1} from="left" className="absolute left-0 lg:left-[3%] top-[-50px] md:top-[-90px] lg:top-[-190px] z-[5] pointer-events-none">
+            <Image unoptimized src="/apple.png" alt="Apples" width={260} height={520} className="object-contain w-[90px] md:w-[150px] lg:w-[210px] h-auto" />
           </AnimatedChild>
           <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-50px] md:top-[-100px] lg:top-[-220px] z-[5] pointer-events-none translate-x-[40%] md:translate-x-[45%] lg:translate-x-[47%]">
             <Image unoptimized src="/brand-orange.png" alt="Orange" width={550} height={550} className="object-contain drop-shadow-lg w-[170px] md:w-[300px] lg:w-[550px] h-auto" />
@@ -221,29 +351,74 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 5. Trusted By People Worldwide */}
-        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end sticky top-0 z-[20]">
+        <AnimatedSection as="section" className="bg-inyange-blue relative flex flex-col justify-end z-[20] pt-12 md:pt-24">
           <AnimatedChild delay={0.3} from="pop-up">
-            <div className="w-full max-w-[700px] mx-auto relative flex justify-center h-[280px] md:h-[460px]">
-              <div className="absolute bottom-0 w-[95%] sm:w-[80%] md:w-full h-[360px] sm:h-[420px] md:h-[550px] z-30 pointer-events-none">
+            <div className="w-full max-w-[750px] mx-auto relative flex justify-center h-[220px] md:h-[380px]">
+              <div className="absolute bottom-0 w-[95%] sm:w-[85%] md:w-[90%] h-[350px] sm:h-[450px] md:h-[600px] z-30 pointer-events-none">
                 <Image src="/girl.png" alt="Girl Drinking Milk" fill className="object-contain object-bottom drop-shadow-xl" />
               </div>
             </div>
           </AnimatedChild>
 
-          <div className="bg-[#0ea5e9] py-4 w-full overflow-hidden relative z-20">
-            <div className="flex whitespace-nowrap animate-scroll items-center">
+          <div ref={targetRef} className="bg-white py-8 md:py-16 w-full overflow-hidden relative z-20 flex flex-col justify-center min-h-[100svh] gap-y-4 md:gap-y-6 border-t-8 border-inyange-blue/10">
+            {/* Row 1 */}
+            <motion.div style={{ x: x1 }} className="flex whitespace-nowrap items-center w-max gap-x-4 md:gap-x-6">
               {[...Array(6)].map((_, i) => (
-                <span key={i} className="flex items-center">
-                  <span className="text-inyange-green font-gothic text-2xl md:text-4xl uppercase px-4">Trusted By People Worldwide</span>
-                  <span className="text-white font-gothic text-2xl md:text-4xl uppercase px-4">Trusted By People Worldwide</span>
-                </span>
+                <div key={i} className="flex items-center gap-x-4 md:gap-x-6">
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-green leading-[0.8] tracking-tighter uppercase">Trusted</span>
+                  <div className="w-[70px] h-[70px] md:w-[130px] md:h-[130px] lg:w-[150px] lg:h-[150px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-md flex-shrink-0">
+                    <Image src="/slide1.png" alt="Food" fill className="object-cover" />
+                  </div>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-[#0ea5e9] leading-[0.8] tracking-tighter uppercase">By</span>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-blue leading-[0.8] tracking-tighter uppercase">People</span>
+                  <div className="w-[80px] h-[80px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-md flex-shrink-0">
+                    <Image src="/slide3.png" alt="Food" fill className="object-cover" />
+                  </div>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-green leading-[0.8] tracking-tighter uppercase">Worldwide</span>
+                </div>
               ))}
-            </div>
+            </motion.div>
+            
+            {/* Row 2 */}
+            <motion.div style={{ x: x2 }} className="flex whitespace-nowrap items-center w-max gap-x-4 md:gap-x-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex items-center gap-x-4 md:gap-x-6">
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-[#0ea5e9] leading-[0.8] tracking-tighter uppercase">Worldwide</span>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-blue leading-[0.8] tracking-tighter uppercase">Trusted</span>
+                  <div className="w-[80px] h-[80px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-md flex-shrink-0">
+                    <Image src="/freepik__enhance__29647.jpg" alt="Food" fill className="object-cover" />
+                  </div>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-green leading-[0.8] tracking-tighter uppercase">By</span>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-[#0ea5e9] leading-[0.8] tracking-tighter uppercase">People</span>
+                  <div className="w-[70px] h-[70px] md:w-[130px] md:h-[130px] lg:w-[150px] lg:h-[150px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-md flex-shrink-0">
+                    <Image src="/feast_hq.png" alt="Food" fill className="object-cover" />
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Row 3 */}
+            <motion.div style={{ x: x3 }} className="flex whitespace-nowrap items-center w-max gap-x-4 md:gap-x-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex items-center gap-x-4 md:gap-x-6">
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-blue leading-[0.8] tracking-tighter uppercase">People</span>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-green leading-[0.8] tracking-tighter uppercase">Worldwide</span>
+                  <div className="w-[80px] h-[80px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-md flex-shrink-0">
+                    <Image src="/friends_hq.png" alt="Food" fill className="object-cover" />
+                  </div>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-[#0ea5e9] leading-[0.8] tracking-tighter uppercase">Trusted</span>
+                  <span className="text-[60px] md:text-[140px] lg:text-[160px] font-gothic text-inyange-blue leading-[0.8] tracking-tighter uppercase">By</span>
+                  <div className="w-[70px] h-[70px] md:w-[130px] md:h-[130px] lg:w-[150px] lg:h-[150px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-md flex-shrink-0">
+                    <Image src="/friends_hq.png" alt="Food" fill className="object-cover" />
+                  </div>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </AnimatedSection>
 
         {/* 6. The Pride of Rwanda's Beverage Industry */}
-        <AnimatedSection as="section" className="bg-inyange-green py-12 md:py-24 relative sticky top-0 z-[30]">
+        <AnimatedSection as="section" className="bg-inyange-green py-12 md:py-24 relative z-[30]">
           <div className="max-w-[850px] mx-auto px-4 md:px-0 flex flex-col md:flex-row items-center gap-6 md:gap-12">
             <AnimatedChild delay={0} from="left" className="w-full md:w-1/2 flex flex-col justify-center">
               <h2 className="text-4xl md:text-[60px] font-gothic text-white uppercase leading-[0.9] tracking-tight mb-4 md:mb-6">
@@ -262,7 +437,7 @@ export default function Home() {
         </AnimatedSection>
 
         {/* 7 & 8. Vision, Mission & Leaders Wrapper */}
-        <div className="sticky top-0 z-[40] bg-white relative">
+        <div className="z-[40] bg-white relative">
           <AnimatedChild delay={0.2} from="left" className="absolute left-0 top-[-60px] md:top-[-100px] lg:top-[-150px] z-30 pointer-events-none translate-x-[-30%] md:translate-x-[-25%] lg:translate-x-[-25%]">
             <Image unoptimized src="/mango.png" alt="Mango" width={400} height={400} className="object-contain drop-shadow-xl w-[160px] md:w-[250px] lg:w-[400px] h-auto" />
           </AnimatedChild>
@@ -340,57 +515,91 @@ export default function Home() {
         </div>
 
         {/* 9. From Our Newsroom */}
-        <AnimatedSection as="section" className="py-10 md:py-20 bg-[#0ea5e9] sticky top-0 z-[50] relative">
+        <AnimatedSection as="section" className="py-10 md:py-20 bg-[#0ea5e9] z-[50] relative">
           <AnimatedChild delay={0.2} from="right" className="absolute right-0 top-[-80px] md:top-[-100px] lg:top-[-150px] z-30 pointer-events-none translate-x-[30%] md:translate-x-[30%] lg:translate-x-[35%]">
             <Image unoptimized src="/021.png" alt="Orange Slices" width={450} height={450} className="object-contain drop-shadow-xl w-[160px] md:w-[280px] lg:w-[450px] h-auto" />
           </AnimatedChild>
 
           <div className="container mx-auto px-4 text-center">
             <AnimatedChild delay={0} from="bottom">
-              <h2 className="text-4xl md:text-[65px] font-gothic text-inyange-green uppercase leading-none mb-8 md:mb-20 tracking-tight">From Our Newsroom</h2>
+              <h2 className="text-4xl md:text-[65px] font-gothic text-white uppercase leading-none mb-8 md:mb-20 tracking-tight">From Our Newsroom</h2>
             </AnimatedChild>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 max-w-[1050px] mx-auto text-left">
+            <div ref={newsCarouselRef} className="flex overflow-hidden snap-x snap-mandatory hide-scrollbar gap-6 max-w-[1050px] mx-auto text-left pb-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {[
                 {
                   img: "/photo-1550583724-b2692b85b150.webp",
-                  title: "Sustainable Farming",
-                  desc: "Inyange remains at the forefront of agricultural innovation."
+                  title: "Inyange summer essentials: 5 ways to hydrate, snack, and enjoy"
                 },
                 {
                   img: "/photo-1488521787991-ed7bbaae773c.webp",
-                  title: "Awarded Best Producer",
-                  desc: "Honored to receive the 2023 Excellence Award."
+                  title: "How Inyange is delivering jobs and economic activity across Rwanda"
                 },
                 {
                   img: "/photo-1550989460-0adf9ea622e2.webp",
-                  title: "New Fortified Milk",
-                  desc: "Meeting the growing nutritional needs."
+                  title: "Sustainable farming practices for a greener future"
                 },
                 {
                   img: "/photo-1500382017468-9049fed747ef.webp",
-                  title: "Community Outreach",
-                  desc: "Providing dairy products to school children."
+                  title: "Community outreach: Providing dairy products to school children"
+                },
+                {
+                  img: "/freepik__enhance__29647.jpg",
+                  title: "New fortified milk hits the shelves this summer"
+                },
+                {
+                  img: "/feast_hq.png",
+                  title: "Awarded best producer in East Africa for 2025"
                 }
               ].map((news, idx) => (
-                <AnimatedChild key={idx} delay={0.1 + idx * 0.1} from="bottom">
-                  <div className="bg-white rounded-[16px] md:rounded-[20px] overflow-hidden flex flex-col shadow-lg smooth-hover hover:-translate-y-2 h-full">
-                    <div className="h-[100px] md:h-[230px] relative w-full">
-                      <Image src={news.img} alt={news.title} fill className="object-cover" />
+                <AnimatedChild key={idx} delay={0.1 + idx * 0.1} from="bottom" className="w-[85vw] sm:w-[calc(50%-0.75rem)] md:w-[calc(33.333%-1rem)] flex-shrink-0 snap-start">
+                  <div className="flex flex-col group cursor-pointer w-full">
+                    <div className="h-[200px] md:h-[260px] relative w-full rounded-[1.5rem] overflow-hidden mb-4 md:mb-6 shadow-md">
+                      <Image src={news.img} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                      <span className="absolute bottom-4 left-5 text-white font-calibre font-bold text-[16px] md:text-[18px]">News</span>
                     </div>
-                    <div className="p-3 md:p-5 flex-1 flex flex-col">
-                      <h3 className="font-calibre font-bold text-gray-700 text-[12px] md:text-[15px] mb-1 md:mb-2 leading-tight">{news.title}</h3>
-                      <p className="text-gray-500 text-[10px] md:text-[13px] font-calibre leading-snug">{news.desc}</p>
-                    </div>
+                    <h3 className="font-calibre font-medium text-inyange-blue text-[16px] md:text-[20px] leading-tight group-hover:text-white transition-colors px-2">{news.title}</h3>
                   </div>
                 </AnimatedChild>
               ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="max-w-[1050px] mx-auto mt-8 md:mt-12 flex items-center justify-between px-2">
+              {/* Dots */}
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-inyange-blue"></div>
+                <div className="w-3 h-3 rounded-full bg-inyange-blue/30"></div>
+                <div className="w-3 h-3 rounded-full bg-inyange-blue/30"></div>
+                <div className="w-3 h-3 rounded-full bg-inyange-blue/30"></div>
+                <div className="w-3 h-3 rounded-full bg-inyange-blue/30"></div>
+                <div className="w-3 h-3 rounded-full bg-inyange-blue/30"></div>
+              </div>
+              
+              {/* Arrows */}
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => scrollNews('left')} 
+                  disabled={!canScrollLeft}
+                  className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-colors z-10 ${canScrollLeft ? 'bg-inyange-blue/20 hover:bg-inyange-blue text-inyange-blue hover:text-white cursor-pointer' : 'bg-inyange-blue/10 text-inyange-blue/40 cursor-not-allowed'}`}
+                >
+                  <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <button 
+                  onClick={() => scrollNews('right')} 
+                  disabled={!canScrollRight}
+                  className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-colors z-10 ${canScrollRight ? 'bg-inyange-blue text-white hover:bg-white hover:text-inyange-blue cursor-pointer' : 'bg-inyange-blue/50 text-white/50 cursor-not-allowed'}`}
+                >
+                  <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </button>
+              </div>
             </div>
           </div>
         </AnimatedSection>
 
         {/* 10. Want To Get In Touch? */}
-        <AnimatedSection as="section" className="pt-24 pb-20 bg-white sticky top-0 z-[60]">
+        <AnimatedSection as="section" className="pt-24 pb-20 bg-white relative z-[60]">
           <div className="container mx-auto px-4 text-center flex flex-col items-center">
             <AnimatedChild delay={0} from="bottom">
               <h2 className="text-5xl md:text-[75px] font-gothic text-inyange-blue uppercase mb-6 leading-[0.9] tracking-tight">
@@ -417,7 +626,7 @@ export default function Home() {
       </main>
 
       {/* 11. Footer */}
-      <AnimatedSection as="footer" className="bg-[#0072a6] pt-12 md:pt-20 pb-48 sticky top-0 z-[70]">
+      <AnimatedSection as="footer" className="bg-inyange-blue pt-12 md:pt-20 pb-48 relative z-[70]">
         <div className="max-w-[1000px] mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-10 md:gap-y-12 text-white font-calibre text-[13px] md:text-[15px] leading-relaxed">
           <AnimatedChild delay={0} from="bottom" className="col-span-2 md:col-span-1 pr-4">
             <h4 className="uppercase text-white text-[14px] md:text-[16px] mb-4 md:mb-6">Inyange Industries</h4>
