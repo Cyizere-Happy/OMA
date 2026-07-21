@@ -1,0 +1,449 @@
+{
+  "kigali_heights": {
+    "id": "kigali_heights",
+    "title": "Kigali Heights Residences",
+    "slug": "kigali-heights",
+    "summary": "Luxury 48-unit apartment complex in Gasabo District with panoramic city views.",
+    "project_status": "funded",
+    "created_at": "2026-06-02T13:53:19.141Z",
+    "location": "Gasabo, Kimironko — Kigali",
+    "valuation_rwf": 480000000,
+    "completion_level": "Structure complete",
+    "unit_count": 48,
+    "owner_name": "Jean-Pierre Habimana",
+    "verified_stages": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": true
+    },
+    "docs": [
+      {
+        "id": "d1",
+        "name": "Title Deed Certificate — Gasabo Plot 284",
+        "type": "Land Registry",
+        "submitted_at": "2026-03-20",
+        "status": "pending"
+      },
+      {
+        "id": "d2",
+        "name": "Approved Structural Construction Permit",
+        "type": "Building Permit",
+        "submitted_at": "2026-03-20",
+        "status": "pending"
+      },
+      {
+        "id": "d3",
+        "name": "Architectural Elevations & Drawings",
+        "type": "Site Drawings",
+        "submitted_at": "2026-03-20",
+        "status": "verified"
+      }
+    ],
+    "gov_checks": {
+      "rdb_lookup": "verified",
+      "land_registry": "verified",
+      "crb_check": "verified"
+    },
+    "structural_evaluator": "Marie Uwimana",
+    "quantity_surveyor": null,
+    "valuation_evaluator": "Jean-Pierre Habimana",
+    "evaluator_reports": [
+      {
+        "name": "Jean-Pierre Habimana",
+        "specialization": "Property Valuation",
+        "result": "pass",
+        "comment": "Property is in excellent condition. Market value aligns with submitted valuation. Construction quality meets required standards.",
+        "value_rwf": 480000000,
+        "submitted_at": "2026-04-18"
+      },
+      {
+        "name": "Marie Uwimana",
+        "specialization": "Structural Engineering",
+        "result": "pass",
+        "comment": "Structural integrity is sound. Foundation and load-bearing walls meet Rwandan construction standards. No structural concern was observed during site visit.",
+        "value_rwf": 475000000,
+        "submitted_at": "2026-04-19"
+      },
+      {
+        "name": "Sylvain Nkurunziza",
+        "specialization": "Legal Verification",
+        "result": "fail",
+        "comment": "Omg it expired ",
+        "submitted_at": "2026-06-04"
+      }
+    ],
+    "upi": "1/02/08/04/4921",
+    "land_size_m2": 3450,
+    "funding_target_rwf": 360000000,
+    "expected_completion_date": "2027-12-31",
+    "stage_comments": {
+      "0": "Basic characteristics match physical blueprint. Approved.",
+      "1": "Waiting for official seal verify report from structural engineer Marie.",
+      "2": "All background registry query checks passed cleanly.",
+      "3": "",
+      "4": ""
+    },
+    "milestones": [
+      {
+        "name": "Milestone 1: Foundation Works",
+        "amountRwf": "150000000",
+        "status": "released",
+        "reportSummary": "Foundation concrete pouring completed and compression tested."
+      },
+      {
+        "name": "Milestone 2: Concrete Framing & Pillars",
+        "amountRwf": "200000000",
+        "status": "reviewing",
+        "submittedReport": "Reinforced concrete framing and pillars for floors 1-3 have been fully completed, compression-tested, and audited by onsite engineer Marie Uwimana.",
+        "submittedEvidenceUrl": "framing_structural_report.pdf"
+      },
+      {
+        "name": "Milestone 3: Finishing & Interior Masonry",
+        "amountRwf": "100000000",
+        "status": "pending"
+      }
+    ],
+    "locationProvince": "Kigali City",
+    "locationDistrict": "Gasabo",
+    "locationSector": "Kimihurura",
+    "locationCell": "Rugando",
+    "zoningCategory": "R4 Multi-Family Residential",
+    "gpsCoordinates": "Lat: -1.9441° S, Lon: 30.0898° E",
+    "nationalIdRef": "1198580047291039",
+    "buildingPermitRef": "GP-284/2026-GAS"
+  },
+  "nyarutarama_villas": {
+    "id": "nyarutarama_villas",
+    "title": "Nyarutarama Green Villas",
+    "slug": "nyarutarama-villas",
+    "summary": "Eco-friendly gated community with 12 premium villas and shared green spaces.",
+    "project_status": "approved",
+    "created_at": "2026-06-04T09:37:21.019Z",
+    "location": "Gasabo, Remera — Kigali",
+    "valuation_rwf": 310000000,
+    "completion_level": "Finishing works",
+    "unit_count": 12,
+    "owner_name": "Alexis Kamana",
+    "verified_stages": {
+      "0": true,
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true
+    },
+    "docs": [
+      {
+        "id": "d4",
+        "name": "Nyarutarama Plot 4492 Land Title Deed",
+        "type": "Land Registry",
+        "submitted_at": "2026-03-22",
+        "status": "pending"
+      },
+      {
+        "id": "d5",
+        "name": "Remera Municipal Building Permit",
+        "type": "Building Permit",
+        "submitted_at": "2026-03-22",
+        "status": "pending"
+      }
+    ],
+    "gov_checks": {
+      "rdb_lookup": "verified",
+      "land_registry": "verified",
+      "crb_check": "verified"
+    },
+    "structural_evaluator": "Marie Uwimana",
+    "quantity_surveyor": "David Mugisha",
+    "valuation_evaluator": "Sylvestre Uwera",
+    "evaluator_reports": [
+      {
+        "name": "Marie Uwimana",
+        "specialization": "Structural Engineering",
+        "result": "pass",
+        "comment": "Verified load-bearing tolerances. Solid structural foundations and soil test reports match regulatory clearance guidelines.",
+        "value_rwf": 310000000,
+        "submitted_at": "2026-06-04"
+      },
+      {
+        "name": "David Mugisha",
+        "specialization": "Quantity Surveying",
+        "result": "pass",
+        "comment": "Quantity bill of materials audited. Procurement lists align with site progress, materials costs conform to regional averages.",
+        "value_rwf": 308000000,
+        "submitted_at": "2026-06-04"
+      },
+      {
+        "name": "Sylvestre Uwera",
+        "specialization": "Property Valuation",
+        "result": "pass",
+        "comment": "Physical land survey complete. Prime residential location Nyarutarama valuation verified based on actual build area metrics.",
+        "value_rwf": 310000000,
+        "submitted_at": "2026-06-04"
+      }
+    ],
+    "upi": "1/02/08/04/4492",
+    "land_size_m2": 2800,
+    "funding_target_rwf": 232500000,
+    "expected_completion_date": "2028-06-30",
+    "stage_comments": {
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": ""
+    },
+    "milestones": [
+      {
+        "name": "Milestone 1: Site Clearing & Foundation Excavation",
+        "amountRwf": "50000000",
+        "status": "released",
+        "reportSummary": "Excavation and soil preparation completed. Stamped by quantity surveyor."
+      },
+      {
+        "name": "Milestone 2: Wall Masonry & Concrete Framing",
+        "amountRwf": "100000000",
+        "status": "released",
+        "reportSummary": "Brick structures and framing completed to standard."
+      },
+      {
+        "name": "Milestone 3: Roofing, Plumbing & Wiring Installation",
+        "amountRwf": "82500000",
+        "status": "reviewing",
+        "submittedReport": "Roofing tiling and wire pathways completed. Inspection reports submitted.",
+        "submittedEvidenceUrl": "wiring_inspection.pdf"
+      }
+    ],
+    "locationProvince": "Kigali City",
+    "locationDistrict": "Gasabo",
+    "locationSector": "Remera",
+    "locationCell": "Kamatamu",
+    "zoningCategory": "R1 Low-Density Single-Family Residential",
+    "gpsCoordinates": "Lat: -1.9392° S, Lon: 30.1042° E",
+    "nationalIdRef": "1197980029381029",
+    "buildingPermitRef": "GP-119/2026-REM"
+  },
+  "gisozi_heights": {
+    "id": "gisozi_heights",
+    "title": "Gisozi Heights Apartments",
+    "slug": "gisozi-heights",
+    "summary": "Modern apartments complex located on Gisozi hill with sweeping valley views.",
+    "project_status": "under_review",
+    "created_at": "2026-06-04T09:40:30.679Z",
+    "location": "Gasabo, Gisozi — Kigali",
+    "valuation_rwf": 520000000,
+    "completion_level": "Structure complete",
+    "unit_count": 32,
+    "owner_name": "Eric Rwigamba",
+    "verified_stages": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+    },
+    "docs": [
+      {
+        "id": "d6",
+        "name": "Title Deed Registry — Gisozi Plot 1044",
+        "type": "Land Registry",
+        "submitted_at": "2026-06-04",
+        "status": "rejected"
+      },
+      {
+        "id": "d7",
+        "name": "Approved Construction & Zoning Authorization",
+        "type": "Building Permit",
+        "submitted_at": "2026-06-04",
+        "status": "verified"
+      },
+      {
+        "id": "d8",
+        "name": "EIA Environmental Auditing Certificate",
+        "type": "EIA Certification",
+        "submitted_at": "2026-06-04",
+        "status": "rejected"
+      }
+    ],
+    "gov_checks": {
+      "rdb_lookup": "verified",
+      "land_registry": "running",
+      "crb_check": "verified"
+    },
+    "structural_evaluator": null,
+    "quantity_surveyor": null,
+    "valuation_evaluator": null,
+    "evaluator_reports": [],
+    "upi": "1/02/08/02/1044",
+    "land_size_m2": 2100,
+    "funding_target_rwf": 390000000,
+    "expected_completion_date": "2027-09-30",
+    "stage_comments": {
+      "0": "Verified.",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": ""
+    },
+    "milestones": [],
+    "locationProvince": "Kigali City",
+    "locationDistrict": "Gasabo",
+    "locationSector": "Gisozi",
+    "locationCell": "Musezero",
+    "zoningCategory": "R4 Multi-Family Residential",
+    "gpsCoordinates": "Lat: -1.9441° S, Lon: 30.0898° E",
+    "nationalIdRef": "1198580047291039",
+    "buildingPermitRef": "GP-284/2026-GAS"
+  },
+  "kicukiro_plaza": {
+    "id": "kicukiro_plaza",
+    "title": "Kicukiro Commercial Hub",
+    "slug": "kicukiro-plaza",
+    "summary": "Premium multi-storey commercial plaza in Niboye, designed for business offices and retail stores.",
+    "description": "Premium multi-storey commercial plaza in Niboye, designed for business offices and retail stores.",
+    "location": "Kicukiro, Niboye — Kigali",
+    "locationProvince": "Kigali City",
+    "locationDistrict": "Kicukiro",
+    "locationSector": "Niboye",
+    "locationCell": "Niboye",
+    "valuation_rwf": 850000000,
+    "propertyValuation": "850000000",
+    "fundingTarget": "600000000",
+    "funding_target_rwf": 600000000,
+    "unit_count": 50,
+    "owner_name": "Jean-Pierre Mugisha",
+    "completion_level": "Finishing works",
+    "progressState": "finishing_works",
+    "upi": "1/02/11/03/8920",
+    "land_size_m2": 4500,
+    "landSizeSqm": "4500",
+    "landParcelRef": "1/02/11/03/8920",
+    "expectedCompletionDate": "2027-04-15",
+    "expected_completion_date": "2027-04-15",
+    "verified_stages": {
+      "0": true,
+      "1": false,
+      "2": true,
+      "3": false,
+      "4": false
+    },
+    "docs": [
+      {
+        "id": "d9",
+        "name": "Plot Title Registry Document — Niboye 8920",
+        "type": "Land Registry",
+        "submitted_at": "2026-06-04",
+        "status": "verified"
+      },
+      {
+        "id": "d10",
+        "name": "Municipal Development License & Permit",
+        "type": "Building Permit",
+        "submitted_at": "2026-06-04",
+        "status": "pending"
+      }
+    ],
+    "gov_checks": {
+      "rdb_lookup": "verified",
+      "land_registry": "verified",
+      "crb_check": "verified"
+    },
+    "structural_evaluator": null,
+    "quantity_surveyor": null,
+    "valuation_evaluator": null,
+    "evaluator_reports": [],
+    "stage_comments": {
+      "0": "Verified.",
+      "1": "",
+      "2": "Verified.",
+      "3": "",
+      "4": ""
+    },
+    "adminStageComments": {
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": ""
+    },
+    "project_status": "under_review",
+    "reviewStatus": "under_review",
+    "assigned_notary": "Sylvain Nkurunziza"
+  },
+  "remera_oasis": {
+    "id": "remera_oasis",
+    "title": "Remera Oasis Estates",
+    "slug": "remera-oasis",
+    "summary": "18 high-end fractional villas with solar power grid and shared swimming pools.",
+    "description": "18 high-end fractional villas with solar power grid and shared swimming pools.",
+    "location": "Gasabo, Remera — Kigali",
+    "locationProvince": "Kigali City",
+    "locationDistrict": "Gasabo",
+    "locationSector": "Remera",
+    "locationCell": "Rukiri",
+    "valuation_rwf": 410000000,
+    "propertyValuation": "410000000",
+    "fundingTarget": "300000000",
+    "funding_target_rwf": 300000000,
+    "unit_count": 18,
+    "owner_name": "Claudine Mukamana",
+    "completion_level": "Planning phase",
+    "progressState": "planning_phase",
+    "upi": "1/02/08/04/7821",
+    "land_size_m2": 3100,
+    "landSizeSqm": "3100",
+    "landParcelRef": "1/02/08/04/7821",
+    "expectedCompletionDate": "2028-12-01",
+    "expected_completion_date": "2028-12-01",
+    "verified_stages": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+    },
+    "docs": [
+      {
+        "id": "d11",
+        "name": "Certified Title Document — Remera Plot 7821",
+        "type": "Land Registry",
+        "submitted_at": "2026-06-04",
+        "status": "pending"
+      },
+      {
+        "id": "d12",
+        "name": "Masterplan Zoning Clearance Stamped",
+        "type": "Zoning Permit",
+        "submitted_at": "2026-06-04",
+        "status": "pending"
+      }
+    ],
+    "gov_checks": {
+      "rdb_lookup": "not_run",
+      "land_registry": "not_run",
+      "crb_check": "not_run"
+    },
+    "structural_evaluator": null,
+    "quantity_surveyor": null,
+    "valuation_evaluator": null,
+    "evaluator_reports": [],
+    "stage_comments": {
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": ""
+    },
+    "adminStageComments": {
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": ""
+    },
+    "project_status": "under_review",
+    "reviewStatus": "under_review",
+    "assigned_notary": "Sylvain Nkurunziza"
+  }
+}
