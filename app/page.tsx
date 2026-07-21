@@ -27,9 +27,9 @@ const yogurtProducts: Product[] = [
 ];
 
 const milkProducts: Product[] = [
-  { id: "m1", src: "/Low fat milk.png", alt: "Low Fat Milk", color: "#215fb3" }, // Blue
+  { id: "m1", src: "/Low fat milk.png", alt: "Low Fat Milk", color: "#38bdf8" }, // Bright Sky Blue
   { id: "m2", src: "/Low fat milk-bw.png", alt: "Milk BW", color: "#e2e3e5" }, // Grey
-  { id: "m3", src: "/Low fat milk.png", alt: "Whole Milk", color: "#215fb3" } // Blue
+  { id: "m3", src: "/Low fat milk.png", alt: "Whole Milk", color: "#38bdf8" } // Bright Sky Blue
 ];
 
 export default function Home() {
@@ -140,7 +140,8 @@ export default function Home() {
         </div>
 
         {/* 1. Floating Navbar */}
-        <header className="relative w-[95%] md:w-[90%] max-w-[1600px] mx-auto bg-inyange-blue rounded-b-xl shadow-lg z-50 py-2 md:py-2.5 px-5 md:px-8">
+        <AnimatedChild from="top" delay={0.2} className="absolute top-0 w-full flex justify-center z-50">
+          <header className="relative w-[95%] md:w-[90%] max-w-[1600px] bg-inyange-blue rounded-b-xl shadow-lg py-2 md:py-2.5 px-5 md:px-8">
           <div className="w-full flex items-center justify-between">
             {/* Logo */}
             <div className="flex-shrink-0">
@@ -223,6 +224,7 @@ export default function Home() {
             </nav>
           )}
         </header>
+        </AnimatedChild>
 
         {/* 2. Hero Text */}
         <div className="relative z-10 w-full max-w-[850px] mx-auto px-4 md:px-0 mt-auto mb-16 md:mb-24 min-h-[140px] md:min-h-[220px]">
